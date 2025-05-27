@@ -1,0 +1,107 @@
+package com.cocinaapp.RecetasMagicas.auth.service;
+
+import com.cocinaapp.RecetasMagicas.auth.dto.*;
+import com.cocinaapp.RecetasMagicas.exception.EmailAliasExistException;
+import com.cocinaapp.RecetasMagicas.util.EmailService;
+import com.cocinaapp.RecetasMagicas.util.TokenUtil;
+import com.cocinaapp.RecetasMagicas.user.model.User;
+import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Service
+public class AuthService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenUtil tokenUtil;
+    private final EmailService emailService;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenUtil tokenUtil, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenUtil = tokenUtil;
+        this.emailService = emailService;
+    }
+
+    public void register(RegisterRequestDTO request) {
+        // 1. Validar si el email o alias ya están en uso
+        if (userRepository.existsByEmail(request.getEmail()) || userRepository.existsByAlias(request.getAlias())) {
+            throw new EmailAliasExistException("Alias o email ya están registrados");
+        }
+
+        // 2. Encriptar contraseña
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        // 3. Crear objeto User
+        User user = new User();
+        user.setAlias(request.getAlias());
+        user.setEmail(request.getEmail());
+        user.setPassword(encodedPassword);
+        user.setRole("USER"); // o un enum si lo preferís
+
+        // 4. Guardar en la base de datos
+        userRepository.save(user);
+    }
+
+    public AuthResponseDTO login(LoginRequestDTO request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Credenciales inválidas");
+        }
+
+        String token = tokenUtil.generateToken(user.getEmail());
+        return new AuthResponseDTO(token);
+    }
+
+
+    public void validate(ValidationRequestDTO request) {
+        boolean aliasTaken = userRepository.existsByAlias(request.getAlias());
+        boolean emailTaken = userRepository.existsByEmail(request.getEmail());
+
+        if (aliasTaken || emailTaken) {
+            throw new EmailAliasExistException("Alias o email ya están en uso");
+        }
+    }
+
+
+    private final Map<String, String> codeStorage = new ConcurrentHashMap<>();
+
+    public void storeValidationCode(String email, String code) {
+        codeStorage.put(email, code);
+    }
+
+    public void validateCode(CodeValidationRequestDTO request) {
+        String expectedCode = codeStorage.get(request.getEmail());
+
+        if (expectedCode == null || !expectedCode.equals(request.getCode())) {
+            throw new RuntimeException("Código inválido");
+        }
+
+        // Opcional: eliminar el código una vez validado
+        codeStorage.remove(request.getEmail());
+    }
+
+    public void sendRecoveryCode(PasswordRecoveryRequestDTO request) {
+        // Validar existencia del email
+        if (!userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("El email no está registrado");
+        }
+
+        // Generar código
+        String code = String.format("%06d", new Random().nextInt(999999));
+
+        // Guardarlo en el Map
+        storeValidationCode(request.getEmail(), code);
+
+        // Enviar por correo
+        emailService.sendValidationCode(request.getEmail(), code);
+    }
+
+
+}
