@@ -2,6 +2,7 @@ package com.cocinaapp.RecetasMagicas.auth.controller;
 
 import com.cocinaapp.RecetasMagicas.auth.dto.*;
 import com.cocinaapp.RecetasMagicas.auth.service.AuthService;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
-        System.out.println("Login llamado: " + request.getEmail());
 
         return ResponseEntity.ok(authService.login(request));
     }

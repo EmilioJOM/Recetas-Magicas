@@ -1,9 +1,9 @@
 package com.cocinaapp.RecetasMagicas.auth.service;
 
 import com.cocinaapp.RecetasMagicas.auth.dto.*;
+import com.cocinaapp.RecetasMagicas.config.JwtService;
 import com.cocinaapp.RecetasMagicas.exception.EmailAliasExistException;
 import com.cocinaapp.RecetasMagicas.util.EmailService;
-import com.cocinaapp.RecetasMagicas.util.TokenUtil;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,13 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenUtil tokenUtil;
+    private final JwtService jwtService;
     private final EmailService emailService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenUtil tokenUtil, EmailService emailService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.tokenUtil = tokenUtil;
+        this.jwtService = jwtService;
         this.emailService = emailService;
     }
 
@@ -54,8 +54,7 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Credenciales inválidas");
         }
-
-        String token = tokenUtil.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getEmail());
         return new AuthResponseDTO(token);
     }
 
@@ -101,6 +100,14 @@ public class AuthService {
 
         // Enviar por correo
         emailService.sendValidationCode(request.getEmail(), code);
+    }
+
+    public void changePassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
 
