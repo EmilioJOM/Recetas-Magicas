@@ -6,7 +6,6 @@ import com.cocinaapp.RecetasMagicas.recipe.model.Step;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 

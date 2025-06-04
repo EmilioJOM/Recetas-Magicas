@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CourseRepository extends JpaRepository<Recipe, Long>{
+public interface CourseRepository extends JpaRepository<Course, Long>{
     @Query("SELECT c FROM Course c WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Course> findByQuery(@Param("query") String query);
 }

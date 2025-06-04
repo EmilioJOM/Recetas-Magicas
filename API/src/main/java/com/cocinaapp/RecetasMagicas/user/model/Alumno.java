@@ -16,7 +16,8 @@ public class Alumno {
     private String cuentaCorriente;
 
     // Si tu modelo lo necesita: relación uno a uno con User
+
     @OneToOne
-    @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")
+    @JoinColumn(name = "idUsuario", referencedColumnName = "id")
     private User user;
 }
