@@ -11,9 +11,10 @@ public class Alumno {
     private Long idAlumno;
 
     private String numeroTarjeta;
-    private String dniNif;
+    private String numeroTramite;
     private String nombre;           // Podrías hacer referencia a User si tenés relación
-    private String cuentaCorriente;
+    private String PathDniFrente;
+    private String PathDniDorso;
 
     // Si tu modelo lo necesita: relación uno a uno con User
 

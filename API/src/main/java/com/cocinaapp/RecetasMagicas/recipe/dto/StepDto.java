@@ -13,6 +13,6 @@ public
 class StepDto {
 
     private Integer nroPaso;
-    private String texto;
+    private String instruction;
     private List<StepMediaDto> media;
 }

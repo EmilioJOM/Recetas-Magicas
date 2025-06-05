@@ -1,5 +1,6 @@
 package com.cocinaapp.RecetasMagicas.user.model;
 
+import com.cocinaapp.RecetasMagicas.recipe.model.Recipe;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +25,8 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role = "USER"; // Podés usar enum si querés más seguridad
+    @ManyToMany
+    private List<Recipe> favoritos;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -2,19 +2,28 @@ package com.cocinaapp.RecetasMagicas.recipe.service;
 
 
 import com.cocinaapp.RecetasMagicas.recipe.dto.*;
-import com.cocinaapp.RecetasMagicas.recipe.model.Recipe;
-import com.cocinaapp.RecetasMagicas.recipe.model.RecipeStatus;
+import com.cocinaapp.RecetasMagicas.recipe.model.*;
 import com.cocinaapp.RecetasMagicas.recipe.repository.RecipeRepository;
+import com.cocinaapp.RecetasMagicas.user.model.User;
+import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
     private final RecipeRepository recipeRepository;
+    private final UserRepository userRepository;
 
     public List<RecipeListItemDto> getLatestRecipes(int n) {
         List<Recipe> recipes = recipeRepository.findByStatusOrderByIdDesc(RecipeStatus.APROBADA, PageRequest.of(0, n));
@@ -59,7 +68,7 @@ public class RecipeService {
                 .steps(recipe.getSteps().stream()
                         .map(s -> StepDto.builder()
                                 .nroPaso(s.getNroPaso())
-                                .texto(s.getTexto())
+                                .instruction(s.getInstruction())
                                 .media(s.getMedia().stream()
                                         .map(m -> StepMediaDto.builder()
                                                 .tipoContenido(m.getTipoContenido())
@@ -72,4 +81,123 @@ public class RecipeService {
                 .build();
 
     }
+    public void crearReceta(
+            RecipeCreateRequest dto,
+            MultipartFile mainPhoto,
+            List<MultipartFile> stepPhotos,
+            String emailUsuario
+    ) {
+        User user = userRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Validar unicidad de nombre de receta para este usuario
+        if (recipeRepository.existsByTitleAndAuthor(dto.getTitle(), user)) {
+            throw new IllegalArgumentException("Ya existe una receta con ese nombre para tu usuario.");
+        }
+
+        // Guardar foto principal
+        String mainPhotoPath = guardarArchivo(mainPhoto, "uploads/recetas/", "principal_" + System.currentTimeMillis());
+
+        // Crear entidad receta
+        Recipe receta = new Recipe();
+        receta.setTitle(dto.getTitle());
+        receta.setDescription(dto.getDescription());
+        receta.setServings(dto.getServings());
+        receta.setMainPhoto(mainPhotoPath);
+        receta.setAuthor(user);
+        receta.setStatus(RecipeStatus.APROBADA); // La receta queda publicada automáticamente
+
+        // Ingredientes
+        List<RecipeIngredient> ingredientes = new ArrayList<>();
+        for (IngredientDto i : dto.getIngredients()) {
+            Ingredient ingrediente = new Ingredient();
+            ingrediente.setDetail(i.getDetail());
+            // ingredienteRepository.save(ingrediente); // Si lo necesitas persistente
+
+            RecipeIngredient ri = new RecipeIngredient();
+            ri.setCantidad(i.getQuantity());
+            ri.setUnidad(i.getUnit());
+            ri.setObservaciones(i.getObservations());
+            ri.setIngredient(ingrediente);
+            ri.setRecipe(receta);
+            ingredientes.add(ri);
+        }
+        receta.setIngredientesUtilizados(ingredientes);
+
+        // Pasos
+        List<Step> steps = new ArrayList<>();
+        for (int idx = 0; idx < dto.getSteps().size(); idx++) {
+            StepDto stepDto = dto.getSteps().get(idx);
+            Step step = new Step();
+            step.setNroPaso(idx + 1);
+            step.setInstruction(stepDto.getInstruction());
+            step.setRecipe(receta);
+
+            List<StepMedia> mediaList = new ArrayList<>();
+            // Guardar foto si viene
+            if (stepPhotos != null && stepPhotos.size() > idx && stepPhotos.get(idx) != null && !stepPhotos.get(idx).isEmpty()) {
+                String stepPhotoPath = guardarArchivo(stepPhotos.get(idx), "uploads/recetas/", "step_" + idx + "_" + System.currentTimeMillis());
+                StepMedia media = StepMedia.builder()
+                        .tipoContenido("foto")
+                        .extension(getExtension(stepPhotos.get(idx).getOriginalFilename()))
+                        .urlContenido(stepPhotoPath)
+                        .step(step)
+                        .build();
+                mediaList.add(media);
+            }
+            // Puedes agregar videos aquí también si tienes.
+
+            step.setMedia(mediaList);
+            steps.add(step);
+        }
+        receta.setSteps(steps);
+
+        // Guardar receta en la base
+        recipeRepository.save(receta);
+    }
+    private String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
+        try {
+            Files.createDirectories(Paths.get(carpeta));
+            String path = carpeta + nombre + "_" + archivo.getOriginalFilename();
+            archivo.transferTo(new File(path));
+            return path;
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo guardar el archivo", e);
+        }
+    }
+    private String getExtension (String filename) {
+        if (filename == null) return "";
+        int dot = filename.lastIndexOf(".");
+        return (dot >= 0) ? filename.substring(dot + 1) : "";
+    }
+    public void eliminarReceta(Long recipeId, String emailUsuario) {
+        User user = userRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Recipe receta = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+        if (!receta.getAuthor().getId().equals(user.getId())) {
+            throw new RuntimeException("No autorizado para eliminar esta receta.");
+        }
+        recipeRepository.delete(receta);
+    }
+    public void marcarComoFavorito(Long recipeId, String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+
+        user.getFavoritos().add(recipe);
+        userRepository.save(user);
+    }
+
+    public void desmarcarComoFavorito(Long recipeId, String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+
+        user.getFavoritos().remove(recipe);
+        userRepository.save(user);
+    }
+
 }

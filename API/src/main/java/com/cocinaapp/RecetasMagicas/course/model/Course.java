@@ -15,7 +15,7 @@ public class Course {
     private String title;
     private String description;
     private String mainPhoto;
-    private LocalDate dateStart;
+    private String dateStart;
 
     // Cronograma de clases o temas
     @ElementCollection

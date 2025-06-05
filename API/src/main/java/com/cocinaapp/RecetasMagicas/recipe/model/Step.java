@@ -15,7 +15,7 @@ public class Step {
 
     private int nroPaso;
 
-    private String texto;
+    private String instruction;
 
     @ManyToOne
     @JoinColumn(name = "receta_id")

@@ -102,13 +102,7 @@ public class AuthService {
         emailService.sendValidationCode(request.getEmail(), code);
     }
 
-    public void changePassword(String email, String newPassword) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
 
 
 }
