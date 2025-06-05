@@ -15,6 +15,7 @@ public class Alumno {
     private String nombre;           // Podrías hacer referencia a User si tenés relación
     private String PathDniFrente;
     private String PathDniDorso;
+    private String numeroDNI;
 
     // Si tu modelo lo necesita: relación uno a uno con User
 

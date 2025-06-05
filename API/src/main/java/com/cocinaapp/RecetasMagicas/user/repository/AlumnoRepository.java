@@ -12,7 +12,7 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Long> {
 
     boolean existsByUser(User user);
 
-
+    boolean existsByNumeroDNI(String numeroDNI);
     boolean existsByNumeroTramite(String numeroTramite);
 
     Optional<Alumno> findByNumeroTramite(String numeroTramite);

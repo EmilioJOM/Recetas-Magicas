@@ -32,10 +32,11 @@ public class UserController {
     public ResponseEntity<?> subirDni(
             @RequestParam("dniFrente") MultipartFile dniFrente,
             @RequestParam("dniDorso") MultipartFile dniDorso,
-            @RequestParam("numeroTramite") String numeroTramite
+            @RequestParam("numeroTramite") String numeroTramite,
+            @RequestParam("numeroDNI") String numeroDNI
     ) {
         String email = authentication.getName();
-        alumnoService.registrarAlumno(email, dniFrente, dniDorso, numeroTramite);
+        alumnoService.registrarAlumno(email, dniFrente, dniDorso, numeroTramite, numeroDNI);
         return ResponseEntity.ok("Fotos y número de trámite recibidos correctamente.");
     }
 }

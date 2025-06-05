@@ -25,11 +25,11 @@ public class AlumnoService {
     private final UserRepository userRepository;
 
     public void registrarAlumno(
-            String emailUsuario, MultipartFile dniFrente, MultipartFile dniDorso, String numeroTramite) {
+            String emailUsuario, MultipartFile dniFrente, MultipartFile dniDorso, String numeroTramite, String numeroDNI) {
 
         User user = userRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        if (!ValidateDNI.ValidateNroTramite(numeroTramite, alumnoRepository)){
+        if (!ValidateDNI.ValidateNroTramite(numeroTramite, alumnoRepository, numeroDNI)){
             throw new IllegalArgumentException("Numero de Tramite ya registrado");
         }
 
@@ -50,6 +50,7 @@ public class AlumnoService {
         Alumno alumno = new Alumno();
         alumno.setUser(user);
         alumno.setNumeroTramite(numeroTramite);
+        alumno.setNumeroDNI(numeroDNI);
         alumno.setPathDniFrente(pathFrente);
         alumno.setPathDniDorso(pathDorso);
         // ... otros campos si hacen falta
