@@ -200,4 +200,70 @@ public class RecipeService {
         userRepository.save(user);
     }
 
+    public void guardarRecetaModificada(Long recetaId, Integer porciones, String emailUsuario) {
+        User user = userRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Recipe recetaOriginal = recipeRepository.findById(recetaId)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+
+        // Validación básica
+        if (porciones == null || porciones < 1) {
+            throw new IllegalArgumentException("Cantidad de porciones inválida");
+        }
+
+        // Clonar la receta (solo campos esenciales, NO copiar el mismo ID)
+        Recipe recetaModificada = new Recipe();
+        recetaModificada.setTitle(recetaOriginal.getTitle() + " (modificada)");
+        recetaModificada.setDescription(recetaOriginal.getDescription());
+        recetaModificada.setServings(porciones);
+        recetaModificada.setMainPhoto(recetaOriginal.getMainPhoto());
+        recetaModificada.setAuthor(user);
+        recetaModificada.setStatus(RecipeStatus.APROBADA); // O como prefieras
+
+        // Clonar ingredientes (ajustando cantidades proporcionalmente)
+        List<RecipeIngredient> nuevosIngredientes = new ArrayList<>();
+        double factor = (double) porciones / recetaOriginal.getServings();
+        for (RecipeIngredient origIng : recetaOriginal.getIngredientesUtilizados()) {
+            RecipeIngredient nuevoIng = new RecipeIngredient();
+            nuevoIng.setRecipe(recetaModificada);
+            nuevoIng.setIngredient(origIng.getIngredient());
+            if (origIng.getCantidad() != null) {
+                nuevoIng.setCantidad(origIng.getCantidad() * factor);
+            } else {
+                nuevoIng.setCantidad(null);
+            }
+            nuevoIng.setUnidad(origIng.getUnidad());
+            nuevoIng.setObservaciones(origIng.getObservaciones());
+            nuevosIngredientes.add(nuevoIng);
+        }
+        recetaModificada.setIngredientesUtilizados(nuevosIngredientes);
+
+        // Clonar pasos (asociar a la nueva receta)
+        List<Step> nuevosPasos = new ArrayList<>();
+        for (Step origStep : recetaOriginal.getSteps()) {
+            Step nuevoStep = new Step();
+            nuevoStep.setNroPaso(origStep.getNroPaso());
+            nuevoStep.setInstruction(origStep.getInstruction());
+            nuevoStep.setRecipe(recetaModificada);
+            // Podés copiar media si querés, aquí sólo las rutas
+            List<StepMedia> nuevaMedia = new ArrayList<>();
+            for (StepMedia origMedia : origStep.getMedia()) {
+                StepMedia sm = StepMedia.builder()
+                        .tipoContenido(origMedia.getTipoContenido())
+                        .extension(origMedia.getExtension())
+                        .urlContenido(origMedia.getUrlContenido())
+                        .step(nuevoStep)
+                        .build();
+                nuevaMedia.add(sm);
+            }
+            nuevoStep.setMedia(nuevaMedia);
+            nuevosPasos.add(nuevoStep);
+        }
+        recetaModificada.setSteps(nuevosPasos);
+
+        // Guardar la nueva receta modificada
+        recipeRepository.save(recetaModificada);
+    }
+
+
 }

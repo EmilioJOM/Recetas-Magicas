@@ -4,6 +4,7 @@ package com.cocinaapp.RecetasMagicas.recipe.controller;
 import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeCreateRequest;
 import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeDetailDto;
 import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeListItemDto;
+import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeModifiedRequestDto;
 import com.cocinaapp.RecetasMagicas.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -65,6 +66,17 @@ public class RecipeController {
         recipeService.desmarcarComoFavorito(id, userEmail);
         return ResponseEntity.ok("Receta desmarcada como favorita");
     }
+    @PostMapping("/{id}/modified")
+    public ResponseEntity<?> guardarRecetaModificada(
+            @PathVariable Long id,
+            @RequestBody RecipeModifiedRequestDto dto,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+        recipeService.guardarRecetaModificada(id, dto.getPortions(), email);
+        return ResponseEntity.ok("Receta modificada y guardada correctamente");
+    }
+
 
 
 }
