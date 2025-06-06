@@ -19,3 +19,6 @@ services:
         value: root
       - key: MYSQL_PASSWORD
         value: hZhaPaXgOQYzhUdeUzkOWkUtyFvVTgyZ
+
+
+# comentario por que git no me reconoce el commit pero al mismo tiempo si lo reconoce
