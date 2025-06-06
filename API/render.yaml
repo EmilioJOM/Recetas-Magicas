@@ -1,7 +1,7 @@
 services:
   - type: web
     name: recetas-magicas-api
-    runtime: java
+    env: java
     rootDir: API
     buildCommand: ./mvnw clean package
     startCommand: java -jar target/RecetasMagicas-0.0.1-SNAPSHOT.jar
@@ -9,16 +9,14 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: MYSQL_HOST
-        value: mysql.railway.internal
-      - key: MYSQL_PORT
-        value: 3306
-      - key: MYSQL_DATABASE
-        value: railway
-      - key: MYSQL_USER
-        value: root
-      - key: MYSQL_PASSWORD
-        value: hZhaPaXgOQYzhUdeUzkOWkUtyFvVTgyZ
-
-
-# comentario por que git no me reconoce el commit pero al mismo tiempo si lo reconoce
+      # Aquí agregá tus variables para la base si querés que estén desde el blueprint
+      # - key: MYSQL_HOST
+      #   value: mysql.railway.internal
+      # - key: MYSQL_PORT
+      #   value: 3306
+      # - key: MYSQL_DATABASE
+      #   value: railway
+      # - key: MYSQL_USER
+      #   value: root
+      # - key: MYSQL_PASSWORD
+      #   value: hZhaPaXgOQYzhUdeUzkOWkUtyFvVTgyZ
