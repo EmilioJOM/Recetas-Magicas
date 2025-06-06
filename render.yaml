@@ -2,9 +2,10 @@ services:
   - type: web
     name: recetas-magicas-api
     rootDir: API
-    buildCommand: ./mvnw clean package
-    startCommand: java -jar target/RecetasMagicas-0.0.1-SNAPSHOT.jar
+    buildCommand: ""
+    startCommand: ""
     plan: free
+    dockerfilePath: Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
