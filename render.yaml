@@ -8,9 +8,9 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: MYSQL_HOST
-        value: mysql.railway.internal
+        value: mainline.proxy.rlwy.net
       - key: MYSQL_PORT
-        value: 3306
+        value: 53574
       - key: MYSQL_DATABASE
         value: railway
       - key: MYSQL_USER
