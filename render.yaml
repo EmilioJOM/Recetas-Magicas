@@ -2,8 +2,7 @@ services:
   - type: web
     name: recetas-magicas-api
     rootDir: API
-    buildCommand: ""
-    startCommand: ""
+    runtime: docker
     plan: free
     dockerfilePath: Dockerfile
     envVars:
