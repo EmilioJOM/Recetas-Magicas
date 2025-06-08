@@ -24,7 +24,7 @@ public class UserController {
     private Authentication authentication;
 
 
-    @PutMapping("/change-password")
+    @PutMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequestDTO request, Authentication authentication) {
         String email = authentication.getName();
 

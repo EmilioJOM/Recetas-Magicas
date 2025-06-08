@@ -35,14 +35,14 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponseDTO("Alias y email disponibles"));
     }
 
-    @PostMapping("/validate-code")
+    @PostMapping("/validateCode")
     public ResponseEntity<AuthResponseDTO> validateCode(@RequestBody CodeValidationRequestDTO request) {
         authService.validateCode(request);
         return ResponseEntity.ok(new AuthResponseDTO("Código válido"));
     }
 
 
-    @PostMapping("/recover-password")
+    @PostMapping("/recoverPassword")
     public ResponseEntity<AuthResponseDTO> recoverPassword(@RequestBody PasswordRecoveryRequestDTO request) {
         authService.sendRecoveryCode(request);
         return ResponseEntity.ok(new AuthResponseDTO("Código enviado por correo"));
