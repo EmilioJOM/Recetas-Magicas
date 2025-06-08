@@ -28,6 +28,8 @@ public class User implements UserDetails {
     @ManyToMany
     private List<Recipe> favoritos;
 
+    private boolean esPago;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role)); // Ej: "USER"

@@ -54,8 +54,11 @@ public class AlumnoService {
         alumno.setPathDniFrente(pathFrente);
         alumno.setPathDniDorso(pathDorso);
         // ... otros campos si hacen falta
+        user.setRole("ALUMNO");
+        user.setEsPago(true);
 
         alumnoRepository.save(alumno);
+        userRepository.save(user);
     }
 
     public void changePassword(String email, String newPassword) {

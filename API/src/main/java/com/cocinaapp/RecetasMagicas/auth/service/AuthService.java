@@ -9,6 +9,8 @@ import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +29,7 @@ public class AuthService {
         this.emailService = emailService;
     }
 
-    public void register(RegisterRequestDTO request) {
+    public AuthResponseDTO register(RegisterRequestDTO request) {
         // 1. Validar si el email o alias ya están en uso
         if (userRepository.existsByEmail(request.getEmail()) || userRepository.existsByAlias(request.getAlias())) {
             throw new EmailAliasExistException("Alias o email ya están registrados");
@@ -42,9 +44,13 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
         user.setRole("USER"); // o un enum si lo preferís
+        user.setEsPago(false);
 
         // 4. Guardar en la base de datos
         userRepository.save(user);
+
+        String token = jwtService.generateToken(user.getEmail());
+        return new AuthResponseDTO(token);
     }
 
     public AuthResponseDTO login(LoginRequestDTO request) {
@@ -64,9 +70,30 @@ public class AuthService {
         boolean emailTaken = userRepository.existsByEmail(request.getEmail());
 
         if (aliasTaken || emailTaken) {
-            throw new EmailAliasExistException("Alias o email ya están en uso");
+            String mensaje = "Alias o email ya están en uso";
+            List<String> sugerencias = null;
+            if (aliasTaken) {
+                sugerencias = generarSugerenciasAlias(request.getAlias());
+                mensaje += ". Sugerencias: " + String.join(", ", sugerencias);
+            }
+            throw new EmailAliasExistException(mensaje);
         }
     }
+
+    private List<String> generarSugerenciasAlias(String aliasBase) {
+        List<String> sugerencias = new ArrayList<>();
+        Random rand = new Random();
+        int intentos = 0;
+        while (sugerencias.size() < 3 && intentos < 10) {
+            String aliasSugerido = aliasBase + (rand.nextInt(900) + 100); // ejemplo: alias123
+            if (!userRepository.existsByAlias(aliasSugerido)) {
+                sugerencias.add(aliasSugerido);
+            }
+            intentos++;
+        }
+        return sugerencias;
+    }
+
 
 
     private final Map<String, String> codeStorage = new ConcurrentHashMap<>();
