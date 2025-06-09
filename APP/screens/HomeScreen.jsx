@@ -8,7 +8,24 @@ import BottomTabs from '../components/BottomTabs';
 import RecipeOrCourseCard from '../components/RecipeOrCourseCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { getLatestRecipes } from '../api/auth';
 
+/**
+const [latestRecipes, setLatestRecipes] = useState([]);
+
+useEffect(() => {
+  const fetchLatestRecipes = async () => {
+    try {
+      const response = await getLatestRecipes();
+      setLatestRecipes(response.data);
+    } catch (error) {
+      console.error('Error al traer las últimas recetas', error);
+    }
+  };
+
+  fetchLatestRecipes();
+}, []);
+*/
 const recetasMock = [
   { id: '1', title: 'Tarta de Verdura', isFavorite: true, isModified: false, isInCourse: false },
   { id: '2', title: 'Pollo a la Mostaza', isFavorite: false, isModified: true, isInCourse: true },
@@ -617,7 +634,7 @@ export default function HomeScreen() {
           <>
             <ImageCarousel data={imagenes} />
             <LatestRecipesPreview
-              recipes={ultimasRecetas}
+              recipes={latestRecipes}
               onPressRecipe={(receta) =>
                 navigation.navigate('DetailRecipeScreen', { receta })
               }

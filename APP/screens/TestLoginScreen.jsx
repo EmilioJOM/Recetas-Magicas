@@ -8,13 +8,15 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import InputShow from '../components/InputShow'
 import TermsAndConditions from '../components/TermsAndConditions'
+import { useAuth } from '../context/AuthContext';
+
 
 // Validación con Yup
 const schema = yup.object().shape({
     email: yup.string()
         .email('El email ingresado no es válido')
         .required('El email es obligatorio'),
-        
+
     password: yup.string()
         .min(6, 'La contraseña debe tener al menos 6 caracteres')
         .required('La contraseña es obligatoria'),
@@ -32,10 +34,15 @@ export default function LoginForm() {
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = (data) => {
-        console.log('Datos enviados:', { ...data, rememberMe });
-            navigation.navigate('HomeScreen');
+    const { signin, errorsApi, user } = useAuth();
 
+    const onSubmit = async (data) => {
+        await signin(data);
+
+        // Si el usuario se logueó correctamente, user debería estar definido
+        if (user) {
+            navigation.navigate('HomeScreen');
+        }
     };
 
     return (

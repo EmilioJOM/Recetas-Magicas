@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Button from '../components/Button';
 import TermsAndConditions from '../components/TermsAndConditions';
+import { validateCode } from '../api/auth';
 
 const CODE_LENGTH = 6;
 
@@ -19,7 +20,7 @@ const schema = yup.object().shape({
 export default function RegisterStepTwoScreen() {
   const navigation = useNavigation();
   const inputsRef = useRef([]);
-  
+
   const {
     control,
     handleSubmit,
@@ -39,7 +40,7 @@ export default function RegisterStepTwoScreen() {
       const codeArray = codeValue.split('').slice(0, CODE_LENGTH);
       codeArray[index] = text;
       // Rellenar espacios vacíos con ''
-      for(let i = 0; i < CODE_LENGTH; i++) {
+      for (let i = 0; i < CODE_LENGTH; i++) {
         if (!codeArray[i]) codeArray[i] = '';
       }
       const newCode = codeArray.join('');
@@ -61,22 +62,27 @@ export default function RegisterStepTwoScreen() {
   const { paidUser, alias, email } = route.params;
 
   const onSubmit = async (data) => {
-  try {
-    const payload = {
-      code: data.code,
-      email, // asegurate de tener este email disponible
-    };
+    try {
+      const response = await validateCode({
+        code: data.code,
+        email, // asegurate de tener este valor definido en el scope
+      });
 
-    const response = await validateCode(payload);
-    console.log('Código validado correctamente:', response.data);
+      // Suponiendo que la respuesta tiene una propiedad 'success' o similar
+      if (response.status === 200) {
+        console.log('Código validado correctamente:', response.data);
+        navigation.navigate('RegisterStepThreeScreen', { alias, email, paidUser });
+      } else {
+        console.warn('Código inválido:', response.data);
+        Alert.alert('Código inválido', response.data.message || 'El código ingresado no es válido o expiró.');
+      }
 
-    navigation.navigate('RegisterStepThreeScreen', { alias, email, paidUser });
+    } catch (error) {
+      console.error('Error al validar código:', error);
+      Alert.alert('Error', 'Ocurrió un error inesperado. Intenta más tarde.');
+    }
+  };
 
-  } catch (error) {
-    console.error('Error al validar código:', error);
-    Alert.alert('Error', 'El código ingresado no es válido o expiró.');
-  }
-};
 
   // Obtener array para mostrar cada dígito en inputs separados
   const codeArray = codeValue.padEnd(CODE_LENGTH, ' ').split('').slice(0, CODE_LENGTH);

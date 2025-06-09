@@ -7,8 +7,9 @@ import * as yup from 'yup';
 import Button from '../components/Button'
 import InputShow from '../components/InputShow'
 import TermsAndConditions from '../components/TermsAndConditions'
-
+import { useAuth } from '../context/AuthContext';
 // Validación con Yup
+
 const schema = yup.object().shape({
     password: yup
         .string()
@@ -33,14 +34,32 @@ export default function RegisterStepThreeScreen() {
 
     const route = useRoute();
     const { alias, email, paidUser } = route.params;
+    const { signup, errors: signupErrors } = useAuth();
 
-    const onSubmit = (data) => {
-        console.log('Datos enviados:', { ...data });
 
-        if (paidUser) {
-            navigation.navigate('RegisterStepFourScreen', { paidUser });
-        } else {
-            navigation.navigate('HomeScreen');
+    const onSubmit = async (data) => {
+        const finalData = {
+            alias,
+            email,
+            password: data.password,
+        };
+
+        console.log('Datos finales a enviar:', finalData);
+
+        try {
+            await signup(finalData); // esto guarda el usuario en contexto y AsyncStorage
+
+            if (paidUser) {
+                navigation.navigate('RegisterStepFourScreen', finalData); // se continúa con el pago
+            } else {
+                navigation.navigate('HomeScreen'); // va directo al home
+            }
+
+        } catch (e) {
+            console.error('Error en el registro:', e);
+            // El AuthContext ya maneja los errores y los guarda en `signupErrors`
+            // Podés mostrarlos si querés:
+            Alert.alert('Error', 'No se pudo crear la cuenta. Revisá los datos o intenta más tarde.');
         }
     };
 

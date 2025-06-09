@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import Button from '../components/Button'
 import Input from '../components/Input'
 import TermsAndConditions from '../components/TermsAndConditions'
-import registerRequest from '../api/auth'
+import { authValidate } from '../api/auth';
 
 // Validación con Yup
 const schema = yup.object().shape({
@@ -35,13 +35,13 @@ export default function RegisterStepOneScreen() {
 
     const onSubmit = async (data) => {
         try {
-            const available = await checkUserAvailability(data.alias, data.email);
+            const available = await authValidate({ alias: data.alias, email: data.email });
             if (available) {
                 navigation.navigate('RegisterStepTwoScreen', {
                     alias: data.alias,
                     email: data.email,
-                    paidUser
                 });
+                console.log('Respuesta del backend:', available.data);
             } else {
                 alert('El alias o el email ya están registrados. Por favor elige otros.');
             }

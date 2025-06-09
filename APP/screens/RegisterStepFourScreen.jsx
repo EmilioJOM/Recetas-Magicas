@@ -1,177 +1,214 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useForm, Controller} from 'react-hook-form';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import * as ImagePicker from 'expo-image-picker';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { userDni } from '../api/auth';
 
-
-// Validación Yup
+// Validación
 const schema = yup.object().shape({
-    cardNumber: yup
-        .string()
-        .matches(/^\d{16}$/, 'Debe tener 16 dígitos numéricos')
-        .required('Número de tarjeta requerido'),
+  dni: yup
+    .string()
+    .matches(/^\d{7,8}$/, 'Debe tener 7 u 8 dígitos')
+    .required('El DNI es obligatorio'),
 
-    cardHolderName: yup
-        .string()
-        .required('Nombre del titular requerido'),
-
-    expirationDate: yup
-        .string()
-        .required('Fecha de vencimiento requerida')
-        .test('valid-date', 'Fecha inválida. Usar MM/AA y debe ser futura', (value) => {
-            if (!value) return false;
-            const [monthStr, yearStr] = value.split('/');
-
-            const month = parseInt(monthStr, 10);
-            const year = parseInt(`20${yearStr}`, 10); // convierte "25" a 2025
-
-            if (isNaN(month) || isNaN(year)) return false;
-            if (month < 1 || month > 12) return false;
-
-            const now = new Date();
-            const expDate = new Date(year, month - 1, 1); // primer día del mes
-
-            // Vencimiento debe ser igual o posterior al mes actual
-            return expDate >= new Date(now.getFullYear(), now.getMonth(), 1);
-        }),
-
-
-    securityCode: yup
-        .string()
-        .matches(/^\d{3,4}$/, 'Código inválido. Debe tener 3 o 4 dígitos')
-        .required('Código de seguridad requerido'),
+  dniTramite: yup
+    .string()
+    .matches(/^\d{10}$/, 'Debe tener 10 dígitos')
+    .required('El número de trámite es obligatorio'),
 });
 
 export default function RegisterStepFourScreen() {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+  const [dniFront, setDniFront] = useState(null);
+  const [dniBack, setDniBack] = useState(null);
+  const [imageError, setImageError] = useState(''); // <-- Estado para error en fotos
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(schema),
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const pickImage = async (setImage) => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.5,
     });
 
-    const onSubmit = (data) => {
-        console.log('Datos de tarjeta:', data);
-        navigation.navigate('RegisterStepFiveScreen'); // Navega al paso 5
-    };
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      setImageError(''); // limpio error si cargo una imagen
+    }
+  };
 
-    return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Datos de Tarjeta</Text>
-            <Text style={styles.subtitle}>Ingresá tus datos de tarjeta</Text>
-            {/* Número de tarjeta */}
-            <Controller
-                control={control}
-                name="cardNumber"
-                render={({ field: { onChange, value } }) => (
-                    <Input
-                        placeholder="Número de tarjeta (16 dígitos)"
-                        keyboardType="number-pad"
-                        onChangeText={onChange}
-                        value={value}
-                        maxLength={16}
-                    />
-                )}
+  const onSubmit = async (data) => {
+    if (!dniFront || !dniBack) {
+      setImageError('Por favor, subí las dos fotos del DNI.');
+      return;
+    }
+
+    setImageError('');
+
+    try {
+      // Crear un FormData para enviar archivos
+      const formData = new FormData();
+      formData.append('dni', data.dni);
+      formData.append('dniTramite', data.dniTramite);
+
+      formData.append('dniFront', {
+        uri: dniFront,
+        name: 'dniFront.jpg',
+        type: 'image/jpeg',
+      });
+
+      formData.append('dniBack', {
+        uri: dniBack,
+        name: 'dniBack.jpg',
+        type: 'image/jpeg',
+      });
+
+      await userDni(formData); // llamada al backend
+
+      // Si todo sale bien
+      navigation.navigate('RegisterStepFiveScreen');
+    } catch (error) {
+      console.error('Error al enviar datos del DNI:', error);
+      setImageError('Hubo un error al enviar los datos. Intentalo nuevamente.');
+    }
+  };
+
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text style={styles.title}>Verificación de identidad</Text>
+        <Text style={styles.subtitle}>Ingresá tus datos personales</Text>
+
+        {/* DNI */}
+        <Controller
+          control={control}
+          name="dni"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              placeholder="DNI"
+              keyboardType="numeric"
+              value={value}
+              maxLength={8}
+              onChangeText={onChange}
             />
-            {errors.cardNumber && <Text style={styles.error}>{errors.cardNumber.message}</Text>}
+          )}
+        />
+        {errors.dni && <Text style={styles.error}>{errors.dni.message}</Text>}
 
-            {/* Nombre del titular */}
-            <Controller
-                control={control}
-                name="cardHolderName"
-                render={({ field: { onChange, value } }) => (
-                    <Input
-                        placeholder="Nombre y apellido del titular"
-                        onChangeText={onChange}
-                        value={value}
-                    />
-                )}
+        {/* Número de trámite */}
+        <Controller
+          control={control}
+          name="dniTramite"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              placeholder="Número de trámite"
+              keyboardType="numeric"
+              value={value}
+              maxLength={10}
+              onChangeText={onChange}
             />
-            {errors.cardHolderName && <Text style={styles.error}>{errors.cardHolderName.message}</Text>}
+          )}
+        />
+        {errors.dniTramite && (
+          <Text style={styles.error}>{errors.dniTramite.message}</Text>
+        )}
 
-            {/* Fecha de vencimiento */}
-            <Controller
-                control={control}
-                name="expirationDate"
-                render={({ field: { onChange, value } }) => {
-                    const handleDateChange = (text) => {
-                        // Elimina todo lo que no sea número
-                        const cleaned = text.replace(/\D/g, '');
+        {/* Foto frente */}
+        <TouchableOpacity
+          style={styles.imagePicker}
+          onPress={() => pickImage(setDniFront)}
+        >
+          <Text style={styles.imagePickerText}>Subir foto del frente del DNI</Text>
+          {dniFront && <Image source={{ uri: dniFront }} style={styles.preview} />}
+        </TouchableOpacity>
 
-                        let formatted = cleaned;
-                        if (cleaned.length > 2) {
-                            formatted = cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4);
-                        }
+        {/* Foto dorso */}
+        <TouchableOpacity
+          style={styles.imagePicker}
+          onPress={() => pickImage(setDniBack)}
+        >
+          <Text style={styles.imagePickerText}>Subir foto del dorso del DNI</Text>
+          {dniBack && <Image source={{ uri: dniBack }} style={styles.preview} />}
+        </TouchableOpacity>
 
-                        onChange(formatted);
-                    };
+        {/* Mensaje de error para fotos */}
+        {!!imageError && <Text style={styles.imageError}>{imageError}</Text>}
 
-                    return (
-                        <Input
-                            placeholder="Fecha de vencimiento (MM/AA)"
-                            keyboardType="number-pad"
-                            onChangeText={handleDateChange}
-                            value={value}
-                            maxLength={5} // MM/AA = 5 caracteres
-                        />
-                    );
-                }}
-            />
-
-
-            {errors.expirationDate && <Text style={styles.error}>{errors.expirationDate.message}</Text>}
-
-            {/* Código de seguridad */}
-            <Controller
-                control={control}
-                name="securityCode"
-                render={({ field: { onChange, value } }) => (
-                    <Input
-                        placeholder="Código de seguridad (CVV)"
-                        keyboardType="number-pad"
-                        onChangeText={onChange}
-                        value={value}
-                        maxLength={4}
-                    />
-                )}
-            />
-            {errors.securityCode && <Text style={styles.error}>{errors.securityCode.message}</Text>}
-
-            <Button title="Continuar" onPress={handleSubmit(onSubmit)} />
-        </ScrollView>
-    );
+        <Button title="Finalizar registro" onPress={handleSubmit(onSubmit)} />
+      </ScrollView>
+    </TouchableWithoutFeedback>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 24,
-        flexGrow: 1,
-        justifyContent: 'center',
-        gap: 16,
-        backgroundColor: '#fff',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 0,
-        color: '#E08D3E',
-    },
-    subtitle: {
-        fontSize: 18,
-        textAlign: 'center',
-        marginBottom: 12,
-    },
-    error: {
-        color: '#f00',
-        marginTop: -12,
-        marginBottom: 8,
-    },
+  container: {
+    padding: 24,
+    flexGrow: 1,
+    justifyContent: 'center',
+    gap: 16,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#E08D3E',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  error: {
+    color: '#f00',
+    fontSize: 14,
+  },
+  imageError: {
+    color: '#f00',
+    fontSize: 14,
+    textAlign: 'center',
+    marginVertical: 8,
+  },
+  imagePicker: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  imagePickerText: {
+    fontSize: 16,
+    color: '#555',
+  },
+  preview: {
+    width: 200,
+    height: 120,
+    marginTop: 8,
+    borderRadius: 6,
+  },
 });

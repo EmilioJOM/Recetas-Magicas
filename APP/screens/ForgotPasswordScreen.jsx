@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import Button from '../components/Button'
 import Input from '../components/Input'
 import TermsAndConditions from '../components/TermsAndConditions'
+import { changePasswordRequest } from '../api/auth';
 
 // Validación con Yup
 const schema = yup.object().shape({
@@ -24,9 +25,19 @@ export default function ForgotPassowrdScreen() {
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = (data) => {
-        console.log('Datos enviados:', { ...data});
+
+    const onSubmit = async (data) => {
+        try {
+            console.log('Enviando email de recuperación...', data);
+            const res = await changePasswordRequest({ email: data.email });
+            alert('Revisa tu correo para continuar con la recuperación');
+
+        } catch (error) {
+            console.error('Error al recuperar contraseña:', error);
+            alert('Hubo un problema. Verificá el email ingresado.');
+        }
     };
+
 
     return (
         <View style={styles.containerPadre}>
@@ -41,7 +52,7 @@ export default function ForgotPassowrdScreen() {
                     render={({ field: { onChange, value } }) => (
                         <Input
                             placeholder="Email"
-                            secureTextEntry={true}
+                            secureTextEntry={false}
                             onChangeText={onChange}
                             value={value}
                         />
