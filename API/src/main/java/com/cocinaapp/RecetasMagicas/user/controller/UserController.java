@@ -34,13 +34,14 @@ public class UserController {
 
     @PostMapping(value = "/dni", consumes = "multipart/form-data")
     public ResponseEntity<?> subirDni(
-            @RequestParam("dniFrente") MultipartFile dniFrente,
-            @RequestParam("dniDorso") MultipartFile dniDorso,
-            @RequestParam("numeroTramite") String numeroTramite,
-            @RequestParam("numeroDNI") String numeroDNI
+            @RequestParam("dniFront") MultipartFile dniFront,
+            @RequestParam("dniBack") MultipartFile dniBack,
+            @RequestParam("dniTramite") String dniTramite,
+            @RequestParam("dni") String dni,
+            Authentication authentication
     ) {
         String email = authentication.getName();
-        alumnoService.registrarAlumno(email, dniFrente, dniDorso, numeroTramite, numeroDNI);
+        alumnoService.registrarAlumno(email, dniFront, dniBack, dniTramite, dni);
         return ResponseEntity.ok("Fotos y número de trámite recibidos correctamente.");
     }
 

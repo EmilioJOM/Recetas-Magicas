@@ -23,7 +23,12 @@ const schema = yup.object().shape({
 });
 
 export default function RegisterStepOneScreen() {
+    
+    
+
+
     const navigation = useNavigation();
+
     const [paidUser, setPaidUser] = useState(false);
     const {
         control,

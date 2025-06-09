@@ -2,7 +2,7 @@ package com.cocinaapp.RecetasMagicas.auth.service;
 
 import com.cocinaapp.RecetasMagicas.auth.dto.*;
 import com.cocinaapp.RecetasMagicas.config.JwtService;
-import com.cocinaapp.RecetasMagicas.exception.EmailAliasExistException;
+import com.cocinaapp.RecetasMagicas.exception.*;
 import com.cocinaapp.RecetasMagicas.util.EmailService;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
@@ -69,15 +69,19 @@ public class AuthService {
         boolean aliasTaken = userRepository.existsByAlias(request.getAlias());
         boolean emailTaken = userRepository.existsByEmail(request.getEmail());
 
-        if (aliasTaken || emailTaken) {
-            String mensaje = "Alias o email ya están en uso";
+        if (emailTaken) {
+            String mensaje = "email ya esta en uso";
+            throw new EmailAliasExistException(mensaje);
+        }
+        if (aliasTaken){
+            String mensaje = "Alias ya está en uso.";
             List<String> sugerencias = null;
             if (aliasTaken) {
                 sugerencias = generarSugerenciasAlias(request.getAlias());
-                mensaje += ". Sugerencias: " + String.join(", ", sugerencias);
             }
-            throw new EmailAliasExistException(mensaje);
+            throw new AliasAlreadyExistException(mensaje,sugerencias);
         }
+
         String code = String.format("%06d", new Random().nextInt(999999));
         storeValidationCode(request.getEmail(), code);
         emailService.sendValidationCode(request.getEmail(), code);
