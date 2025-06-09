@@ -15,6 +15,7 @@ public class CourseController {
 
     @GetMapping("/latest")
     public List<CourseListItemDto> getLatestCourses(@RequestParam(defaultValue = "3") int n) {
+        System.out.println("course/latest");
         return courseService.getLatestCourses(n);
     }
 }
