@@ -78,6 +78,9 @@ public class AuthService {
             }
             throw new EmailAliasExistException(mensaje);
         }
+        String code = String.format("%06d", new Random().nextInt(999999));
+        storeValidationCode(request.getEmail(), code);
+        emailService.sendValidationCode(request.getEmail(), code);
     }
 
     private List<String> generarSugerenciasAlias(String aliasBase) {
