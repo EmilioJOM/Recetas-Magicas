@@ -21,6 +21,7 @@ public class CardController {
     public ResponseEntity<?> registrarTarjeta(
             @RequestBody CardRegisterRequestDto request,
             Authentication authentication) {
+        System.out.println("tarjetas/registrar");
         String email = authentication.getName();
         cardService.registrarTarjeta(request, email);
         return ResponseEntity.ok("Tarjeta registrada exitosamente.");
@@ -28,6 +29,7 @@ public class CardController {
 
     @GetMapping
     public List<CardResponseDto> listarTarjetas(Authentication authentication) {
+        System.out.println("tarjetas/");
         String email = authentication.getName();
         return cardService.getCardsByUser(email);
     }
@@ -37,6 +39,7 @@ public class CardController {
             @PathVariable Long id,
             Authentication authentication
     ) {
+        System.out.println("tarjetas{"+id.toString()+"}");
         String email = authentication.getName();
         cardService.eliminarTarjeta(id, email);
         return ResponseEntity.ok("Tarjeta eliminada correctamente");

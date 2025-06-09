@@ -18,6 +18,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO request) {
+        System.out.println("register");
         AuthResponseDTO response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -25,18 +26,20 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
-
+        System.out.println("login");
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/validate")
     public ResponseEntity<AuthResponseDTO> validate(@RequestBody ValidationRequestDTO request) {
+        System.out.println("validate");
         authService.validate(request);
         return ResponseEntity.ok(new AuthResponseDTO("Alias y email disponibles"));
     }
 
     @PostMapping("/validateCode")
     public ResponseEntity<AuthResponseDTO> validateCode(@RequestBody CodeValidationRequestDTO request) {
+        System.out.println("validateCode");
         authService.validateCode(request);
         return ResponseEntity.ok(new AuthResponseDTO("Código válido"));
     }
@@ -44,6 +47,7 @@ public class AuthController {
 
     @PostMapping("/recoverPassword")
     public ResponseEntity<AuthResponseDTO> recoverPassword(@RequestBody PasswordRecoveryRequestDTO request) {
+        System.out.println("recoverPassword");
         authService.sendRecoveryCode(request);
         return ResponseEntity.ok(new AuthResponseDTO("Código enviado por correo"));
     }

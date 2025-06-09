@@ -25,11 +25,13 @@ public class RecipeController {
 
     @GetMapping("/latest")
     public List<RecipeListItemDto> getLatestRecipes(@RequestParam(defaultValue = "3") int n) {
+        System.out.println("recipe/latest");
         return recipeService.getLatestRecipes(n);
     }
 
     @GetMapping("/{id}")
     public RecipeDetailDto getRecipeDetail(@PathVariable Long id) {
+        System.out.println("recipe{"+id.toString()+"}");
         return recipeService.getRecipeDetail(id);
     }
 
@@ -40,6 +42,7 @@ public class RecipeController {
             @RequestPart(value = "stepPhotos", required = false) List<MultipartFile> stepPhotos,
             Authentication authentication
     ) {
+        System.out.println("POST recipe/");
         String email = authentication.getName();
         recipeService.crearReceta(request, mainPhoto, stepPhotos, email);
         return ResponseEntity.ok("Receta creada exitosamente");
@@ -50,6 +53,7 @@ public class RecipeController {
             @PathVariable Long id,
             Authentication authentication
     ) {
+        System.out.println("DELETE recipe/{"+id.toString()+"}");
         String email = authentication.getName();
         recipeService.eliminarReceta(id, email);
         return ResponseEntity.ok("Receta eliminada correctamente.");
@@ -57,6 +61,7 @@ public class RecipeController {
 
     @PostMapping("/{id}/favorito")
     public ResponseEntity<?> marcarFavorito(@PathVariable Long id, @RequestParam String userEmail) {
+        System.out.println("recipe/{id}/favorite");
         recipeService.marcarComoFavorito(id, userEmail);
         return ResponseEntity.ok("Receta marcada como favorita");
     }
