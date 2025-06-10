@@ -1,5 +1,6 @@
 package com.cocinaapp.RecetasMagicas.auth.dto;
 
+import com.cocinaapp.RecetasMagicas.user.dto.UserInfoResponseDTO;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,5 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginResponseDTO {
     private String token;
-    private User user;
+    private UserInfoResponseDTO user;
 }

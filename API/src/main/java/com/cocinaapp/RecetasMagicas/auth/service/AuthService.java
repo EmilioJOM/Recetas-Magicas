@@ -3,6 +3,8 @@ package com.cocinaapp.RecetasMagicas.auth.service;
 import com.cocinaapp.RecetasMagicas.auth.dto.*;
 import com.cocinaapp.RecetasMagicas.config.JwtService;
 import com.cocinaapp.RecetasMagicas.exception.*;
+import com.cocinaapp.RecetasMagicas.user.dto.UserInfoResponseDTO;
+import com.cocinaapp.RecetasMagicas.user.dto.UserResponseDTO;
 import com.cocinaapp.RecetasMagicas.util.EmailService;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
@@ -50,7 +52,13 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail());
-        return new LoginResponseDTO(token, user);
+        UserInfoResponseDTO userDto = new UserInfoResponseDTO(
+                user.getId(),
+                user.getAlias(),
+                user.getEmail(),
+                user.getRole(),
+                user.isEsPago());
+        return new LoginResponseDTO(token, userDto);
     }
 
     public LoginResponseDTO login(LoginRequestDTO request) {
@@ -67,7 +75,13 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getEmail(), expiration);
 
-        return new LoginResponseDTO(token,user); // SOLO el token en el message/campo
+        UserInfoResponseDTO userDto = new UserInfoResponseDTO(
+                user.getId(),
+                user.getAlias(),
+                user.getEmail(),
+                user.getRole(),
+                user.isEsPago());
+        return new LoginResponseDTO(token, userDto);
     }
 
 
