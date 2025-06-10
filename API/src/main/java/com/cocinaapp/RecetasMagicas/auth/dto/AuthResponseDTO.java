@@ -4,11 +4,9 @@ import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class AuthResponseDTO {
+    private String token;
     private String message;
-    // o private String token;
-
-
 }

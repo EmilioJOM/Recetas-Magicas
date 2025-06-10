@@ -50,7 +50,7 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponseDTO(token);
+        return new AuthResponseDTO(token, "");
     }
 
     public AuthResponseDTO login(LoginRequestDTO request) {
@@ -61,7 +61,7 @@ public class AuthService {
             throw new RuntimeException("Credenciales inválidas");
         }
         String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponseDTO(token);
+        return new AuthResponseDTO(token,"");
     }
 
 
