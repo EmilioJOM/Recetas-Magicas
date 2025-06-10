@@ -27,6 +27,7 @@ public class CardService {
         card.setTitular(req.getTitular());
         card.setVencimiento(req.getVencimiento());
         card.setUser(user);
+        card.setCodigo(req.getCodigo());
         return cardRepository.save(card);
     }
     public List<CardResponseDto> getCardsByUser(String emailUsuario) {

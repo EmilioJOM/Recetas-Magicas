@@ -7,4 +7,5 @@ public class CardRegisterRequestDto {
     private String numero;
     private String titular;
     private String vencimiento;
+    private String codigo;
 }
