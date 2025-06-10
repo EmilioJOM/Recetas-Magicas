@@ -71,16 +71,17 @@ public class RecipeController {
         recipeService.desmarcarComoFavorito(id, userEmail);
         return ResponseEntity.ok("Receta desmarcada como favorita");
     }
-    @PostMapping("/{id}/modified")
-    public ResponseEntity<?> guardarRecetaModificada(
+    @PostMapping("/{id}/modificada")
+    public ResponseEntity<?> marcarRecetaComoModificada(
             @PathVariable Long id,
-            @RequestBody RecipeModifiedRequestDto dto,
             Authentication authentication
     ) {
         String email = authentication.getName();
-        recipeService.guardarRecetaModificada(id, dto.getPortions(), email);
-        return ResponseEntity.ok("Receta modificada y guardada correctamente");
+        recipeService.marcarRecetaComoModificada(id, email);
+        return ResponseEntity.ok("Receta marcada como modificada");
     }
+
+
 
 
 
