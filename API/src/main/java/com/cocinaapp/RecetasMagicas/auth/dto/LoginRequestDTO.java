@@ -9,4 +9,5 @@ import lombok.*;
 public class LoginRequestDTO {
     private String email;
     private String password;
+    private boolean rememberme;
 }

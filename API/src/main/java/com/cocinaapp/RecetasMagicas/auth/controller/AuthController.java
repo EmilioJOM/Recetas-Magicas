@@ -34,14 +34,14 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> validate(@RequestBody ValidationRequestDTO request) {
         System.out.println("validate");
         authService.validate(request);
-        return ResponseEntity.ok(new AuthResponseDTO("Alias y email disponibles"));
+        return ResponseEntity.ok(new AuthResponseDTO("","Alias y email disponibles"));
     }
 
     @PostMapping("/validateCode")
     public ResponseEntity<AuthResponseDTO> validateCode(@RequestBody CodeValidationRequestDTO request) {
         System.out.println("validateCode");
         authService.validateCode(request);
-        return ResponseEntity.ok(new AuthResponseDTO("Código válido"));
+        return ResponseEntity.ok(new AuthResponseDTO("","Código válido"));
     }
 
 
@@ -49,7 +49,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> recoverPassword(@RequestBody PasswordRecoveryRequestDTO request) {
         System.out.println("recoverPassword");
         authService.sendRecoveryCode(request);
-        return ResponseEntity.ok(new AuthResponseDTO("Código enviado por correo"));
+        return ResponseEntity.ok(new AuthResponseDTO("","Código enviado por correo"));
     }
 
 
