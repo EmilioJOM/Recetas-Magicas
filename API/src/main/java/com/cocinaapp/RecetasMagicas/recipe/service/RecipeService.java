@@ -95,15 +95,20 @@ public class RecipeService {
             throw new IllegalArgumentException("Ya existe una receta con ese nombre para tu usuario.");
         }
 
+        Recipe receta = new Recipe();
         // Guardar foto principal
-        String mainPhotoPath = guardarArchivo(mainPhoto, "uploads/recetas/", "principal_" + System.currentTimeMillis());
+        if (mainPhoto != null && !mainPhoto.isEmpty()) {
+            String mainPhotoPath = guardarArchivo(mainPhoto, "uploads/recetas/", "principal_" + System.currentTimeMillis());
+            receta.setMainPhoto(mainPhotoPath);
+        } else {
+            // Si querés que quede null, esto alcanza (o podés setear un path de imagen default)
+            receta.setMainPhoto(null); // o, por ejemplo: "uploads/recetas/placeholder.jpg"
+        }
 
         // Crear entidad receta
-        Recipe receta = new Recipe();
         receta.setTitle(dto.getTitle());
         receta.setDescription(dto.getDescription());
         receta.setServings(dto.getServings());
-        receta.setMainPhoto(mainPhotoPath);
         receta.setAuthor(user);
         receta.setStatus(RecipeStatus.APROBADA); // La receta queda publicada automáticamente
 
@@ -200,70 +205,15 @@ public class RecipeService {
         userRepository.save(user);
     }
 
-    public void guardarRecetaModificada(Long recetaId, Integer porciones, String emailUsuario) {
+    public void marcarRecetaComoModificada(Long recetaId, String emailUsuario) {
         User user = userRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        Recipe recetaOriginal = recipeRepository.findById(recetaId)
-                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
-
-        // Validación básica
-        if (porciones == null || porciones < 1) {
-            throw new IllegalArgumentException("Cantidad de porciones inválida");
+        if (!user.getRecetasModificadas().contains(recetaId)) {
+            user.getRecetasModificadas().add(recetaId);
+            userRepository.save(user);
         }
-
-        // Clonar la receta (solo campos esenciales, NO copiar el mismo ID)
-        Recipe recetaModificada = new Recipe();
-        recetaModificada.setTitle(recetaOriginal.getTitle() + " (modificada)");
-        recetaModificada.setDescription(recetaOriginal.getDescription());
-        recetaModificada.setServings(porciones);
-        recetaModificada.setMainPhoto(recetaOriginal.getMainPhoto());
-        recetaModificada.setAuthor(user);
-        recetaModificada.setStatus(RecipeStatus.APROBADA); // O como prefieras
-
-        // Clonar ingredientes (ajustando cantidades proporcionalmente)
-        List<RecipeIngredient> nuevosIngredientes = new ArrayList<>();
-        double factor = (double) porciones / recetaOriginal.getServings();
-        for (RecipeIngredient origIng : recetaOriginal.getIngredientesUtilizados()) {
-            RecipeIngredient nuevoIng = new RecipeIngredient();
-            nuevoIng.setRecipe(recetaModificada);
-            nuevoIng.setIngredient(origIng.getIngredient());
-            if (origIng.getCantidad() != null) {
-                nuevoIng.setCantidad(origIng.getCantidad() * factor);
-            } else {
-                nuevoIng.setCantidad(null);
-            }
-            nuevoIng.setUnidad(origIng.getUnidad());
-            nuevoIng.setObservaciones(origIng.getObservaciones());
-            nuevosIngredientes.add(nuevoIng);
-        }
-        recetaModificada.setIngredientesUtilizados(nuevosIngredientes);
-
-        // Clonar pasos (asociar a la nueva receta)
-        List<Step> nuevosPasos = new ArrayList<>();
-        for (Step origStep : recetaOriginal.getSteps()) {
-            Step nuevoStep = new Step();
-            nuevoStep.setNroPaso(origStep.getNroPaso());
-            nuevoStep.setInstruction(origStep.getInstruction());
-            nuevoStep.setRecipe(recetaModificada);
-            // Podés copiar media si querés, aquí sólo las rutas
-            List<StepMedia> nuevaMedia = new ArrayList<>();
-            for (StepMedia origMedia : origStep.getMedia()) {
-                StepMedia sm = StepMedia.builder()
-                        .tipoContenido(origMedia.getTipoContenido())
-                        .extension(origMedia.getExtension())
-                        .urlContenido(origMedia.getUrlContenido())
-                        .step(nuevoStep)
-                        .build();
-                nuevaMedia.add(sm);
-            }
-            nuevoStep.setMedia(nuevaMedia);
-            nuevosPasos.add(nuevoStep);
-        }
-        recetaModificada.setSteps(nuevosPasos);
-
-        // Guardar la nueva receta modificada
-        recipeRepository.save(recetaModificada);
     }
+
 
 
 }

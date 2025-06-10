@@ -2,7 +2,9 @@ package com.cocinaapp.RecetasMagicas.auth.service;
 
 import com.cocinaapp.RecetasMagicas.auth.dto.*;
 import com.cocinaapp.RecetasMagicas.config.JwtService;
-import com.cocinaapp.RecetasMagicas.exception.EmailAliasExistException;
+import com.cocinaapp.RecetasMagicas.exception.*;
+import com.cocinaapp.RecetasMagicas.user.dto.UserInfoResponseDTO;
+import com.cocinaapp.RecetasMagicas.user.dto.UserResponseDTO;
 import com.cocinaapp.RecetasMagicas.util.EmailService;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
@@ -29,7 +31,7 @@ public class AuthService {
         this.emailService = emailService;
     }
 
-    public AuthResponseDTO register(RegisterRequestDTO request) {
+    public LoginResponseDTO register(RegisterRequestDTO request) {
         // 1. Validar si el email o alias ya están en uso
         if (userRepository.existsByEmail(request.getEmail()) || userRepository.existsByAlias(request.getAlias())) {
             throw new EmailAliasExistException("Alias o email ya están registrados");
@@ -50,18 +52,36 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponseDTO(token);
+        UserInfoResponseDTO userDto = new UserInfoResponseDTO(
+                user.getId(),
+                user.getAlias(),
+                user.getEmail(),
+                user.getRole(),
+                user.isEsPago());
+        return new LoginResponseDTO(token, userDto);
     }
 
-    public AuthResponseDTO login(LoginRequestDTO request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Credenciales inválidas");
         }
-        String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponseDTO(token);
+
+        long expiration = request.isRememberMe()
+                ? (1000L * 60 * 60 * 24 * 30) // 30 días
+                : (1000L * 60 * 60);          // 1 hora
+
+        String token = jwtService.generateToken(user.getEmail(), expiration);
+
+        UserInfoResponseDTO userDto = new UserInfoResponseDTO(
+                user.getId(),
+                user.getAlias(),
+                user.getEmail(),
+                user.getRole(),
+                user.isEsPago());
+        return new LoginResponseDTO(token, userDto);
     }
 
 
@@ -69,15 +89,17 @@ public class AuthService {
         boolean aliasTaken = userRepository.existsByAlias(request.getAlias());
         boolean emailTaken = userRepository.existsByEmail(request.getEmail());
 
-        if (aliasTaken || emailTaken) {
-            String mensaje = "Alias o email ya están en uso";
-            List<String> sugerencias = null;
-            if (aliasTaken) {
-                sugerencias = generarSugerenciasAlias(request.getAlias());
-                mensaje += ". Sugerencias: " + String.join(", ", sugerencias);
-            }
+        if (emailTaken) {
+            String mensaje = "email ya esta en uso";
             throw new EmailAliasExistException(mensaje);
         }
+        if (aliasTaken){
+            String mensaje = "Alias ya está en uso.";
+            List<String> sugerencias;
+            sugerencias = generarSugerenciasAlias(request.getAlias());
+            throw new AliasAlreadyExistException(mensaje,sugerencias);
+        }
+
         String code = String.format("%06d", new Random().nextInt(999999));
         storeValidationCode(request.getEmail(), code);
         emailService.sendValidationCode(request.getEmail(), code);

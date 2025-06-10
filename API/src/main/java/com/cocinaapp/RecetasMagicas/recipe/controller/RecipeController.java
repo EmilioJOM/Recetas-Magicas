@@ -38,7 +38,7 @@ public class RecipeController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> crearReceta(
             @RequestPart("data") RecipeCreateRequest request,
-            @RequestPart("mainPhoto") MultipartFile mainPhoto,
+            @RequestPart(value = "mainPhoto", required = false) MultipartFile mainPhoto,
             @RequestPart(value = "stepPhotos", required = false) List<MultipartFile> stepPhotos,
             Authentication authentication
     ) {
@@ -71,16 +71,17 @@ public class RecipeController {
         recipeService.desmarcarComoFavorito(id, userEmail);
         return ResponseEntity.ok("Receta desmarcada como favorita");
     }
-    @PostMapping("/{id}/modified")
-    public ResponseEntity<?> guardarRecetaModificada(
+    @PostMapping("/{id}/modificada")
+    public ResponseEntity<?> marcarRecetaComoModificada(
             @PathVariable Long id,
-            @RequestBody RecipeModifiedRequestDto dto,
             Authentication authentication
     ) {
         String email = authentication.getName();
-        recipeService.guardarRecetaModificada(id, dto.getPortions(), email);
-        return ResponseEntity.ok("Receta modificada y guardada correctamente");
+        recipeService.marcarRecetaComoModificada(id, email);
+        return ResponseEntity.ok("Receta marcada como modificada");
     }
+
+
 
 
 

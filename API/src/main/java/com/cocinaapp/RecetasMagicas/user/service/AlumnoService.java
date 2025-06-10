@@ -30,7 +30,7 @@ public class AlumnoService {
         User user = userRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         if (!ValidateDNI.ValidateNroTramite(numeroTramite, alumnoRepository, numeroDNI)){
-            throw new IllegalArgumentException("Numero de Tramite ya registrado");
+            throw new IllegalArgumentException("Numero de Tramite o dni ya registrado");
         }
 
         // Guardar los archivos (ejemplo simple)
