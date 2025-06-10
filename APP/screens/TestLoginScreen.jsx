@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Switch, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Switch, StyleSheet, ScrollView  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -37,73 +37,73 @@ export default function LoginForm() {
     const { signin, errorsApi, user } = useAuth();
 
     const onSubmit = async (data) => {
-        await signin(data);
+    await signin({ ...data, rememberMe });
 
-        // Si el usuario se logueó correctamente, user debería estar definido
-        if (user) {
-            navigation.navigate('HomeScreen');
-        }
-    };
+    if (user) {
+        navigation.navigate('HomeScreen');
+    }
+};
 
     return (
-        <View style={styles.containerPadre}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Iniciar Sesión</Text>
-                <Text style={styles.subtitle}>Ingresa tu email para entrar en la app</Text>
+        <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}>
+            <View style={styles.containerPadre}>
+                <View style={styles.container}>
+                    <Text style={styles.title}>Iniciar Sesión</Text>
+                    <Text style={styles.subtitle}>Ingresa tu email para entrar en la app</Text>
 
-                {/* Email */}
-                <Controller
-                    control={control}
-                    name="email"
-                    render={({ field: { onChange, value } }) => (
-                        <Input
-                            placeholder="Email"
-                            secureTextEntry={false}
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                    )}
-                />
-                {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
+                    {/* Email */}
+                    <Controller
+                        control={control}
+                        name="email"
+                        render={({ field: { onChange, value } }) => (
+                            <Input
+                                placeholder="Email"
+                                secureTextEntry={false}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                        )}
+                    />
+                    {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
-                {/* Contraseña */}
-                <Controller
-                    control={control}
-                    name="password"
-                    render={({ field: { onChange, value } }) => (
-                        <InputShow
-                            placeholder="Contraseña"
-                            secureTextEntry={true}
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                    )}
-                />
-                {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+                    {/* Contraseña */}
+                    <Controller
+                        control={control}
+                        name="password"
+                        render={({ field: { onChange, value } }) => (
+                            <InputShow
+                                placeholder="Contraseña"
+                                secureTextEntry={true}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                        )}
+                    />
+                    {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
-                {/* Recordarme */}
-                <View style={styles.rememberRow}>
-                    <View style={styles.switchContainer}>
-                        <Switch
-                            value={rememberMe}
-                            onValueChange={setRememberMe}
-                            trackColor={{ false: '#ccc', true: '#E08D3E' }}
-                            thumbColor={rememberMe ? '#fff' : '#f4f3f4'}
-                        />
-                        <Text style={styles.rememberText}>Recordarme en este dispositivo</Text>
+                    {/* Recordarme */}
+                    <View style={styles.rememberRow}>
+                        <View style={styles.switchContainer}>
+                            <Switch
+                                value={rememberMe}
+                                onValueChange={setRememberMe}
+                                trackColor={{ false: '#ccc', true: '#E08D3E' }}
+                                thumbColor={rememberMe ? '#fff' : '#f4f3f4'}
+                            />
+                            <Text style={styles.rememberText}>Recordarme en este dispositivo</Text>
+                        </View>
                     </View>
+
+                    {/* Botón */}
+                    <Button title="Continuar" onPress={handleSubmit(onSubmit)} />
+
+                    <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
+                        <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
+                    </TouchableOpacity>
                 </View>
-
-                {/* Botón */}
-                <Button title="Continuar" onPress={handleSubmit(onSubmit)} />
-
-                <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-                    <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
-                </TouchableOpacity>
+                <TermsAndConditions />
             </View>
-            <TermsAndConditions />
-        </View>
-
+        </ScrollView >
     );
 }
 

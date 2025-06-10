@@ -60,16 +60,16 @@ export default function RegisterStepTwoScreen() {
 
   const route = useRoute();
   const { paidUser, alias, email } = route.params;
-
+ 
   const onSubmit = async (data) => {
     try {
       const response = await validateCode({
         code: data.code,
         email, // asegurate de tener este valor definido en el scope
       });
-
+      console.log(response)
       // Suponiendo que la respuesta tiene una propiedad 'success' o similar
-      if (response.status === 200) {
+      if (response) {
         console.log('Código validado correctamente:', response.data);
         navigation.navigate('RegisterStepThreeScreen', { alias, email, paidUser });
       } else {

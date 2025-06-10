@@ -83,14 +83,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Signin
-  const signin = async (credentials) => {
+  const signin = async ({ email, password, rememberMe }) => {
     setErrors(null);
     try {
-      const res = await loginRequest(credentials); // llamá a la API para login
+      const res = await loginRequest({ email, password }); // llamá a la API para login
       const { token, user } = res.data;
       setToken(token);
       setUser(user);
-      await saveStorageData(token, user);
+      console.log(token);
+
+      if (rememberMe) {
+        await saveStorageData(token, user);
+      } else {
+        await clearStorageData();
+      }
     } catch (error) {
       if (error.response?.data) {
         setErrors(
@@ -103,6 +109,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
   };
+
 
   // Logout
   const logout = async () => {

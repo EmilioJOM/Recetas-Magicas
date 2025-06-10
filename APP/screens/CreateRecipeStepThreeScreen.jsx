@@ -136,7 +136,7 @@ export default function PantallaPaso3() {
                 </TouchableOpacity>
             </View>
             {/* Bottom Tabs */}
-            <BottomTabs activeTab="AddRecipe" />
+            <BottomTabs activeTab="AddRecipe"/>
         </KeyboardAvoidingView>
     );
 }

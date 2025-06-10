@@ -40,6 +40,7 @@ export default function RegisterStepOneScreen() {
                 navigation.navigate('RegisterStepTwoScreen', {
                     alias: data.alias,
                     email: data.email,
+                    paidUser: paidUser,
                 });
                 console.log('Respuesta del backend:', available.data);
             } else {

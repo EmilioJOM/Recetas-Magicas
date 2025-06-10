@@ -32,3 +32,10 @@ export const changePasswordRequest = (userData) => API.put('user/change-password
 
 // Función para recuperar 5 ultimas recetas ( )
 export const getLatestRecipes = (limit = 5) => API.get(`/recipes/latest?n=${limit}`);
+//export const getLatestRecipes = () => API.get('/recipes/latest');
+
+// Función para recuperar todas las recetas ( )
+export const getRecipes = (limit = 5) => API.get(`/recipes?n=${limit}`);
+
+// Función para recuperar recetas porbuscador y filtros ( filterData )
+export const getRecipesFilter = (filterData) => API.get('/search/search');

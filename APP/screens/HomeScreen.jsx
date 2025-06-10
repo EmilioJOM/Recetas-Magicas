@@ -8,24 +8,8 @@ import BottomTabs from '../components/BottomTabs';
 import RecipeOrCourseCard from '../components/RecipeOrCourseCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { getLatestRecipes } from '../api/auth';
+import { getLatestRecipes, getRecipes } from '../api/auth';
 
-/**
-const [latestRecipes, setLatestRecipes] = useState([]);
-
-useEffect(() => {
-  const fetchLatestRecipes = async () => {
-    try {
-      const response = await getLatestRecipes();
-      setLatestRecipes(response.data);
-    } catch (error) {
-      console.error('Error al traer las últimas recetas', error);
-    }
-  };
-
-  fetchLatestRecipes();
-}, []);
-*/
 const recetasMock = [
   { id: '1', title: 'Tarta de Verdura', isFavorite: true, isModified: false, isInCourse: false },
   { id: '2', title: 'Pollo a la Mostaza', isFavorite: false, isModified: true, isInCourse: true },
@@ -33,12 +17,146 @@ const recetasMock = [
 ];
 
 const ultimasRecetas = [
-  { id: '1', title: 'Lasagna', image: require('../assets/Pancho.jpg') },
-  { id: '2', title: 'Plato de Fideos', image: require('../assets/Fideos3.jpg') },
-  { id: '3', title: 'Shawarma', image: require('../assets/Shawarma.jpg') },
-  { id: '4', title: 'Ensalada Mixta', image: require('../assets/Rabioles.jpg') },
-  { id: '5', title: 'Postre Casero', image: require('../assets/burguer.jpg') },
+  {
+    id: '1',
+    title: 'Lasagna',
+    image: require('../assets/Pancho.jpg'),
+    rating: 4.5,
+    reviews: 320,
+    level: 'Intermedio',
+    desc: 'Una deliciosa lasagna casera con capas de carne, queso y salsa.',
+    userImage: require('../assets/FotoPerfil1.jpg'),
+    userName: 'María Pérez',
+    userAlias: '@mariapz',
+    ingredientes: [
+      { nombre: 'Carne picada', cantidad: 500, unidad: 'g' },
+      { nombre: 'Queso mozzarella', cantidad: 200, unidad: 'g' },
+      { nombre: 'Salsa de tomate', cantidad: 300, unidad: 'ml' },
+    ],
+    pasos: [
+      {
+        texto: 'Preparar la salsa con carne y tomate.',
+        imagenes: [require('../assets/CortarCebolla.jpg')],
+      },
+      {
+        texto: 'Armar las capas de la lasagna en una fuente.',
+        imagenes: [],
+      },
+      {
+        texto: 'Llevar al horno por 40 minutos.',
+        imagenes: [],
+      },
+    ],
+    isFavorite: false,
+    isModified: false,
+    isInCourse: false,
+    tipo: 'Pastas',
+    ago: 'hace 1 día',
+  },
+  {
+    id: '2',
+    title: 'Plato de Fideos',
+    image: require('../assets/Fideos3.jpg'),
+    rating: 4.0,
+    reviews: 150,
+    level: 'Fácil',
+    desc: 'Fideos al dente con una salsa de tu elección.',
+    userImage: require('../assets/FotoPerfil2.jpg'),
+    userName: 'Juan Gómez',
+    userAlias: '@juangz',
+    ingredientes: [
+      { nombre: 'Fideos secos', cantidad: 300, unidad: 'g' },
+      { nombre: 'Salsa', cantidad: 200, unidad: 'ml' },
+    ],
+    pasos: [
+      { texto: 'Hervir los fideos.', imagenes: [] },
+      { texto: 'Agregar salsa y servir.', imagenes: [] },
+    ],
+    isFavorite: true,
+    isModified: false,
+    isInCourse: true,
+    tipo: 'Pastas',
+    ago: 'hace 5 horas',
+  },
+  {
+    id: '3',
+    title: 'Shawarma',
+    image: require('../assets/Shawarma.jpg'),
+    rating: 4.9,
+    reviews: 760,
+    level: 'Avanzado',
+    desc: 'Receta tradicional de Medio Oriente con carne marinada.',
+    userImage: require('../assets/FotoPerfil3.jpg'),
+    userName: 'Ali Rahman',
+    userAlias: '@alirah',
+    ingredientes: [
+      { nombre: 'Pan pita', cantidad: 4, unidad: 'unidad' },
+      { nombre: 'Carne de cordero', cantidad: 500, unidad: 'g' },
+      { nombre: 'Especias shawarma', cantidad: 2, unidad: 'cdas' },
+    ],
+    pasos: [
+      { texto: 'Marinar la carne y cocinar.', imagenes: [] },
+      { texto: 'Servir en pan pita con vegetales.', imagenes: [] },
+    ],
+    isFavorite: true,
+    isModified: true,
+    isInCourse: false,
+    tipo: 'Comida Árabe',
+    ago: 'hace 2 días',
+  },
+  {
+    id: '4',
+    title: 'Ensalada Mixta',
+    image: require('../assets/Rabioles.jpg'),
+    rating: 3.8,
+    reviews: 90,
+    level: 'Fácil',
+    desc: 'Ensalada fresca y saludable con vegetales variados.',
+    userImage: require('../assets/FotoPerfil4.jpg'),
+    userName: 'Luisa Torres',
+    userAlias: '@luistorres',
+    ingredientes: [
+      { nombre: 'Lechuga', cantidad: 1, unidad: 'unidad' },
+      { nombre: 'Tomate', cantidad: 2, unidad: 'unidad' },
+      { nombre: 'Zanahoria', cantidad: 1, unidad: 'unidad' },
+    ],
+    pasos: [
+      { texto: 'Lavar y cortar todos los vegetales.', imagenes: [] },
+      { texto: 'Mezclar y aliñar.', imagenes: [] },
+    ],
+    isFavorite: false,
+    isModified: false,
+    isInCourse: false,
+    tipo: 'Ensaladas',
+    ago: 'hace 8 horas',
+  },
+  {
+    id: '5',
+    title: 'Postre Casero',
+    image: require('../assets/burguer.jpg'),
+    rating: 4.2,
+    reviews: 210,
+    level: 'Intermedio',
+    desc: 'Un postre dulce y casero ideal para la sobremesa.',
+    userImage: require('../assets/FotoPerfil5.jpg'),
+    userName: 'Carlos Méndez',
+    userAlias: '@carmdz',
+    ingredientes: [
+      { nombre: 'Leche condensada', cantidad: 1, unidad: 'lata' },
+      { nombre: 'Galletitas', cantidad: 300, unidad: 'g' },
+    ],
+    pasos: [
+      { texto: 'Triturar las galletitas.', imagenes: [] },
+      { texto: 'Mezclar con leche condensada y enfriar.', imagenes: [] },
+    ],
+    isFavorite: true,
+    isModified: false,
+    isInCourse: true,
+    tipo: 'Postres',
+    ago: 'hace 4 días',
+  },
 ];
+
 
 const imagenes = [
   { id: '1', image: require('../assets/Shawarma.jpg'), title: 'Curso de Cocina Árabe' },
@@ -467,6 +585,40 @@ const recetasBuscador = [
 
 
 export default function HomeScreen() {
+  /** 
+  const [latestRecipes, setLatestRecipes] = useState([]);
+
+  useEffect(() => {
+    const fetchLatestRecipes = async () => {
+      try {
+        const response = await getLatestRecipes();
+        setLatestRecipes(response.data);
+      } catch (error) {
+        console.error('Error al traer las últimas recetas', error);
+      }
+    };
+
+    fetchLatestRecipes();
+  }, []);
+
+  const [allRecipes, setAllRecipes] = useState([]);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await getRecipes();
+        setAllRecipes(response.data);
+      } catch (error) {
+        console.error('Error al traer las recetas', error);
+      }
+    };
+
+    fetchRecipes();
+  }, []);
+
+*/
+
+
   const [searchText, setSearchText] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Todos');
   const [tiposSeleccionados, setTiposSeleccionados] = useState([]);
@@ -634,13 +786,15 @@ export default function HomeScreen() {
           <>
             <ImageCarousel data={imagenes} />
             <LatestRecipesPreview
-              recipes={latestRecipes}
+              //recipes={latestRecipes} endpoint
+              recipes={ultimasRecetas} //constante
               onPressRecipe={(receta) =>
                 navigation.navigate('DetailRecipeScreen', { receta })
               }
             />
             <HorizontalCards
               title="Explorá nuevas recetas"
+              //data={allRecipes} endpoint
               data={exploraRecetas}
               onItemPress={(receta) =>
                 navigation.navigate('DetailRecipeScreen', { receta })

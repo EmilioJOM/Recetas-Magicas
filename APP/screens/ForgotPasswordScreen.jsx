@@ -31,6 +31,7 @@ export default function ForgotPassowrdScreen() {
             console.log('Enviando email de recuperación...', data);
             const res = await changePasswordRequest({ email: data.email });
             alert('Revisa tu correo para continuar con la recuperación');
+            navigation.navigate('TestLoginScreen');
 
         } catch (error) {
             console.error('Error al recuperar contraseña:', error);

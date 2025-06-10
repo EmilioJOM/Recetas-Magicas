@@ -36,7 +36,6 @@ export default function RegisterStepThreeScreen() {
     const { alias, email, paidUser } = route.params;
     const { signup, errors: signupErrors } = useAuth();
 
-
     const onSubmit = async (data) => {
         const finalData = {
             alias,
@@ -52,7 +51,10 @@ export default function RegisterStepThreeScreen() {
             if (paidUser) {
                 navigation.navigate('RegisterStepFourScreen', finalData); // se continúa con el pago
             } else {
-                navigation.navigate('HomeScreen'); // va directo al home
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'HomeScreen' }],
+                }) // va directo al home
             }
 
         } catch (e) {
