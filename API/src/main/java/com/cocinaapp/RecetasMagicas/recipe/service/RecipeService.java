@@ -95,15 +95,20 @@ public class RecipeService {
             throw new IllegalArgumentException("Ya existe una receta con ese nombre para tu usuario.");
         }
 
+        Recipe receta = new Recipe();
         // Guardar foto principal
-        String mainPhotoPath = guardarArchivo(mainPhoto, "uploads/recetas/", "principal_" + System.currentTimeMillis());
+        if (mainPhoto != null && !mainPhoto.isEmpty()) {
+            String mainPhotoPath = guardarArchivo(mainPhoto, "uploads/recetas/", "principal_" + System.currentTimeMillis());
+            receta.setMainPhoto(mainPhotoPath);
+        } else {
+            // Si querés que quede null, esto alcanza (o podés setear un path de imagen default)
+            receta.setMainPhoto(null); // o, por ejemplo: "uploads/recetas/placeholder.jpg"
+        }
 
         // Crear entidad receta
-        Recipe receta = new Recipe();
         receta.setTitle(dto.getTitle());
         receta.setDescription(dto.getDescription());
         receta.setServings(dto.getServings());
-        receta.setMainPhoto(mainPhotoPath);
         receta.setAuthor(user);
         receta.setStatus(RecipeStatus.APROBADA); // La receta queda publicada automáticamente
 
