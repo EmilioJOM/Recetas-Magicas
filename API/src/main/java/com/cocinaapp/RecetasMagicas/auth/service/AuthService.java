@@ -140,14 +140,25 @@ public class AuthService {
 
     public void sendRecoveryCode(PasswordRecoveryRequestDTO request) {
         // Validar existencia del email
-        if (!userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("El email no está registrado");
-        }
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("El email no está registrado"));
+
 
         // Generar código
         String code = String.format("%06d", new Random().nextInt(999999));
 
         // Guardarlo en el Map
+        storeValidationCode(request.getEmail(), code);
+
+        // Enviar por correo
+        emailService.sendValidationCode(request.getEmail(), code);
+
+        String encodedPassword = passwordEncoder.encode(code);
+
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+
+        // Guardarlo en el Map para validación por si hace falta
         storeValidationCode(request.getEmail(), code);
 
         // Enviar por correo
