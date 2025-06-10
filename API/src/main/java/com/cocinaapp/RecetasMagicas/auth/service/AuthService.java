@@ -29,7 +29,7 @@ public class AuthService {
         this.emailService = emailService;
     }
 
-    public AuthResponseDTO register(RegisterRequestDTO request) {
+    public LoginResponseDTO register(RegisterRequestDTO request) {
         // 1. Validar si el email o alias ya están en uso
         if (userRepository.existsByEmail(request.getEmail()) || userRepository.existsByAlias(request.getAlias())) {
             throw new EmailAliasExistException("Alias o email ya están registrados");
@@ -50,18 +50,24 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponseDTO(token, "");
+        return new LoginResponseDTO(token, user);
     }
 
-    public AuthResponseDTO login(LoginRequestDTO request) {
+    public LoginResponseDTO login(LoginRequestDTO request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Credenciales inválidas");
         }
-        String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponseDTO(token,"");
+
+        long expiration = request.isRememberMe()
+                ? (1000L * 60 * 60 * 24 * 30) // 30 días
+                : (1000L * 60 * 60);          // 1 hora
+
+        String token = jwtService.generateToken(user.getEmail(), expiration);
+
+        return new LoginResponseDTO(token,user); // SOLO el token en el message/campo
     }
 
 
@@ -75,10 +81,8 @@ public class AuthService {
         }
         if (aliasTaken){
             String mensaje = "Alias ya está en uso.";
-            List<String> sugerencias = null;
-            if (aliasTaken) {
-                sugerencias = generarSugerenciasAlias(request.getAlias());
-            }
+            List<String> sugerencias;
+            sugerencias = generarSugerenciasAlias(request.getAlias());
             throw new AliasAlreadyExistException(mensaje,sugerencias);
         }
 

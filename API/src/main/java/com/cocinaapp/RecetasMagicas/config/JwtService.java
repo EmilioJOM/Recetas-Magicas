@@ -14,13 +14,18 @@ public class JwtService {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     private final long expiration = 1000 * 60 * 60; // 1 hora
 
-    public String generateToken(String email) {
+    public String generateToken(String email, long expiration) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+    }
+
+    // para compatibilidad:
+    public String generateToken(String email) {
+        return generateToken(email, 1000 * 60 * 60); // default 1 hora
     }
 
     public String extractEmail(String token) {

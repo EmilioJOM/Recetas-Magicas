@@ -17,15 +17,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> register(@RequestBody RegisterRequestDTO request) {
         System.out.println("register");
-        AuthResponseDTO response = authService.register(request);
+        LoginResponseDTO response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
         System.out.println("login");
         return ResponseEntity.ok(authService.login(request));
     }
