@@ -23,11 +23,11 @@ public class CardService {
         User user = userRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Card card = new Card();
-        card.setNumero(req.getNumero());
-        card.setTitular(req.getTitular());
-        card.setVencimiento(req.getVencimiento());
+        card.setNumero(req.getCardNumber());
+        card.setTitular(req.getCardHolderName());
+        card.setVencimiento(req.getExpirationDate());
         card.setUser(user);
-        card.setCodigo(req.getCodigo());
+        card.setCodigo(req.getSecurityCode());
         return cardRepository.save(card);
     }
     public List<CardResponseDto> getCardsByUser(String emailUsuario) {

@@ -4,8 +4,8 @@ import lombok.*;
 
 @Getter @Setter
 public class CardRegisterRequestDto {
-    private String numero;
-    private String titular;
-    private String vencimiento;
-    private String codigo;
+    private String cardNumber;
+    private String cardHolderName;
+    private String expirationDate;
+    private String securityCode;
 }
