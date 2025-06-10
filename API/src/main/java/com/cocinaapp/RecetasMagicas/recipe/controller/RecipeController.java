@@ -38,7 +38,7 @@ public class RecipeController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> crearReceta(
             @RequestPart("data") RecipeCreateRequest request,
-            @RequestPart("mainPhoto", required = false) MultipartFile mainPhoto,
+            @RequestPart("mainPhoto") MultipartFile mainPhoto,
             @RequestPart(value = "stepPhotos", required = false) List<MultipartFile> stepPhotos,
             Authentication authentication
     ) {
