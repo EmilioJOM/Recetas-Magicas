@@ -81,6 +81,16 @@ public class RecipeService {
                 .build();
 
     }
+
+    private String getBaseRecipeImageDir() {
+        String env = System.getenv("APP_ENV");
+        if (env != null && env.equalsIgnoreCase("production")) {
+            return "/tmp/uploads/recetas/";
+        }
+        return "uploads/recetas/";
+    }
+
+
     public void crearReceta(
             RecipeCreateRequest dto,
             MultipartFile mainPhoto,
@@ -90,34 +100,31 @@ public class RecipeService {
         User user = userRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Validar unicidad de nombre de receta para este usuario
         if (recipeRepository.existsByTitleAndAuthor(dto.getTitle(), user)) {
             throw new IllegalArgumentException("Ya existe una receta con ese nombre para tu usuario.");
         }
 
         Recipe receta = new Recipe();
-        // Guardar foto principal
+
+        // Guardar foto principal con ruta adecuada
         if (mainPhoto != null && !mainPhoto.isEmpty()) {
-            String mainPhotoPath = guardarArchivo(mainPhoto, "uploads/recetas/", "principal_" + System.currentTimeMillis());
+            String mainPhotoPath = guardarArchivo(mainPhoto, getBaseRecipeImageDir(), "principal_" + System.currentTimeMillis());
             receta.setMainPhoto(mainPhotoPath);
         } else {
-            // Si querés que quede null, esto alcanza (o podés setear un path de imagen default)
-            receta.setMainPhoto(null); // o, por ejemplo: "uploads/recetas/placeholder.jpg"
+            receta.setMainPhoto(null);
         }
 
-        // Crear entidad receta
         receta.setTitle(dto.getTitle());
         receta.setDescription(dto.getDescription());
         receta.setServings(dto.getServings());
         receta.setAuthor(user);
-        receta.setStatus(RecipeStatus.APROBADA); // La receta queda publicada automáticamente
+        receta.setStatus(RecipeStatus.APROBADA);
 
         // Ingredientes
         List<RecipeIngredient> ingredientes = new ArrayList<>();
         for (IngredientDto i : dto.getIngredients()) {
             Ingredient ingrediente = new Ingredient();
             ingrediente.setDetail(i.getDetail());
-            // ingredienteRepository.save(ingrediente); // Si lo necesitas persistente
 
             RecipeIngredient ri = new RecipeIngredient();
             ri.setCantidad(i.getQuantity());
@@ -139,9 +146,8 @@ public class RecipeService {
             step.setRecipe(receta);
 
             List<StepMedia> mediaList = new ArrayList<>();
-            // Guardar foto si viene
             if (stepPhotos != null && stepPhotos.size() > idx && stepPhotos.get(idx) != null && !stepPhotos.get(idx).isEmpty()) {
-                String stepPhotoPath = guardarArchivo(stepPhotos.get(idx), "uploads/recetas/", "step_" + idx + "_" + System.currentTimeMillis());
+                String stepPhotoPath = guardarArchivo(stepPhotos.get(idx), getBaseRecipeImageDir(), "step_" + idx + "_" + System.currentTimeMillis());
                 StepMedia media = StepMedia.builder()
                         .tipoContenido("foto")
                         .extension(getExtension(stepPhotos.get(idx).getOriginalFilename()))
@@ -150,16 +156,14 @@ public class RecipeService {
                         .build();
                 mediaList.add(media);
             }
-            // Puedes agregar videos aquí también si tienes.
-
             step.setMedia(mediaList);
             steps.add(step);
         }
         receta.setSteps(steps);
 
-        // Guardar receta en la base
         recipeRepository.save(receta);
     }
+
     private String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
         try {
             Files.createDirectories(Paths.get(carpeta));
