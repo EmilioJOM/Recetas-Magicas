@@ -10,7 +10,6 @@ public class RecipeDetailDto {
     private String title;
     private String description;
     private Integer servings;
-    private Long tipoId;
     private String mainPhoto;
     private String authorAlias;
     private LocalDateTime createdAt;
