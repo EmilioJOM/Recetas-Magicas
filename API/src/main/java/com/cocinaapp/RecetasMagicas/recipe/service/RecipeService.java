@@ -4,6 +4,7 @@ package com.cocinaapp.RecetasMagicas.recipe.service;
 import com.cocinaapp.RecetasMagicas.recipe.dto.*;
 import com.cocinaapp.RecetasMagicas.recipe.model.*;
 import com.cocinaapp.RecetasMagicas.recipe.repository.RecipeRepository;
+import com.cocinaapp.RecetasMagicas.recipe.repository.RecipeTypeRepository;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
+    private final RecipeTypeRepository recipeTypeRepository;
+
 
     public List<RecipeListItemDto> getLatestRecipes(int n) {
         List<Recipe> recipes = recipeRepository.findByStatusOrderByIdDesc(RecipeStatus.APROBADA, PageRequest.of(0, n));
@@ -161,6 +164,9 @@ public class RecipeService {
         }
         receta.setSteps(steps);
 
+        RecipeType tipo = recipeTypeRepository.findById(dto.getTipoId())
+                .orElseThrow(() -> new RuntimeException("Tipo de receta no encontrado"));
+        receta.setTipo(tipo);
         recipeRepository.save(receta);
     }
 
