@@ -87,7 +87,7 @@ public class RecipeService {
         if (env != null && env.equalsIgnoreCase("production")) {
             return "/tmp/uploads/recetas/";
         }
-        return "uploads/recetas/";
+        return "/tmp/uploads/recetas/";
     }
 
 
