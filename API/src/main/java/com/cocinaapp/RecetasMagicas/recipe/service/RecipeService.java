@@ -3,6 +3,7 @@ package com.cocinaapp.RecetasMagicas.recipe.service;
 
 import com.cocinaapp.RecetasMagicas.recipe.dto.*;
 import com.cocinaapp.RecetasMagicas.recipe.model.*;
+import com.cocinaapp.RecetasMagicas.recipe.repository.IngredientRepository;
 import com.cocinaapp.RecetasMagicas.recipe.repository.RecipeRepository;
 import com.cocinaapp.RecetasMagicas.recipe.repository.RecipeTypeRepository;
 import com.cocinaapp.RecetasMagicas.user.model.User;
@@ -26,6 +27,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final RecipeTypeRepository recipeTypeRepository;
+    private final IngredientRepository ingredientRepository;
 
 
     public List<RecipeListItemDto> getLatestRecipes(int n) {
@@ -136,6 +138,7 @@ public class RecipeService {
             ri.setIngredient(ingrediente);
             ri.setRecipe(receta);
             ingredientes.add(ri);
+            ingredientRepository.save(ingrediente);
         }
         receta.setIngredientesUtilizados(ingredientes);
 
