@@ -168,6 +168,7 @@ public class RecipeService {
         try {
             Files.createDirectories(Paths.get(carpeta));
             String path = carpeta + nombre + "_" + archivo.getOriginalFilename();
+            System.out.println("Intentando guardar en: " + path);
             archivo.transferTo(new File(path));
             return path;
         } catch (IOException e) {
