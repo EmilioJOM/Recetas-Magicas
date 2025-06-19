@@ -33,8 +33,16 @@ public class AlumnoService {
             throw new IllegalArgumentException("Numero de Tramite o dni ya registrado");
         }
 
-        // Guardar los archivos (ejemplo simple)
-        String baseDir = "uploads/dni/";
+        String baseDir = "/tmp/uploads/dni/";
+        // SI CORRÉS LOCAL, podés dejar: String baseDir = "uploads/dni/";
+
+        // Creá el directorio si no existe (no falla si ya existe)
+        try {
+            Files.createDirectories(Paths.get(baseDir));
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo crear la carpeta de destino para los DNIs", e);
+        }
+
         String pathFrente = baseDir + "dni_frente_" + user.getId() + "_" + dniFrente.getOriginalFilename();
         String pathDorso = baseDir + "dni_dorso_" + user.getId() + "_" + dniDorso.getOriginalFilename();
 
@@ -60,6 +68,7 @@ public class AlumnoService {
         alumnoRepository.save(alumno);
         userRepository.save(user);
     }
+
 
     public void changePassword(String email, String newPassword) {
         User user = userRepository.findByEmail(email)

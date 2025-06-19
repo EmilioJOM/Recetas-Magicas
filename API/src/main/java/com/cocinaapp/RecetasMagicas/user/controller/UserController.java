@@ -40,6 +40,7 @@ public class UserController {
             @RequestParam("dni") String dni,
             Authentication authentication
     ) {
+        System.out.println("AUTH: " + authentication);
         String email = authentication.getName();
         alumnoService.registrarAlumno(email, dniFront, dniBack, dniTramite, dni);
         return ResponseEntity.ok("Fotos y número de trámite recibidos correctamente.");
