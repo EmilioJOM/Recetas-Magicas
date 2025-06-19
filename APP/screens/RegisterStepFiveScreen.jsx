@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useForm, Controller} from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { tarjetasRegistrar } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 // Validación Yup
 const schema = yup.object().shape({
@@ -47,6 +48,7 @@ const schema = yup.object().shape({
 });
 
 export default function RegisterStepFiveScreen() {
+    const { token } = useAuth();
     const navigation = useNavigation();
 
     const {
@@ -56,16 +58,28 @@ export default function RegisterStepFiveScreen() {
     } = useForm({
         resolver: yupResolver(schema),
     });
-
+    console.log(token);
     const onSubmit = async (data) => {
+        navigation.navigate('HomeScreen');
+        /**
+        const options = {
+            method: 'POST',
+            url: 'https://recetas-magicas-api.onrender.com/tarjetas/registrar',
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: data,
+        };
+
         try {
-            await tarjetasRegistrar(data);
+            await tarjetasRegistrar(options); // 🔸 token como segundo argumento
             Alert.alert('Éxito', 'Datos de tarjeta registrados correctamente');
             navigation.navigate('HomeScreen');
         } catch (error) {
             console.error('Error al registrar tarjeta:', error);
             Alert.alert('Error', 'Hubo un problema al registrar la tarjeta');
         }
+        */
     };
 
     return (

@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import Button from '../components/Button'
 import Input from '../components/Input'
 import TermsAndConditions from '../components/TermsAndConditions'
-import { changePasswordRequest } from '../api/auth';
+import { recoverPassword } from '../api/auth';
 
 // Validación con Yup
 const schema = yup.object().shape({
@@ -29,10 +29,10 @@ export default function ForgotPassowrdScreen() {
     const onSubmit = async (data) => {
         try {
             console.log('Enviando email de recuperación...', data);
-            const res = await changePasswordRequest({ email: data.email });
+            const res = await recoverPassword({ email: data.email });
             alert('Revisa tu correo para continuar con la recuperación');
             navigation.navigate('TestLoginScreen');
-
+            
         } catch (error) {
             console.error('Error al recuperar contraseña:', error);
             alert('Hubo un problema. Verificá el email ingresado.');

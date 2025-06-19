@@ -3,7 +3,7 @@ import axios from 'axios';
 //import API from './apiClient';
 
 const API = axios.create({
-  baseURL: 'https://recetas-magicas-api.onrender.com',
+  baseURL: '192.168.152.215:8080',
   // No seteamos Content-Type para que axios lo maneje según corresponda
 });
 
@@ -20,13 +20,18 @@ export const registerRequest = (userData) => API.post('/auth/register', userData
 export const userDni = (formData) => API.post('/user/dni', formData);
 
 // Función para subir los datos de tarjeta (Numero de tarjeta - Nombre y Apellido del titular - Fecha Nacimiento - Codigo de Seguridad)
-export const tarjetasRegistrar = (cardData) => API.post('/tarjetas/registrar', cardData);
+export const tarjetasRegistrar = (cardData) => API.post('/tarjetas/registrar', cardData, {
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`, // si tu backend lo requiere
+  },
+});
 
 // Función para loguear usuario ( Email - Password )
 export const loginRequest = (userData) => API.post('auth/login', userData);
 
 // Función para recuperar contraseña ( Email )
-export const changePasswordRequest = (userData) => API.put('user/change-password', userData);
+export const recoverPassword = (userData) => API.put('auth/recoverPassword', userData);
 
 //--------recipes--------
 

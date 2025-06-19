@@ -91,12 +91,12 @@ export const AuthProvider = ({ children }) => {
       setToken(token);
       setUser(user);
       console.log(token);
-
+/** 
       if (rememberMe) {
         await saveStorageData(token, user);
       } else {
         await clearStorageData();
-      }
+      }*/
     } catch (error) {
       if (error.response?.data) {
         setErrors(
