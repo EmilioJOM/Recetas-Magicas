@@ -159,7 +159,8 @@ public class RecipeService {
             ingredientes.add(ri);
             ingredientRepository.save(ingrediente);
         }
-        receta.setIngredientesUtilizados(ingredientes);
+        receta.getIngredientesUtilizados().clear();
+        receta.getIngredientesUtilizados().addAll(ingredientes);
 
         recipeRepository.save(receta);
     }
@@ -193,7 +194,8 @@ public class RecipeService {
             step.setMedia(mediaList);
             steps.add(step);
         }
-        receta.setSteps(steps);
+        receta.getSteps().clear();
+        receta.getSteps().addAll(steps);
 
         recipeRepository.save(receta);
     }
