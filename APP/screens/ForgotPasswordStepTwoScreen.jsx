@@ -64,7 +64,8 @@ export default function ForgotPasswordStepTwoScreen() {
     const onSubmit = async (data) => {
         try {
             const response = await recoverPassword2({
-                code: data.code,
+                email: email,
+                code: data.code
             });
             const token = response.data.token;
             console.log(response)

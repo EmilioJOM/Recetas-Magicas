@@ -38,10 +38,11 @@ export default function ForgotPasswordStepThreeScreen() {
 
     const onSubmit = async (data) => {
         const finalData = {
-            password: data.password,
+            newPassword: data.password,
         };
 
         console.log('Datos finales a enviar:', finalData);
+        console.log('Token recibido:', token);
 
         try {
             const response = await changePassword(finalData, token);
