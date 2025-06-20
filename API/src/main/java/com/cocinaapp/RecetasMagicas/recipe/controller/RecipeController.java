@@ -23,9 +23,9 @@ public class RecipeController {
     private final RecipeService recipeService;
     private Authentication authentication;
 
-    @GetMapping("/latest")
-    public List<RecipeListItemDto> getLatestRecipes(@RequestParam(defaultValue = "3") int n) {
-        System.out.println("recipe/latest");
+    @GetMapping("/latest/{n}")
+    public List<RecipeListItemDto> getLatestRecipes(@PathVariable int n) {
+        System.out.println("recipe/latest/" + n);
         return recipeService.getLatestRecipes(n);
     }
 

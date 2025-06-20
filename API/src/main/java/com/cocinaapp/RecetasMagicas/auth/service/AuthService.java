@@ -146,12 +146,6 @@ public class AuthService {
         String code = String.format("%06d", new Random().nextInt(999999));
         storeValidationCode(request.getEmail(), code);
         emailService.sendValidationCode(request.getEmail(), code);
-
-        // Guardarlo en el Map para validación por si hace falta
-        storeValidationCode(request.getEmail(), code);
-
-        // Enviar por correo
-        emailService.sendValidationCode(request.getEmail(), code);
     }
 
 
