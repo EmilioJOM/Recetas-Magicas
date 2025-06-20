@@ -48,9 +48,11 @@ public class RecipeController {
     @PostMapping("/crearReceta2/{id}")
     public ResponseEntity<?> crearReceta2(
             @PathVariable Long id,
-            @RequestBody RecipeCreate2Request request
+            @RequestBody RecipeCreate2Request request,
+            Authentication authentication
     ) {
-        recipeService.creaReceta2(id, request);
+        String email = authentication.getName();
+        recipeService.creaReceta2(id, request,email);
         return ResponseEntity.ok("Ingredientes agregados");
     }
 
@@ -58,9 +60,11 @@ public class RecipeController {
     public ResponseEntity<?> crearReceta3(
             @PathVariable Long id,
             @RequestPart("data") RecipeCreate3Request request,
-            @RequestPart(value = "stepPhotos", required = false) List<MultipartFile> stepPhotos
+            @RequestPart(value = "stepPhotos", required = false) List<MultipartFile> stepPhotos,
+            Authentication authentication
     ) {
-        recipeService.crearReceta3(id, request, stepPhotos);
+        String email = authentication.getName();
+        recipeService.crearReceta3(id, request, stepPhotos,email);
         return ResponseEntity.ok("Pasos y fotos agregados");
     }
 

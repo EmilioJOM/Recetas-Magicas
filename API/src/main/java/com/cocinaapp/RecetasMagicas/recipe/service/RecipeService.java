@@ -138,9 +138,12 @@ public class RecipeService {
         return id;
     }
 
-    public void creaReceta2(long id, RecipeCreate2Request dto) {
+    public void creaReceta2(long id, RecipeCreate2Request dto, String email) {
         Optional<Recipe> recetaget = recipeRepository.findById(id);
         Recipe receta = recetaget.get();
+        if (receta.getAuthor().getEmail() == email){
+            new RuntimeException("hubo un error al identificar el autor de la receta");
+        }
         // Ingredientes
         List<RecipeIngredient> ingredientes = new ArrayList<>();
         for (IngredientDto i : dto.getIngredients()) {
@@ -161,9 +164,12 @@ public class RecipeService {
         recipeRepository.save(receta);
     }
 
-    public void crearReceta3(long id, RecipeCreate3Request dto, List<MultipartFile> stepPhotos){
+    public void crearReceta3(long id, RecipeCreate3Request dto, List<MultipartFile> stepPhotos, String email){
         Optional<Recipe> recetaget = recipeRepository.findById(id);
         Recipe receta = recetaget.get();
+        if (receta.getAuthor().getEmail() == email){
+            new RuntimeException("hubo un error al identificar el autor de la receta");
+        }
         // Pasos
         List<Step> steps = new ArrayList<>();
         for (int idx = 0; idx < dto.getSteps().size(); idx++) {
