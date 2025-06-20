@@ -1,30 +1,114 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import BottomTabs from '../components/BottomTabs'
+import BottomTabs from '../components/BottomTabs';
+import * as Yup from 'yup';
 
 const CreateRecipeStepOneScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [experience, setExperience] = useState('');
   const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.7,
-    });
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
+  const [errors, setErrors] = useState({});
 
   const experienceOptions = ['Principiante', 'Intermedio', 'Experto'];
 
+  const schema = Yup.object().shape({
+    name: Yup.string()
+      .trim()
+      .required('El nombre de la receta es obligatorio.'),
+    description: Yup.string()
+      .trim()
+      .required('La descripción de la receta es obligatoria.'),
+    experience: Yup.string()
+      .oneOf(experienceOptions, 'Selecciona un nivel válido de experiencia.')
+      .required('Debés seleccionar un nivel de experiencia.'),
+    image: Yup.string()
+      .nullable()
+      .required('Debés subir una imagen de la receta.')
+      .test(
+        'is-valid-image',
+        'Debés subir una imagen válida.',
+        (value) => !!value && value.trim() !== ''
+      ),
+  });
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permiso requerido',
+        'Necesitamos permiso para acceder a tu galería de fotos.'
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Funciona aunque tire warn
+      quality: 0.7,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const validateAndContinue = async () => {
+    try {
+      await schema.validate(
+        {
+          name,
+          description,
+          experience,
+          image,
+        },
+        { abortEarly: false }
+      );
+
+      setErrors({});
+
+      const formData = new FormData();
+
+      formData.append('name', name);
+      formData.append('description', description);
+      formData.append('experience', experience);
+      formData.append('image', {
+        uri: image,
+        name: 'recipe-image.jpg',
+        type: 'image/jpeg',
+      });
+
+      // 🚀 Simula envío o reemplaza con tu fetch real
+      Alert.alert('Validación exitosa', 'La receta está lista para enviar.');
+
+      navigation.navigate('CreateRecipeStepTwoScreen');
+
+    } catch (validationError) {
+      if (validationError.name === 'ValidationError') {
+        const newErrors = {};
+        validationError.inner.forEach((err) => {
+          newErrors[err.path] = err.message;
+        });
+        setErrors(newErrors);
+      } else {
+        console.error(validationError);
+        Alert.alert('Error', validationError.message || 'Error desconocido');
+      }
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Barra de progreso */}
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 130 }}>
       <View style={styles.progressContainer}>
         <View style={[styles.step, styles.stepActive]} />
         <View style={styles.step} />
@@ -33,26 +117,25 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
 
       <Text style={styles.title}>Crear Receta</Text>
 
-      {/* Nombre */}
       <Text style={styles.label}>Nombre</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, errors.name && styles.inputError]}
         placeholder="Nombre de la receta"
         value={name}
         onChangeText={setName}
       />
+      {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
-      {/* Descripción */}
       <Text style={styles.label}>Descripción breve</Text>
       <TextInput
-        style={[styles.input, { height: 80 }]}
+        style={[styles.input, { height: 80 }, errors.description && styles.inputError]}
         placeholder="Breve descripción de la receta"
         value={description}
         multiline
         onChangeText={setDescription}
       />
+      {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
 
-      {/* Selector de experiencia */}
       <Text style={styles.label}>Experiencia recomendada</Text>
       <View style={styles.dropdownContainer}>
         {experienceOptions.map((option) => (
@@ -70,10 +153,16 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
+      {errors.experience && <Text style={styles.errorText}>{errors.experience}</Text>}
 
-      {/* Carga de imagen */}
       <Text style={styles.label}>Imagen principal</Text>
-      <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
+      <TouchableOpacity
+        style={[
+          styles.imageUpload,
+          errors.image && { borderColor: '#FF5C5C' },
+        ]}
+        onPress={pickImage}
+      >
         {image ? (
           <Image source={{ uri: image }} style={styles.imagePreview} />
         ) : (
@@ -81,28 +170,25 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
             <Ionicons name="cloud-upload-outline" size={36} color="#999" />
             <Text style={styles.uploadText}>Seleccionar o arrastrar los archivos aquí</Text>
             <Text style={styles.imageHint}>
-              Sube tu imagen JPG, JPEG, PNG o WEBP, con una resolución mínima de 500 píxeles en
-              ambos lados y hasta 10 MB de peso.
+              Sube tu imagen JPG, JPEG, PNG o WEBP, con una resolución mínima de 500 píxeles en ambos lados y hasta 10 MB de peso.
             </Text>
           </View>
         )}
       </TouchableOpacity>
+      {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
 
-      {/* Botones */}
       <View style={styles.buttonRow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.cancelText}>Cancelar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('CreateRecipeStepTwoScreen')}
-        >
+        <TouchableOpacity style={styles.button} onPress={validateAndContinue}>
           <Text style={styles.buttonText}>Continuar</Text>
         </TouchableOpacity>
       </View>
+
       <BottomTabs activeTab="AddRecipe" />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -115,12 +201,20 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 12,
     padding: 12,
-    marginBottom: 15,
+    marginBottom: 5,
+  },
+  inputError: {
+    borderColor: '#FF5C5C',
+  },
+  errorText: {
+    color: '#FF5C5C',
+    marginBottom: 10,
+    fontSize: 12,
   },
   dropdownContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   experienceOption: {
     flex: 1,
@@ -142,7 +236,7 @@ const styles = StyleSheet.create({
     height: 170,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
     overflow: 'hidden',
     paddingHorizontal: 12,
   },
