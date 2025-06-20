@@ -97,7 +97,7 @@ export default function LoginForm() {
                     {/* Botón */}
                     <Button title="Continuar" onPress={handleSubmit(onSubmit)} />
 
-                    <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordStepOneScreen')}>
                         <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
                     </TouchableOpacity>
                 </View>

@@ -8,7 +8,9 @@ import RegisterStepThreeScreen from './screens/RegisterStepThreeScreen'
 import RegisterStepFourScreen from './screens/RegisterStepFourScreen'
 import RegisterStepFiveScreen from './screens/RegisterStepFiveScreen'
 import TestLoginScreen from './screens/TestLoginScreen'
-import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
+import ForgotPasswordStepOneScreen from './screens/ForgotPasswordStepOneScreen'
+import ForgotPasswordStepTwoScreen from './screens/ForgotPasswordStepTwoScreen'
+import ForgotPasswordStepThreeScreen from './screens/ForgotPasswordStepThreeScreen'
 import DetailCourseScreen from './screens/DetailCourseScreen'
 import DetailRecipeScreen from './screens/DetailRecipeScreen'
 import CreateRecipeStepOneScreen from './screens/CreateRecipeStepOneScreen'
@@ -36,6 +38,7 @@ function MyStack() {
         component={SplashScreen}
         options={{ headerShown: false }} // hide header en splash
       />
+      <Stack.Screen name="TestLoginScreen" component={TestLoginScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="RegisterStepOneScreen" component={RegisterStepOneScreen} />
       <Stack.Screen name="RegisterStepTwoScreen" component={RegisterStepTwoScreen} />
@@ -45,11 +48,12 @@ function MyStack() {
       <Stack.Screen name="CreateRecipeStepThreeScreen" component={CreateRecipeStepThreeScreen} />
       <Stack.Screen name="CreateRecipeStepTwoScreen" component={CreateRecipeStepTwoScreen} />
       <Stack.Screen name="CreateRecipeStepOneScreen" component={CreateRecipeStepOneScreen} />
-      <Stack.Screen name="TestLoginScreen" component={TestLoginScreen} />
       <Stack.Screen name="DetailRecipeScreen" component={DetailRecipeScreen} />
       <Stack.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
       
-      <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
+      <Stack.Screen name="ForgotPasswordStepOneScreen" component={ForgotPasswordStepOneScreen} />
+      <Stack.Screen name="ForgotPasswordStepTwoScreen" component={ForgotPasswordStepTwoScreen} />
+      <Stack.Screen name="ForgotPasswordStepThreeScreen" component={ForgotPasswordStepThreeScreen} />
       
     </Stack.Navigator>
   )
