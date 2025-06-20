@@ -45,11 +45,17 @@ public class AuthController {
     }
 
 
-    @PostMapping("/recoverPassword")
-    public ResponseEntity<AuthResponseDTO> recoverPassword(@RequestBody PasswordRecoveryRequestDTO request) {
+    @PostMapping("/recoverPassword1")
+    public ResponseEntity<AuthResponseDTO> recoverPassword(@RequestBody PasswordRecoveryRequest1DTO request) {
         System.out.println("recoverPassword");
         authService.sendRecoveryCode(request);
         return ResponseEntity.ok(new AuthResponseDTO("","Código enviado por correo"));
+    }
+    @PostMapping("/recoverPassword2")
+    public ResponseEntity<AuthResponseDTO> recoverPassword(@RequestBody CodeValidationRequestDTO request) {
+        System.out.println("recoverPassword");
+        String token = authService.validateCodeRecoveryPassword(request);
+        return ResponseEntity.ok(new AuthResponseDTO(token,"Codigo valido"));
     }
 
 
