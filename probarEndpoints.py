@@ -1,4 +1,5 @@
 import requests
+import json
 
 URL = "https://recetas-magicas-api.onrender.com/"
 global TOKEN
@@ -11,7 +12,17 @@ class User:
     nroTramite = str
 
 class Receta:
-    pass
+    def __init__(self, title, description, servings, tipoId, ingredients, steps, main_photo_path, step_photos_paths=None):
+        self.title = title
+        self.description = description
+        self.servings = servings
+        self.tipoId = tipoId  # Long en backend
+        self.ingredients = ingredients  # lista de dicts: quantity, detail, unit, observations
+        self.steps = steps  # lista de dicts: instruction
+        self.main_photo_path = main_photo_path
+        self.step_photos_paths = step_photos_paths or []
+
+
 
 
 emilio = User()
@@ -191,8 +202,71 @@ def DeleteTarjeta(id):
     if r.status_code != 200:
         print("validacion failed.")
         
-def crearReceta():
-    pass
+def crearRecetaPaso1(receta):
+    url = URL + "recipes/crearReceta1"
+    data_json = {
+        "title": receta.title,
+        "description": receta.description,
+        "servings": receta.servings,
+        "tipoId": receta.tipoId
+    }
+    files = [
+        ('data', ('data', json.dumps(data_json), 'application/json'))
+    ]
+    if receta.main_photo_path:
+        files.append(('mainPhoto', open(receta.main_photo_path, 'rb')))
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    response = requests.post(url, files=files, headers=headers)
+    try:
+        resp = response.json()
+        print("Paso 1:", response.status_code, resp)
+        return resp.get("id")
+    except Exception:
+        print("Paso 1:", response.status_code, response.text)
+        return None
+    finally:
+        for f in files:
+            if hasattr(f[1], 'close'):
+                try: f[1].close()
+                except: pass
+            elif isinstance(f[1], tuple) and hasattr(f[1][1], 'close'):
+                try: f[1][1].close()
+                except: pass
+
+def crearRecetaPaso2(id, receta):
+    url = URL + f"recipes/crearReceta2/{id}"
+    data_json = {
+        "ingredients": receta.ingredients
+    }
+    headers = {
+        'Authorization': f'Bearer {TOKEN}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.post(url, data=json.dumps(data_json), headers=headers)
+    print("Paso 2:", response.status_code, response.text)
+
+def crearRecetaPaso3(id, receta):
+    url = URL + f"recipes/crearReceta3/{id}"
+    data_json = {
+        "steps": [{"instruction": s["instruction"]} for s in receta.steps]
+    }
+    files = [
+        ('data', ('data', json.dumps(data_json), 'application/json'))
+    ]
+    for path in receta.step_photos_paths:
+        files.append(('stepPhotos', open(path, 'rb')))
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    response = requests.post(url, files=files, headers=headers)
+    print("Paso 3:", response.status_code, response.text)
+    for f in files:
+        if hasattr(f[1], 'close'):
+            try: f[1].close()
+            except: pass
+        elif isinstance(f[1], tuple) and hasattr(f[1][1], 'close'):
+            try: f[1][1].close()
+            except: pass
+
+
 def recuperarRecetas():
     login_url = f"{URL}recipe/latest/1"
     r = requests.get(login_url)
@@ -224,10 +298,42 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
     getTarjetas()
     DeleteTarjeta(input("ingresarID: "))
 
+def testCrearReceta():
+    mi_receta = Receta(
+        title="Pizza napolitana b",
+        description="Pizza casera con masa fina",
+        servings=4,
+        tipoId=1,  # Debe existir ese tipo en tu DB
+        ingredients=[
+            {
+                "quantity": 500,
+                "detail": "harina 000",
+                "unit": "gramos",
+                "observations": ""
+            },
+            # Más ingredientes...
+        ],
+        steps=[
+            {"instruction": "Mezclar la harina con el agua"},
+            {"instruction": "Amasar hasta obtener una masa suave"},
+            # Más pasos...
+        ],
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
+        step_photos_paths=[
+            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
+            # Más imágenes si tenés más pasos
+        ]
+    )
+    id = crearRecetaPaso1(mi_receta)
+    crearRecetaPaso2(id, mi_receta)
+    crearRecetaPaso3(id, mi_receta)
 #############################################
 
-# login(emilio.mail,emilio.contraseña)
-testRecoverPassword(emilio.mail)
+login(emilio.mail,emilio.contraseña)
+# testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
 # recuperarRecetas()
+testCrearReceta()
+
+# subirDNI(emilio.dni,emilio.nroTramite)

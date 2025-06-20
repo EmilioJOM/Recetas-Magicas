@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -96,10 +97,9 @@ public class RecipeService {
     }
 
 
-    public void crearReceta(
-            RecipeCreateRequest dto,
+    public long crearReceta1(
+            RecipeCreate1Request dto,
             MultipartFile mainPhoto,
-            List<MultipartFile> stepPhotos,
             String emailUsuario
     ) {
         User user = userRepository.findByEmail(emailUsuario)
@@ -125,6 +125,25 @@ public class RecipeService {
         receta.setAuthor(user);
         receta.setStatus(RecipeStatus.APROBADA);
 
+
+        RecipeType tipo = recipeTypeRepository.findById(dto.getTipoId())
+                .orElseThrow(() -> new RuntimeException("Tipo de receta no encontrado"));
+        receta.setTipo(tipo);
+        recipeRepository.save(receta);
+
+        Recipe recetaCreada = recipeRepository.findByTitleAndAuthor(dto.getTitle(), user)
+                .orElseThrow(() -> new RuntimeException("No se encontró la receta recién creada"));
+        long id = recetaCreada.getId();
+
+        return id;
+    }
+
+    public void creaReceta2(long id, RecipeCreate2Request dto, String email) {
+        Optional<Recipe> recetaget = recipeRepository.findById(id);
+        Recipe receta = recetaget.get();
+        if (receta.getAuthor().getEmail() == email){
+            new RuntimeException("hubo un error al identificar el autor de la receta");
+        }
         // Ingredientes
         List<RecipeIngredient> ingredientes = new ArrayList<>();
         for (IngredientDto i : dto.getIngredients()) {
@@ -142,6 +161,15 @@ public class RecipeService {
         }
         receta.setIngredientesUtilizados(ingredientes);
 
+        recipeRepository.save(receta);
+    }
+
+    public void crearReceta3(long id, RecipeCreate3Request dto, List<MultipartFile> stepPhotos, String email){
+        Optional<Recipe> recetaget = recipeRepository.findById(id);
+        Recipe receta = recetaget.get();
+        if (receta.getAuthor().getEmail() == email){
+            new RuntimeException("hubo un error al identificar el autor de la receta");
+        }
         // Pasos
         List<Step> steps = new ArrayList<>();
         for (int idx = 0; idx < dto.getSteps().size(); idx++) {
@@ -167,9 +195,6 @@ public class RecipeService {
         }
         receta.setSteps(steps);
 
-        RecipeType tipo = recipeTypeRepository.findById(dto.getTipoId())
-                .orElseThrow(() -> new RuntimeException("Tipo de receta no encontrado"));
-        receta.setTipo(tipo);
         recipeRepository.save(receta);
     }
 

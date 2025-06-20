@@ -6,11 +6,9 @@ import java.util.List;
 
 @Getter
 @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class RecipeCreateRequest {
+public class RecipeCreate1Request {
     private String title;
     private String description;
     private Integer servings;
     private Long tipoId;
-    private List<IngredientDto> ingredients;
-    private List<StepDto> steps;
 }
