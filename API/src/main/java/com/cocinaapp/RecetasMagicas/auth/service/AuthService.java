@@ -4,7 +4,6 @@ import com.cocinaapp.RecetasMagicas.auth.dto.*;
 import com.cocinaapp.RecetasMagicas.config.JwtService;
 import com.cocinaapp.RecetasMagicas.exception.*;
 import com.cocinaapp.RecetasMagicas.user.dto.UserInfoResponseDTO;
-import com.cocinaapp.RecetasMagicas.user.dto.UserResponseDTO;
 import com.cocinaapp.RecetasMagicas.util.EmailService;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
@@ -138,25 +137,15 @@ public class AuthService {
         codeStorage.remove(request.getEmail());
     }
 
-    public void sendRecoveryCode(PasswordRecoveryRequestDTO request) {
+    public void sendRecoveryCode(PasswordRecoveryRequest1DTO request) {
         // Validar existencia del email
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("El email no está registrado"));
 
 
-        // Generar código
         String code = String.format("%06d", new Random().nextInt(999999));
-
-        // Guardarlo en el Map
         storeValidationCode(request.getEmail(), code);
-
-        // Enviar por correo
         emailService.sendValidationCode(request.getEmail(), code);
-
-        String encodedPassword = passwordEncoder.encode(code);
-
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
 
         // Guardarlo en el Map para validación por si hace falta
         storeValidationCode(request.getEmail(), code);
@@ -166,6 +155,16 @@ public class AuthService {
     }
 
 
+    public String validateCodeRecoveryPassword(CodeValidationRequestDTO request){
+        String expectedCode = codeStorage.get(request.getEmail());
 
+        if (expectedCode == null || !expectedCode.equals(request.getCode())) {
+            throw new RuntimeException("Código inválido");
+        }
+
+        // Opcional: eliminar el código una vez validado
+        codeStorage.remove(request.getEmail());
+        return jwtService.generateToken(request.getEmail(), 60*60*1000);//una hora de token
+    }
 
 }

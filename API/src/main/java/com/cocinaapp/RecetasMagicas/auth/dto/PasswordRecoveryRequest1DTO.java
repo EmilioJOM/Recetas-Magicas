@@ -6,6 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordRecoveryRequestDTO {
+public class PasswordRecoveryRequest1DTO {
     private String email;
 }
