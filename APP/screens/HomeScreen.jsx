@@ -732,6 +732,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <ScrollView
+        horizontal={false}
         contentContainerStyle={[
           styles.scrollContent,
           { paddingBottom: insets.bottom + 50 },

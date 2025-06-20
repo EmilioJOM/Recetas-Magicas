@@ -9,7 +9,11 @@ import {
     Modal,
     Keyboard,
     TouchableWithoutFeedback,
+    KeyboardAvoidingView,
     Alert,
+    Platform,
+    ScrollView,
+    Animated
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Yup from 'yup';
@@ -139,55 +143,64 @@ const CreateRecipeStepTwoScreen = ({ navigation }) => {
                 >
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.modalOverlay}>
-                            <View style={styles.modalContent}>
-                                <Text style={styles.modalTitle}>Nuevo Ingrediente</Text>
+                            <KeyboardAvoidingView
+                                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                            >
+                                <ScrollView
+                                    contentContainerStyle={styles.modalContent}
+                                    keyboardShouldPersistTaps="handled"
+                                >
+                                    <Text style={styles.modalTitle}>Nuevo Ingrediente</Text>
 
-                                <TextInput
-                                    style={[styles.input, errors.quantity && styles.inputError]}
-                                    placeholder="Cantidad (e.g., 200)"
-                                    keyboardType="numeric"
-                                    value={quantity}
-                                    onChangeText={setQuantity}
-                                />
-                                {errors.quantity && (
-                                    <Text style={styles.errorText}>{errors.quantity}</Text>
-                                )}
+                                    <TextInput
+                                        style={[styles.input, errors.quantity && styles.inputError]}
+                                        placeholder="Cantidad (e.g., 200)"
+                                        keyboardType="numeric"
+                                        value={quantity}
+                                        onChangeText={setQuantity}
+                                    />
+                                    {errors.quantity && (
+                                        <Text style={styles.errorText}>{errors.quantity}</Text>
+                                    )}
 
-                                <TextInput
-                                    style={[styles.input, errors.unit && styles.inputError]}
-                                    placeholder="Unidad (e.g., g, ml)"
-                                    value={unit}
-                                    onChangeText={setUnit}
-                                />
-                                {errors.unit && (
-                                    <Text style={styles.errorText}>{errors.unit}</Text>
-                                )}
+                                    <TextInput
+                                        style={[styles.input, errors.unit && styles.inputError]}
+                                        placeholder="Unidad (e.g., g, ml)"
+                                        value={unit}
+                                        onChangeText={setUnit}
+                                    />
+                                    {errors.unit && (
+                                        <Text style={styles.errorText}>{errors.unit}</Text>
+                                    )}
 
-                                <TextInput
-                                    style={[styles.input, errors.name && styles.inputError]}
-                                    placeholder="Nombre del ingrediente"
-                                    value={name}
-                                    onChangeText={setName}
-                                />
-                                {errors.name && (
-                                    <Text style={styles.errorText}>{errors.name}</Text>
-                                )}
+                                    <TextInput
+                                        style={[styles.input, errors.name && styles.inputError]}
+                                        placeholder="Nombre del ingrediente"
+                                        value={name}
+                                        onChangeText={setName}
+                                    />
+                                    {errors.name && (
+                                        <Text style={styles.errorText}>{errors.name}</Text>
+                                    )}
 
-                                <View style={styles.modalButtons}>
-                                    <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                        <Text style={styles.cancelButton}>Cancelar</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.addButton}
-                                        onPress={addIngredient}
-                                    >
-                                        <Text style={styles.addButtonText}>Agregar</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                                    <View style={styles.modalButtons}>
+                                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                            <Text style={styles.cancelButton2}>Cancelar</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={styles.addButton}
+                                            onPress={addIngredient}
+                                        >
+                                            <Text style={styles.addButtonText}>Agregar</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </ScrollView>
+                            </KeyboardAvoidingView>
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>
+
+
 
                 {/* Bottom Tabs */}
                 <BottomTabs activeTab="AddRecipe" />
@@ -312,12 +325,20 @@ const styles = StyleSheet.create({
     modalButtons: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        marginTop: 10,
+        marginTop: 20,
+        //marginTop: 270,
     },
     cancelButton: {
         fontSize: 16,
         color: '#FFA500',
         marginRight: 20,
+        fontWeight: 'bold',
+    },
+    cancelButton2: {
+        fontSize: 16,
+        color: '#FFA500',
+        marginRight: 20,
+        marginTop: 8,
         fontWeight: 'bold',
     },
     addButton: {
