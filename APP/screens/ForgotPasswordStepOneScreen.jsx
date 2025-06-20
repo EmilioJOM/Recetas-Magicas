@@ -7,14 +7,14 @@ import * as yup from 'yup';
 import Button from '../components/Button'
 import Input from '../components/Input'
 import TermsAndConditions from '../components/TermsAndConditions'
-import { recoverPassword } from '../api/auth';
+import { recoverPassword1 } from '../api/auth';
 
 // Validación con Yup
 const schema = yup.object().shape({
     email: yup.string().email('Email inválido').required('El email es obligatorio'),
 });
 
-export default function ForgotPassowrdScreen() {
+export default function ForgotPassowrdStepOneScreen() {
     const navigation = useNavigation();
 
     const {
@@ -28,14 +28,18 @@ export default function ForgotPassowrdScreen() {
 
     const onSubmit = async (data) => {
         try {
-            console.log('Enviando email de recuperación...', data);
-            const res = await recoverPassword({ email: data.email });
-            alert('Revisa tu correo para continuar con la recuperación');
-            navigation.navigate('TestLoginScreen');
-            
+            const available = await recoverPassword1({ email: data.email });
+            if (available) {
+                navigation.navigate('ForgotPasswordStepTwoScreen', {
+                    email: data.email,
+                });
+                console.log('Respuesta del backend:', available.data);
+            } else {
+                alert('El email no esta registrado.');
+            }
         } catch (error) {
-            console.error('Error al recuperar contraseña:', error);
-            alert('Hubo un problema. Verificá el email ingresado.');
+            console.error(error);
+            alert('Error al verificar datos. Intenta más tarde.');
         }
     };
 

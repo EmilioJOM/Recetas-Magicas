@@ -30,8 +30,21 @@ export const tarjetasRegistrar = (cardData) => API.post('/tarjetas/registrar', c
 // Función para loguear usuario ( Email - Password )
 export const loginRequest = (userData) => API.post('auth/login', userData);
 
+//------------- Recuperar Contraseña -------------------
+
 // Función para recuperar contraseña ( Email )
-export const recoverPassword = (userData) => API.post('auth/recoverPassword', userData);
+export const recoverPassword1 = (Data) => API.post('auth/recoverPassword1', Data);
+
+// Funcion para etapa 2 de recuperar contraseña ( Email, Code )
+export const recoverPassword2 = (Data) => API.post('auth/recoverPassword2', Data);
+
+// Funcion para etapa 3 de recuperar contraseña ( Token, NewPassword )
+export const changePassword = (Data, token) =>
+  API.put('user/changePassword', Data, {
+    headers: {
+      Authorization: `Bearer ${token}`  // o el nombre de header que tu API espere
+    }
+  });
 
 //--------recipes--------
 
