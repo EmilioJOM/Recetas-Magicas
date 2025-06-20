@@ -116,8 +116,6 @@ def subRecoverPassword2(email, codigo):
     login_data = r.json()
     TOKEN = login_data["token"] 
 
-        
-
 def newPassword(newPassword):
     login_url = f"{URL}user/changePassword"
     login_payload = {
@@ -184,6 +182,18 @@ def DeleteTarjeta(id):
         print("validacion failed.")
         
 
+def recuperarRecetas():
+    login_url = f"{URL}recipe/latest/1"
+    r = requests.get(login_url)
+    print("get RECETAS:", r.status_code, r.text)
+    # for i in r.json():
+    #     print(i)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+
+        
+#######################################################################
 
 def testRecoverPassword(email):
     subRecoverPassword1(email)
@@ -203,7 +213,10 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
     getTarjetas()
     DeleteTarjeta(input("ingresarID: "))
 
+#############################################
+
 # login(emilio.mail,emilio.contraseña)
-testRecoverPassword(emilio.mail)
+# testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
+recuperarRecetas()
