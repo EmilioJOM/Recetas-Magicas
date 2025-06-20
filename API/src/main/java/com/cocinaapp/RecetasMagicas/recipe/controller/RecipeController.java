@@ -33,7 +33,7 @@ public class RecipeController {
         return recipeService.getRecipeDetail(id);
     }
 
-    @PostMapping(value = "/crearReceta",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/crearReceta1",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> crearReceta(
             @RequestPart("data") RecipeCreate1Request request,
             @RequestPart(value = "mainPhoto", required = false) MultipartFile mainPhoto,
