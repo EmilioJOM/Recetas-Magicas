@@ -25,7 +25,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/user/change-password").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/recipes/latest/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/recipes/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
