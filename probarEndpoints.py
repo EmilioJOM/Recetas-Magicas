@@ -1,8 +1,18 @@
 import requests
-from user import User
 
 URL = "https://recetas-magicas-api.onrender.com/"
 global TOKEN
+
+class User:
+    mail = str
+    alias = str
+    contraseña = str
+    dni = str
+    nroTramite = str
+
+class Receta:
+    pass
+
 
 emilio = User()
 emilio.mail = "emijesus21@gmail.com"
@@ -181,7 +191,8 @@ def DeleteTarjeta(id):
     if r.status_code != 200:
         print("validacion failed.")
         
-
+def crearReceta():
+    pass
 def recuperarRecetas():
     login_url = f"{URL}recipe/latest/1"
     r = requests.get(login_url)
@@ -190,7 +201,7 @@ def recuperarRecetas():
     #     print(i)
     if r.status_code != 200:
         print("validacion failed.")
-
+    
 
         
 #######################################################################
@@ -216,7 +227,7 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 #############################################
 
 # login(emilio.mail,emilio.contraseña)
-# testRecoverPassword(emilio.mail)
+testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-recuperarRecetas()
+# recuperarRecetas()
