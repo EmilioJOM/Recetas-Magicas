@@ -1,10 +1,7 @@
 package com.cocinaapp.RecetasMagicas.recipe.controller;
 
 
-import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeCreateRequest;
-import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeDetailDto;
-import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeListItemDto;
-import com.cocinaapp.RecetasMagicas.recipe.dto.RecipeModifiedRequestDto;
+import com.cocinaapp.RecetasMagicas.recipe.dto.*;
 import com.cocinaapp.RecetasMagicas.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("recipes")
@@ -35,17 +33,35 @@ public class RecipeController {
         return recipeService.getRecipeDetail(id);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/crearReceta",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> crearReceta(
-            @RequestPart("data") RecipeCreateRequest request,
+            @RequestPart("data") RecipeCreate1Request request,
             @RequestPart(value = "mainPhoto", required = false) MultipartFile mainPhoto,
-            @RequestPart(value = "stepPhotos", required = false) List<MultipartFile> stepPhotos,
             Authentication authentication
     ) {
-        System.out.println("POST recipe/");
+        System.out.println("POST recipe/crearReceta1");
         String email = authentication.getName();
-        recipeService.crearReceta(request, mainPhoto, stepPhotos, email);
-        return ResponseEntity.ok("Receta creada exitosamente");
+        long id = recipeService.crearReceta1(request, mainPhoto, email); // retorna el ID
+        return ResponseEntity.ok(Map.of("id", id));
+    }
+
+    @PostMapping("/crearReceta2/{id}")
+    public ResponseEntity<?> crearReceta2(
+            @PathVariable Long id,
+            @RequestBody RecipeCreate2Request request
+    ) {
+        recipeService.creaReceta2(id, request);
+        return ResponseEntity.ok("Ingredientes agregados");
+    }
+
+    @PostMapping(value = "/crearReceta3/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> crearReceta3(
+            @PathVariable Long id,
+            @RequestPart("data") RecipeCreate3Request request,
+            @RequestPart(value = "stepPhotos", required = false) List<MultipartFile> stepPhotos
+    ) {
+        recipeService.crearReceta3(id, request, stepPhotos);
+        return ResponseEntity.ok("Pasos y fotos agregados");
     }
 
     @DeleteMapping("/{id}")

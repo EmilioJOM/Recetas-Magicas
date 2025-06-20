@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecificationExecutor<Recipe> {
     // Para N variable:
@@ -20,4 +21,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecif
     List<Recipe> findByQueryAndFilter(@Param("query") String query, @Param("filter") String filter, @Param("userId") Long userId);
 
     boolean existsByTitleAndAuthor(String title, User user);
+    Optional<Recipe> findByTitleAndAuthor(String title, User user);
 }
