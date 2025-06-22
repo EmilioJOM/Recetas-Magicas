@@ -129,7 +129,7 @@ public class RecipeService {
                     .orElseThrow(() -> new RuntimeException("Tipo de receta no encontrado"));
         } catch (RuntimeException e) {
             // Si no se encuentra el tipo, buscar o crear el tipo genérico "Sin tipo"
-            tipo = recipeTypeRepository.findByNameIgnoreCase("Sin tipo")
+            tipo = recipeTypeRepository.findByDescripcionIgnoreCase("Sin tipo")
                     .orElseGet(() -> {
                         RecipeType nuevoTipo = new RecipeType();
                         nuevoTipo.setDescripcion("Sin tipo");
