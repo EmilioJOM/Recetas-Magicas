@@ -57,3 +57,8 @@ export const getRecipes = (limit = 5) => API.get(`/recipes?n=${limit}`);
 
 // Función para recuperar recetas porbuscador y filtros ( filterData )
 export const getRecipesFilter = (filterData) => API.get('/search/search');
+
+//---------- Crear Receta --------------------
+
+// Funcion para crear receta etapa 1 ( title, description, servings, tipoId)
+export const createRecipeStepOne = (recipeData) => API.post('/recipes/crearReceta1');
