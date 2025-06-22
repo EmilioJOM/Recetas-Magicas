@@ -96,7 +96,7 @@ public class RecipeService {
 //        if (env != null && env.equalsIgnoreCase("production")) {
 //            return "src/main/resources/static/uploads/recetas/";
 //        }
-        return "static/uploads/recetas/";
+        return "/tmp/uploads/recetas/";
     }
 
 
