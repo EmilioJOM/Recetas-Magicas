@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role = "USER"; // Podés usar enum si querés más seguridad
-    @ManyToMany
+    @ElementCollection
     private List<Long> favoritos;
 
     @ElementCollection
