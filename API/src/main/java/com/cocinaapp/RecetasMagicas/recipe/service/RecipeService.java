@@ -39,10 +39,7 @@ public class RecipeService {
                         .title(r.getTitle())
                         .description(r.getDescription())
                         .servings(r.getServings())
-                        .mainPhoto(
-                                r.getMainPhoto() == null ? null :
-                                        r.getMainPhoto().replace("src/main/resources/static", "")
-                        )
+                        .mainPhoto(r.getMainPhoto())
                         .authorAlias(r.getAuthor().getAlias())
                         .createdAt(r.getCreatedAt())
                         .build())
@@ -206,10 +203,11 @@ public class RecipeService {
     private String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
         try {
             Files.createDirectories(Paths.get(carpeta));
-            String path = carpeta + nombre + "_" + archivo.getOriginalFilename();
-            System.out.println("Intentando guardar en: " + path);
-            archivo.transferTo(new File(path));
-            return path;
+            String filename = nombre + "_" + archivo.getOriginalFilename();
+            String fullPath = carpeta + filename;
+            System.out.println("Intentando guardar en: " + fullPath);
+            archivo.transferTo(new File(fullPath));
+            return "/uploads/recetas/" + filename;
         } catch (IOException e) {
             throw new RuntimeException("No se pudo guardar el archivo", e);
         }
