@@ -276,8 +276,8 @@ def recuperarRecetas():
     login_url = f"{URL}recipes/latest/5"
     r = requests.get(login_url)
     print("get RECETAS:", r.status_code, r.text)
-    for i,j in r.json():
-        print(i,j)
+    for i in r.json():
+        print(i)
     if r.status_code != 200:
         print("validacion failed.")
     

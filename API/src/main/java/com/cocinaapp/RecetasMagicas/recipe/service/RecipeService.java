@@ -239,10 +239,10 @@ public class RecipeService {
     public void marcarComoFavorito(Long recipeId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        recipeRepository.findById(recipeId)
+        Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        user.getFavoritos().add(recipeId);
+        user.getFavoritos().add(recipe);
         userRepository.save(user);
     }
     public void desmarcarComoFavorito(Long recipeId, String userEmail) {

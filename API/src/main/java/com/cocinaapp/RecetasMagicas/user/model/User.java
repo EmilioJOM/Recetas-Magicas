@@ -26,8 +26,14 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role = "USER"; // Podés usar enum si querés más seguridad
-    @ElementCollection
-    private List<Long> favoritos;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_favoritos",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    private List<Recipe> favoritos;
 
     @ElementCollection
     private List<Long> recetasModificadas = new ArrayList<>();
