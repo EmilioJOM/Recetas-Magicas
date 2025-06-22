@@ -13,11 +13,13 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import BottomTabs from '../components/BottomTabs';
 import * as Yup from 'yup';
+import { createRecipeStepOne } from '../api/auth';
 
 const CreateRecipeStepOneScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [experience, setExperience] = useState('');
+  const [portions, setPortions] = useState('');
   const [image, setImage] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -33,6 +35,11 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
     experience: Yup.string()
       .oneOf(experienceOptions, 'Selecciona un nivel válido de experiencia.')
       .required('Debés seleccionar un nivel de experiencia.'),
+    portions: Yup.number()
+      .typeError('Las porciones deben ser un número.')
+      .integer('Las porciones deben ser un número entero.')
+      .positive('Las porciones deben ser mayores que cero.')
+      .required('El número de porciones es obligatorio.'),
     image: Yup.string()
       .nullable()
       .required('Debés subir una imagen de la receta.')
@@ -54,7 +61,7 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Funciona aunque tire warn
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.7,
     });
 
@@ -70,6 +77,7 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
           name,
           description,
           experience,
+          portions,
           image,
         },
         { abortEarly: false }
@@ -78,20 +86,24 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
       setErrors({});
 
       const formData = new FormData();
-
       formData.append('name', name);
       formData.append('description', description);
       formData.append('experience', experience);
+      formData.append('portions', portions);
       formData.append('image', {
         uri: image,
         name: 'recipe-image.jpg',
         type: 'image/jpeg',
       });
 
-      // 🚀 Simula envío o reemplaza con tu fetch real
-      Alert.alert('Validación exitosa', 'La receta está lista para enviar.');
+      const response = await createRecipeStepOne(formData);
 
-      navigation.navigate('CreateRecipeStepTwoScreen');
+      if (response?.status === 200 || response?.status === 201) {
+        Alert.alert('¡Éxito!', 'Receta creada correctamente.');
+        navigation.navigate('CreateRecipeStepTwoScreen');
+      } else {
+        Alert.alert('Error', 'Hubo un problema al crear la receta.');
+      }
 
     } catch (validationError) {
       if (validationError.name === 'ValidationError') {
@@ -154,6 +166,16 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
         ))}
       </View>
       {errors.experience && <Text style={styles.errorText}>{errors.experience}</Text>}
+
+      <Text style={styles.label}>Porciones</Text>
+      <TextInput
+        style={[styles.input, errors.portions && styles.inputError]}
+        placeholder="Número de porciones"
+        value={portions}
+        onChangeText={setPortions}
+        keyboardType="numeric"
+      />
+      {errors.portions && <Text style={styles.errorText}>{errors.portions}</Text>}
 
       <Text style={styles.label}>Imagen principal</Text>
       <TouchableOpacity
