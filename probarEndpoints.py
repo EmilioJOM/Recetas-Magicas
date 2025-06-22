@@ -221,7 +221,7 @@ def crearRecetaPaso1(receta):
     try:
         resp = response.json()
         print("Paso 1:", response.status_code, resp)
-        return resp.get("id")
+        return int(resp.get("id"))
     except Exception:
         print("Paso 1:", response.status_code, response.text)
         return None
@@ -301,7 +301,7 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana d",
+        title="Pizza napolitana g",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,  # Debe existir ese tipo en tu DB
@@ -331,12 +331,12 @@ def testCrearReceta():
     crearRecetaPaso3(id, mi_receta)
 #############################################
 
-# login(emilio.mail,emilio.contraseña)
+login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
 
+testCrearReceta()
 recuperarRecetas()
-# testCrearReceta()
 
 # subirDNI(emilio.dni,emilio.nroTramite)

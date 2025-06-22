@@ -92,11 +92,11 @@ public class RecipeService {
     }
 
     private String getBaseRecipeImageDir() {
-        String env = System.getenv("APP_ENV");
-        if (env != null && env.equalsIgnoreCase("production")) {
-            return "src/main/resources/static/uploads/recetas/";
-        }
-        return "src/main/resources/static/uploads/recetas/";
+//        String env = System.getenv("APP_ENV");
+//        if (env != null && env.equalsIgnoreCase("production")) {
+//            return "src/main/resources/static/uploads/recetas/";
+//        }
+        return "static/uploads/recetas/";
     }
 
 
