@@ -301,7 +301,7 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana f",
+        title="Pizza napolitana g",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,  # Debe existir ese tipo en tu DB
