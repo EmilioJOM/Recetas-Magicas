@@ -207,6 +207,8 @@ public class RecipeService {
             String fullPath = carpeta + filename;
             System.out.println("Intentando guardar en: " + fullPath);
             archivo.transferTo(new File(fullPath));
+            File file = new File("/tmp/uploads/recetas/principal_1750562925481_pizza2.jpg");
+            System.out.println("Existe? " + file.exists());
             return "/uploads/recetas/" + filename;
         } catch (IOException e) {
             throw new RuntimeException("No se pudo guardar el archivo", e);
