@@ -20,7 +20,7 @@ public class SearchController {
         return searchService.search(filtro);
     }
 
-    @PostMapping("/search")
+    @PostMapping("/search/user")
     public List<SearchResultDto> search(@RequestBody SearchFilterDto filtro, Authentication authentication) {
         String email = authentication != null ? authentication.getName() : null;
         return searchService.search(filtro, email);
