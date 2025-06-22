@@ -87,7 +87,6 @@ public class RecipeService {
                 .build();
 
     }
-
     private String getBaseRecipeImageDir() {
 //        String env = System.getenv("APP_ENV");
 //        if (env != null && env.equalsIgnoreCase("production")) {
@@ -95,8 +94,6 @@ public class RecipeService {
 //        }
         return "/tmp/uploads/recetas/";
     }
-
-
     public long crearReceta1(
             RecipeCreate1Request dto,
             MultipartFile mainPhoto,
@@ -137,7 +134,6 @@ public class RecipeService {
 
         return id;
     }
-
     public void creaReceta2(long id, RecipeCreate2Request dto, String email) {
         Optional<Recipe> recetaget = recipeRepository.findById(id);
         Recipe receta = recetaget.get();
@@ -164,7 +160,6 @@ public class RecipeService {
 
         recipeRepository.save(receta);
     }
-
     public void crearReceta3(long id, RecipeCreate3Request dto, List<MultipartFile> stepPhotos, String email){
         Optional<Recipe> recetaget = recipeRepository.findById(id);
         Recipe receta = recetaget.get();
@@ -199,7 +194,6 @@ public class RecipeService {
 
         recipeRepository.save(receta);
     }
-
     private String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
         try {
             Files.createDirectories(Paths.get(carpeta));
@@ -235,29 +229,29 @@ public class RecipeService {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        user.getFavoritos().add(recipe);
+        user.getFavoritos().add(recipe.getId());
         userRepository.save(user);
     }
-
     public void desmarcarComoFavorito(Long recipeId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        user.getFavoritos().remove(recipe);
+        user.getFavoritos().remove(recipe.getId());
         userRepository.save(user);
     }
-
     public void marcarRecetaComoModificada(Long recetaId, String emailUsuario) {
         User user = userRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         if (!user.getRecetasModificadas().contains(recetaId)) {
             user.getRecetasModificadas().add(recetaId);
+            if (user.getRecetasModificadas().size() > 10){
+                user.getRecetasModificadas().contains(user.getRecetasModificadas().getLast());
+            }
             userRepository.save(user);
         }
     }
-
 
 
 }

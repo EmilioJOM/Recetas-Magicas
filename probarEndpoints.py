@@ -272,12 +272,35 @@ def recuperarRecetas():
     login_url = f"{URL}recipes/latest/5"
     r = requests.get(login_url)
     print("get RECETAS:", r.status_code, r.text)
-    for i in r.json():
-        print(i)
+    for i,j in r.json():
+        print(i,j)
     if r.status_code != 200:
         print("validacion failed.")
     
+def recuperarUnaReceta(id):
+    login_url = f"{URL}recipes/{id}"
+    r = requests.get(login_url)
+    print("get RECETAS:", r.status_code, r.text)
+    for clave, valor in r.json().items():
+            print(f"{clave}: {valor}")
+    if r.status_code != 200:
+        print("validacion failed.")
+    
+def marcarFavorito(id):
+    login_url = f"{URL}recipes/{id}/favorito"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.post(login_url, headers= headers)
+    print("marcar favorito:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
 
+def desmarcarFavorito(id):
+    login_url = f"{URL}recipes/{id}/favorito"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.delete(login_url, headers= headers)
+    print("marcar favorito:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
         
 #######################################################################
 
@@ -335,8 +358,9 @@ login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-
-testCrearReceta()
-recuperarRecetas()
+recuperarUnaReceta(11)
+marcarFavorito(4)
+# testCrearReceta()
+# recuperarRecetas()
 
 # subirDNI(emilio.dni,emilio.nroTramite)
