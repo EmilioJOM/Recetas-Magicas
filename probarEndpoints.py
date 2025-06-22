@@ -399,12 +399,12 @@ def testCrearReceta():
     crearRecetaPaso2(id, mi_receta)
     crearRecetaPaso3(id, mi_receta)
 #############################################
-
+sleep(300)
 login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-recuperarUnaReceta(11)
+# recuperarUnaReceta(11)
 marcarFavorito(4)
 search()
 desmarcarFavorito(4)
