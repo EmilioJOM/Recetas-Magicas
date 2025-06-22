@@ -301,7 +301,53 @@ def desmarcarFavorito(id):
     print("marcar favorito:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
-        
+
+def marcarModificado(id):
+    login_url = f"{URL}recipes/{id}/modificada"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.post(login_url, headers= headers)
+    print("marcar favorito:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+def search():
+    BASE_URL = f"{URL}search/search"
+
+    # Payload de ejemplo compatible con SearchFilterDto
+    payload = {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": None,
+        "ingredientesExcluidos": None,
+        "porciones": None,
+        "tiempoPreparacionMax": None,
+        "autorId": None,
+        "favoritos": True,
+        "modificados": True,
+        "valoracionMinima": None,
+        "estado": None,
+        "fechaDesde": None,
+        "fechaHasta": None,
+        "orden": None,
+        "modalidad": None,
+        "sede": None,
+        "precioMax": None,
+        "vacantesMin": None,
+        "misCursos": None
+    }
+
+    # Realizar la petición POST
+    response = requests.post(BASE_URL, json=payload)
+
+    # Verificar respuesta
+    if response.status_code == 200:
+        resultados = response.json()
+        for r in resultados:
+            print(f"{r['tipo'].capitalize()}: {r['titulo']} - {r['descripcion']}")
+    else:
+        print("Error:", response.status_code)
+        print(response.text)
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -360,6 +406,11 @@ login(emilio.mail,emilio.contraseña)
 # getTarjetas()
 recuperarUnaReceta(11)
 marcarFavorito(4)
+search()
+desmarcarFavorito(4)
+search()
+marcarModificado(11)
+search()
 # testCrearReceta()
 # recuperarRecetas()
 

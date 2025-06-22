@@ -246,8 +246,8 @@ public class RecipeService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         if (!user.getRecetasModificadas().contains(recetaId)) {
             user.getRecetasModificadas().add(recetaId);
-            if (user.getRecetasModificadas().size() > 10){
-                user.getRecetasModificadas().contains(user.getRecetasModificadas().getLast());
+            if (user.getRecetasModificadas().size() > 10) {
+                user.getRecetasModificadas().remove(0);
             }
             userRepository.save(user);
         }
