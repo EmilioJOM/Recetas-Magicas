@@ -39,7 +39,10 @@ public class RecipeService {
                         .title(r.getTitle())
                         .description(r.getDescription())
                         .servings(r.getServings())
-                        .mainPhoto(r.getMainPhoto())
+                        .mainPhoto(
+                                r.getMainPhoto() == null ? null :
+                                        r.getMainPhoto().replace("src/main/resources/static", "")
+                        )
                         .authorAlias(r.getAuthor().getAlias())
                         .createdAt(r.getCreatedAt())
                         .build())
@@ -91,9 +94,9 @@ public class RecipeService {
     private String getBaseRecipeImageDir() {
         String env = System.getenv("APP_ENV");
         if (env != null && env.equalsIgnoreCase("production")) {
-            return "/tmp/uploads/recetas/";
+            return "src/main/resources/static/uploads/recetas/";
         }
-        return "/tmp/uploads/recetas/";
+        return "src/main/resources/static/uploads/recetas/";
     }
 
 

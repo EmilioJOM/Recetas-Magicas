@@ -1,3 +1,4 @@
+from time import sleep
 import requests
 import json
 
@@ -268,11 +269,11 @@ def crearRecetaPaso3(id, receta):
 
 
 def recuperarRecetas():
-    login_url = f"{URL}recipe/latest/1"
+    login_url = f"{URL}recipes/latest/5"
     r = requests.get(login_url)
     print("get RECETAS:", r.status_code, r.text)
-    # for i in r.json():
-    #     print(i)
+    for i in r.json():
+        print(i)
     if r.status_code != 200:
         print("validacion failed.")
     
@@ -330,11 +331,12 @@ def testCrearReceta():
     crearRecetaPaso3(id, mi_receta)
 #############################################
 
-login(emilio.mail,emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-# recuperarRecetas()
-testCrearReceta()
+
+recuperarRecetas()
+# testCrearReceta()
 
 # subirDNI(emilio.dni,emilio.nroTramite)
