@@ -37,7 +37,8 @@ export default function RegisterStepFourScreen() {
   const [dniFront, setDniFront] = useState(null);
   const [dniBack, setDniBack] = useState(null);
   const [imageError, setImageError] = useState(''); // <-- Estado para error en fotos
-
+  const { token } = useAuth();
+  console.log(token);
   const {
     control,
     handleSubmit,
@@ -66,7 +67,7 @@ export default function RegisterStepFourScreen() {
     }
     //navigation.navigate('RegisterStepFiveScreen');
     setImageError('');
-    const { token } = useAuth();
+    
     try {
       // Crear un FormData para enviar archivos
       const formData = new FormData();
@@ -85,7 +86,7 @@ export default function RegisterStepFourScreen() {
         type: 'image/jpeg',
       });
 
-      await userDni(formData, { token }); // llamada al backend
+      await userDni(formData, token); // llamada al backend
 
       // Si todo sale bien
       navigation.navigate('RegisterStepFiveScreen');

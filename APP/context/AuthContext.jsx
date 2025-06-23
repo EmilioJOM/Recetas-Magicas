@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
       const { token, user } = res.data; // asumo que el backend devuelve token y usuario
       setToken(token);
       setUser(user);
+      console.log(token, user)
       await saveStorageData(token, user);
     } catch (error) {
       // Mejor manejo de errores, que puede ser un array o mensaje simple
