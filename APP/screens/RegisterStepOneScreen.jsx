@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Switch, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Switch, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Button from '../components/Button'
-import Input from '../components/Input'
-import TermsAndConditions from '../components/TermsAndConditions'
+import Button from '../components/Button';
+import Input from '../components/Input';
+import TermsAndConditions from '../components/TermsAndConditions';
 import { authValidate } from '../api/auth';
 
 // Validación con Yup
@@ -15,7 +15,6 @@ const schema = yup.object().shape({
         .string()
         .min(3, 'El alias debe tener al menos 3 caracteres')
         .required('El alias es obligatorio'),
-
     email: yup
         .string()
         .email('El email ingresado no es válido')
@@ -25,30 +24,51 @@ const schema = yup.object().shape({
 export default function RegisterStepOneScreen() {
     const navigation = useNavigation();
     const [paidUser, setPaidUser] = useState(false);
+    const [backendError, setBackendError] = useState(null);
+    const [suggestedAliases, setSuggestedAliases] = useState([]);
+
     const {
         control,
         handleSubmit,
         formState: { errors },
+        setValue,
     } = useForm({
         resolver: yupResolver(schema),
     });
 
     const onSubmit = async (data) => {
+        setBackendError(null);
+        setSuggestedAliases([]);
+
         try {
             const available = await authValidate({ alias: data.alias, email: data.email });
-            if (available) {
+            console.log('Respuesta del backend:', available);
+
+            if (available.success) {
                 navigation.navigate('RegisterStepTwoScreen', {
                     alias: data.alias,
                     email: data.email,
                     paidUser: paidUser,
                 });
-                console.log('Respuesta del backend:', available.data);
             } else {
-                alert('El alias o el email ya están registrados. Por favor elige otros.');
+                setBackendError(available.message || 'El alias o el email ya están registrados.');
+                if (available.sugerencias && available.sugerencias.length > 0) {
+                    setSuggestedAliases(available.sugerencias);
+                }
             }
         } catch (error) {
-            console.error(error);
-            alert('Error al verificar datos. Intenta más tarde.');
+            console.error('Error en onSubmit:', error);
+
+            if (error.response && error.response.data) {
+                const errData = error.response.data;
+                setBackendError(errData.message || 'El alias o el email ya están registrados.');
+                if (errData.sugerencias && errData.sugerencias.length > 0) {
+                    setSuggestedAliases(errData.sugerencias);
+                }
+            } else {
+                setBackendError('Error al verificar datos. Intenta más tarde.');
+                setSuggestedAliases([]);
+            }
         }
     };
 
@@ -66,7 +86,11 @@ export default function RegisterStepOneScreen() {
                         <Input
                             placeholder="Alias"
                             secureTextEntry={false}
-                            onChangeText={onChange}
+                            onChangeText={(text) => {
+                                onChange(text);
+                                setBackendError(null);
+                                setSuggestedAliases([]);
+                            }}
                             value={value}
                         />
                     )}
@@ -81,12 +105,39 @@ export default function RegisterStepOneScreen() {
                         <Input
                             placeholder="Email"
                             secureTextEntry={false}
-                            onChangeText={onChange}
+                            onChangeText={(text) => {
+                                onChange(text);
+                                setBackendError(null);
+                                setSuggestedAliases([]);
+                            }}
                             value={value}
                         />
                     )}
                 />
                 {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
+
+                {/* Mensaje de error y sugerencias en el mismo renglón */}
+                {(backendError || suggestedAliases.length > 0) && (
+                    <Text style={[styles.error, { flexWrap: 'wrap' }]}>
+                        {backendError}{' '}
+                        {suggestedAliases.map((alias, i) => (
+                            <Text
+                                key={alias}
+                                onPress={() => {
+                                    setValue('alias', alias);
+                                    setSuggestedAliases([]);
+                                    setBackendError(null);
+                                }}
+                                style={{ textDecorationLine: 'line', color: '#f00' }}
+                            >
+                                {alias}
+                                {i < suggestedAliases.length - 1 ? ' ' : ''}
+                            </Text>
+                        ))}
+                    </Text>
+                )}
+
+
 
                 {/* Usuario de Pago */}
                 <View style={styles.paidUserRow}>
@@ -97,12 +148,13 @@ export default function RegisterStepOneScreen() {
                             trackColor={{ false: '#ccc', true: '#E08D3E' }}
                             thumbColor={paidUser ? '#fff' : '#f4f3f4'}
                         />
-                        <Text style={styles.paidUser}> Quiero una cuenta de pago.</Text>
+                        <Text style={styles.paidUser}> Quiero registrarme como alumno.</Text>
                     </View>
                 </View>
 
                 {/* Botón */}
                 <Button title="Continuar" onPress={handleSubmit(onSubmit)} />
+
                 <View style={styles.containerAccount}>
                     <Text style={styles.textAccount}>¿Ya tienes una cuenta?</Text>
                     <TouchableOpacity onPress={() => navigation.navigate('TestLoginScreen')}>
@@ -111,8 +163,7 @@ export default function RegisterStepOneScreen() {
                 </View>
             </View>
             <TermsAndConditions />
-        </ScrollView >
-
+        </ScrollView>
     );
 }
 
@@ -166,5 +217,4 @@ const styles = StyleSheet.create({
         color: '#3B82F6',
         textDecorationLine: 'underline',
     },
-
 });
