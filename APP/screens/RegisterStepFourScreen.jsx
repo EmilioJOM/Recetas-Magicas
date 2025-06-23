@@ -38,7 +38,7 @@ export default function RegisterStepFourScreen() {
   const [dniBack, setDniBack] = useState(null);
   const [imageError, setImageError] = useState(''); // <-- Estado para error en fotos
   const { token } = useAuth();
-  console.log(token);
+
   const {
     control,
     handleSubmit,
@@ -74,18 +74,13 @@ export default function RegisterStepFourScreen() {
       formData.append('dni', data.dni);
       formData.append('dniTramite', data.dniTramite);
 
-      formData.append('dniFront', {
-        uri: dniFront,
-        name: 'dniFront.jpg',
-        type: 'image/jpeg',
-      });
+      formData.append('dniFront', dniFront);
 
-      formData.append('dniBack', {
-        uri: dniBack,
-        name: 'dniBack.jpg',
-        type: 'image/jpeg',
-      });
+      formData.append('dniBack', dniBack);
 
+      for (let pair of formData.entries()) {
+  console.log(pair[0], pair[1]);
+}
       await userDni(formData, token); // llamada al backend
 
       // Si todo sale bien

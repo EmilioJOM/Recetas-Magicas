@@ -22,7 +22,7 @@ export const userDni = (formData, token) => {
   return API.post('/user/dni', formData, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'multipart/form-data',
+      
     },
   });
 };
