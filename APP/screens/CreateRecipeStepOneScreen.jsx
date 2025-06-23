@@ -20,6 +20,7 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
   const [description, setDescription] = useState('');
   const [experience, setExperience] = useState('');
   const [portions, setPortions] = useState('');
+  const [recipeType, setRecipeType] = useState('');
   const [image, setImage] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -40,6 +41,9 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
       .integer('Las porciones deben ser un número entero.')
       .positive('Las porciones deben ser mayores que cero.')
       .required('El número de porciones es obligatorio.'),
+    recipeType: Yup.string()
+      .trim()
+      .required('El tipo de receta es obligatorio.'),
     image: Yup.string()
       .nullable()
       .required('Debés subir una imagen de la receta.')
@@ -78,6 +82,7 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
           description,
           experience,
           portions,
+          recipeType,
           image,
         },
         { abortEarly: false }
@@ -90,6 +95,7 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
       formData.append('description', description);
       formData.append('experience', experience);
       formData.append('portions', portions);
+      formData.append('recipeType', recipeType);
       formData.append('image', {
         uri: image,
         name: 'recipe-image.jpg',
@@ -104,7 +110,6 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
       } else {
         Alert.alert('Error', 'Hubo un problema al crear la receta.');
       }
-
     } catch (validationError) {
       if (validationError.name === 'ValidationError') {
         const newErrors = {};
@@ -147,6 +152,15 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
         onChangeText={setDescription}
       />
       {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
+
+      <Text style={styles.label}>Tipo de receta</Text>
+      <TextInput
+        style={[styles.input, errors.recipeType && styles.inputError]}
+        placeholder="Ej: Vegetariana, Vegana, Postre..."
+        value={recipeType}
+        onChangeText={setRecipeType}
+      />
+      {errors.recipeType && <Text style={styles.errorText}>{errors.recipeType}</Text>}
 
       <Text style={styles.label}>Experiencia recomendada</Text>
       <View style={styles.dropdownContainer}>
@@ -208,8 +222,7 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Continuar</Text>
         </TouchableOpacity>
       </View>
-
-      <BottomTabs activeTab="AddRecipe" />
+      
     </ScrollView>
   );
 };

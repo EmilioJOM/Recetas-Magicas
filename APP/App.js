@@ -17,6 +17,7 @@ import CreateRecipeStepOneScreen from './screens/CreateRecipeStepOneScreen'
 import CreateRecipeStepTwoScreen from './screens/CreateRecipeStepTwoScreen'
 import CreateRecipeStepThreeScreen from './screens/CreateRecipeStepThreeScreen';
 import SplashScreen from './screens/SplashScreen';
+import WelcomeScreen from './screens/WelcomeScreen';
 import { AuthProvider } from './context/AuthContext';
 const Stack = createStackNavigator()
 
@@ -38,6 +39,7 @@ function MyStack() {
         component={SplashScreen}
         options={{ headerShown: false }} // hide header en splash
       />
+      <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="TestLoginScreen" component={TestLoginScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="RegisterStepOneScreen" component={RegisterStepOneScreen} />

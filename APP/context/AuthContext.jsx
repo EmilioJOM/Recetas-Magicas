@@ -65,8 +65,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await registerRequest(userInfo); // llamá a la API para registrar
       const { token, user } = res.data; // asumo que el backend devuelve token y usuario
-      setToken(token);
-      setUser(user);
       console.log(token, user)
       await saveStorageData(token, user);
     } catch (error) {

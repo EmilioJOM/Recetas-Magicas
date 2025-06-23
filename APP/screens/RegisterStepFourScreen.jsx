@@ -28,7 +28,7 @@ const schema = yup.object().shape({
 
   dniTramite: yup
     .string()
-    .matches(/^\d{10}$/, 'Debe tener 10 dígitos')
+    .matches(/^\d{11}$/, 'Debe tener 11 dígitos')
     .required('El número de trámite es obligatorio'),
 });
 
@@ -67,20 +67,29 @@ export default function RegisterStepFourScreen() {
     }
     //navigation.navigate('RegisterStepFiveScreen');
     setImageError('');
-    
+
     try {
       // Crear un FormData para enviar archivos
       const formData = new FormData();
       formData.append('dni', data.dni);
       formData.append('dniTramite', data.dniTramite);
 
-      formData.append('dniFront', dniFront);
+      formData.append('dniFront', {
+        uri: dniFront,
+        name: 'dniFront.jpg',
+        type: 'image/jpeg',
+      });
 
-      formData.append('dniBack', dniBack);
+      formData.append('dniBack', {
+        uri: dniBack,
+        name: 'dniBack.jpg',
+        type: 'image/jpeg',
+      });
+
 
       for (let pair of formData.entries()) {
-  console.log(pair[0], pair[1]);
-}
+        console.log(pair[0], pair[1]);
+      }
       await userDni(formData, token); // llamada al backend
 
       // Si todo sale bien
@@ -126,7 +135,7 @@ export default function RegisterStepFourScreen() {
               placeholder="Número de trámite"
               keyboardType="numeric"
               value={value}
-              maxLength={10}
+              maxLength={11}
               onChangeText={onChange}
             />
           )}
