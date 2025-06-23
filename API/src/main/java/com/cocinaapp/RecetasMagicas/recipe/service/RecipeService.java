@@ -268,8 +268,15 @@ public class RecipeService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+        
+        user.getFavoritos().size();
 
-        user.getFavoritos().removeIf(r -> r.getId().equals(recipeId));
+        System.out.println("Favoritos antes: " + user.getFavoritos().stream().map(Recipe::getId).toList());
+        boolean removed = user.getFavoritos().removeIf(r -> r.getId().equals(recipeId));
+        System.out.println("Se eliminó? " + removed);
+        System.out.println("Favoritos después: " + user.getFavoritos().stream().map(Recipe::getId).toList());
+        userRepository.save(user);
+
         userRepository.save(user);
     }
     public void marcarRecetaComoModificada(Long recetaId, String emailUsuario) {
