@@ -17,7 +17,12 @@ export const validateCode = (dataCode) => API.post('/auth/validateCode', dataCod
 export const registerRequest = (userData) => API.post('/auth/register', userData);
 
 // Función para subir datos y fotos del DNI (DNI, número de trámite, frente y dorso)
-export const userDni = (formData) => API.post('/user/dni', formData);
+export const userDni = (formData) => API.post('/user/dni', formData, {
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`, // si tu backend lo requiere
+  },
+});
 
 // Función para subir los datos de tarjeta (Numero de tarjeta - Nombre y Apellido del titular - Fecha Nacimiento - Codigo de Seguridad)
 export const tarjetasRegistrar = (cardData) => API.post('/tarjetas/registrar', cardData, {

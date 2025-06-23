@@ -17,6 +17,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import { userDni } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 // Validación
 const schema = yup.object().shape({
@@ -65,7 +66,7 @@ export default function RegisterStepFourScreen() {
     }
     //navigation.navigate('RegisterStepFiveScreen');
     setImageError('');
-    
+    const { token } = useAuth();
     try {
       // Crear un FormData para enviar archivos
       const formData = new FormData();
@@ -84,7 +85,7 @@ export default function RegisterStepFourScreen() {
         type: 'image/jpeg',
       });
 
-      await userDni(formData); // llamada al backend
+      await userDni(formData, { token }); // llamada al backend
 
       // Si todo sale bien
       navigation.navigate('RegisterStepFiveScreen');
@@ -159,7 +160,7 @@ export default function RegisterStepFourScreen() {
         {/* Mensaje de error para fotos */}
         {!!imageError && <Text style={styles.imageError}>{imageError}</Text>}
 
-        <Button title="Finalizar registro" onPress={handleSubmit(onSubmit)} />
+        <Button title="Continuar" onPress={handleSubmit(onSubmit)} />
       </ScrollView>
     </TouchableWithoutFeedback>
   );
