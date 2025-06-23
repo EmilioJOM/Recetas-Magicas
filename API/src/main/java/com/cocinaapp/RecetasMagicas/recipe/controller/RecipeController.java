@@ -80,14 +80,17 @@ public class RecipeController {
     }
 
     @PostMapping("/{id}/favorito")
-    public ResponseEntity<?> marcarFavorito(@PathVariable Long id, @RequestParam String userEmail) {
-        System.out.println("recipe/{id}/favorite");
+    public ResponseEntity<?> marcarFavorito(@PathVariable Long id, Authentication authentication) {
+        System.out.println("POST recipe/{id}/favorite");
+        String userEmail = authentication.getName();
         recipeService.marcarComoFavorito(id, userEmail);
         return ResponseEntity.ok("Receta marcada como favorita");
     }
 
     @DeleteMapping("/{id}/favorito")
-    public ResponseEntity<?> desmarcarFavorito(@PathVariable Long id, @RequestParam String userEmail) {
+    public ResponseEntity<?> desmarcarFavorito(@PathVariable Long id, Authentication authentication) {
+        System.out.println("DELETE recipe/{id}/favorite");
+        String userEmail = authentication.getName();
         recipeService.desmarcarComoFavorito(id, userEmail);
         return ResponseEntity.ok("Receta desmarcada como favorita");
     }
@@ -96,6 +99,7 @@ public class RecipeController {
             @PathVariable Long id,
             Authentication authentication
     ) {
+        System.out.println("POST recipe/{id}/modificada");
         String email = authentication.getName();
         recipeService.marcarRecetaComoModificada(id, email);
         return ResponseEntity.ok("Receta marcada como modificada");

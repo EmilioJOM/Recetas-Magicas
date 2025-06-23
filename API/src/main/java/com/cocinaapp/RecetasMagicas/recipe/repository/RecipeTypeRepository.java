@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface RecipeTypeRepository extends JpaRepository<RecipeType, Long> {
     // Si querés buscar por descripción (opcional)
     Optional<RecipeType> findByDescripcion(String descripcion);
+
+    Optional<RecipeType> findByDescripcionIgnoreCase(String descripcion);
 }

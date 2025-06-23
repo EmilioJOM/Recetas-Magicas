@@ -102,6 +102,7 @@ def validarCodigo(codigo):
         
     
 def registrarse(email,contraseña, alias):
+    global TOKEN
     login_url = f"{URL}auth/register"
     login_payload = {
     "email": email,
@@ -110,6 +111,9 @@ def registrarse(email,contraseña, alias):
     }
     r = requests.post(login_url, json=login_payload)
     print("registracion de usuario:", r.status_code, r.text)
+            
+    login_data = r.json()
+    TOKEN = login_data["token"] 
     if r.status_code != 200:
         print("validacion failed.")
         
@@ -221,7 +225,7 @@ def crearRecetaPaso1(receta):
     try:
         resp = response.json()
         print("Paso 1:", response.status_code, resp)
-        return resp.get("id")
+        return int(resp.get("id"))
     except Exception:
         print("Paso 1:", response.status_code, response.text)
         return None
@@ -277,8 +281,116 @@ def recuperarRecetas():
     if r.status_code != 200:
         print("validacion failed.")
     
+def recuperarUnaReceta(id):
+    login_url = f"{URL}recipes/{id}"
+    r = requests.get(login_url)
+    print("get RECETAS:", r.status_code, r.text)
+    for clave, valor in r.json().items():
+            print(f"{clave}: {valor}")
+    if r.status_code != 200:
+        print("validacion failed.")
+    
+def marcarFavorito(id):
+    login_url = f"{URL}recipes/{id}/favorito"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.post(login_url, headers= headers)
+    print("marcar favorito:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
 
-        
+def desmarcarFavorito(id):
+    login_url = f"{URL}recipes/{id}/favorito"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.delete(login_url, headers= headers)
+    print("marcar favorito:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+def marcarModificado(id):
+    login_url = f"{URL}recipes/{id}/modificada"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.post(login_url, headers= headers)
+    print("marcar modificada:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+def search():
+    BASE_URL = f"{URL}search/search"
+
+    # Payload de ejemplo compatible con SearchFilterDto
+    payload = {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": None,
+        "ingredientesExcluidos": None,
+        "porciones": None,
+        "tiempoPreparacionMax": None,
+        "autorId": None,
+        "favoritos": True,
+        "modificados": True,
+        "valoracionMinima": None,
+        "estado": None,
+        "fechaDesde": None,
+        "fechaHasta": None,
+        "orden": None,
+        "modalidad": None,
+        "sede": None,
+        "precioMax": None,
+        "vacantesMin": None,
+        "misCursos": None
+    }
+
+    # Realizar la petición POST
+    response = requests.post(BASE_URL, json=payload)
+
+    # Verificar respuesta
+    if response.status_code == 200:
+        resultados = response.json()
+        for r in resultados:
+            print(f"{r['tipo'].capitalize()}: {r['titulo']} - {r['descripcion']}")
+    else:
+        print("Error:", response.status_code)
+        print(response.text)
+def searchUser():
+    BASE_URL = f"{URL}search/search/user"
+
+    # Payload de ejemplo compatible con SearchFilterDto
+    payload = {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": None,
+        "ingredientesExcluidos": None,
+        "porciones": None,
+        "tiempoPreparacionMax": None,
+        "autorId": None,
+        "favoritos": True,
+        "modificados": True,
+        "valoracionMinima": None,
+        "estado": None,
+        "fechaDesde": None,
+        "fechaHasta": None,
+        "orden": None,
+        "modalidad": None,
+        "sede": None,
+        "precioMax": None,
+        "vacantesMin": None,
+        "misCursos": None
+    }
+
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+
+    # Realizar la petición POST
+    response = requests.post(BASE_URL, json=payload, headers=headers)
+
+    # Verificar respuesta
+    if response.status_code == 200:
+        resultados = response.json()
+        for r in resultados:
+            print(f"{r['tipo'].capitalize()}: {r['titulo']} - {r['descripcion']}")
+    else:
+        print("Error:", response.status_code)
+        print(response.text)
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -301,7 +413,7 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana d",
+        title="Pizza napolitana a",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,  # Debe existir ese tipo en tu DB
@@ -330,13 +442,20 @@ def testCrearReceta():
     crearRecetaPaso2(id, mi_receta)
     crearRecetaPaso3(id, mi_receta)
 #############################################
-
-# login(emilio.mail,emilio.contraseña)
+# sleep(300)
+# testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
+login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-
+testCrearReceta()
 recuperarRecetas()
-# testCrearReceta()
+recuperarUnaReceta(1)
+marcarFavorito(1)
+searchUser()
+desmarcarFavorito(1)
+searchUser()
+marcarModificado(1)
+searchUser()
 
 # subirDNI(emilio.dni,emilio.nroTramite)

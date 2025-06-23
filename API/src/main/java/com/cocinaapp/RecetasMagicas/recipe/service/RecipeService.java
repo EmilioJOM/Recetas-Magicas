@@ -39,10 +39,7 @@ public class RecipeService {
                         .title(r.getTitle())
                         .description(r.getDescription())
                         .servings(r.getServings())
-                        .mainPhoto(
-                                r.getMainPhoto() == null ? null :
-                                        r.getMainPhoto().replace("src/main/resources/static", "")
-                        )
+                        .mainPhoto(r.getMainPhoto())
                         .authorAlias(r.getAuthor().getAlias())
                         .createdAt(r.getCreatedAt())
                         .build())
@@ -90,16 +87,13 @@ public class RecipeService {
                 .build();
 
     }
-
     private String getBaseRecipeImageDir() {
-        String env = System.getenv("APP_ENV");
-        if (env != null && env.equalsIgnoreCase("production")) {
-            return "src/main/resources/static/uploads/recetas/";
-        }
-        return "src/main/resources/static/uploads/recetas/";
+//        String env = System.getenv("APP_ENV");
+//        if (env != null && env.equalsIgnoreCase("production")) {
+//            return "src/main/resources/static/uploads/recetas/";
+//        }
+        return "/tmp/uploads/recetas/";
     }
-
-
     public long crearReceta1(
             RecipeCreate1Request dto,
             MultipartFile mainPhoto,
@@ -129,8 +123,21 @@ public class RecipeService {
         receta.setStatus(RecipeStatus.APROBADA);
 
 
-        RecipeType tipo = recipeTypeRepository.findById(dto.getTipoId())
-                .orElseThrow(() -> new RuntimeException("Tipo de receta no encontrado"));
+        RecipeType tipo;
+        try {
+            tipo = recipeTypeRepository.findById(dto.getTipoId())
+                    .orElseThrow(() -> new RuntimeException("Tipo de receta no encontrado"));
+        } catch (RuntimeException e) {
+            // Si no se encuentra el tipo, buscar o crear el tipo genérico "Sin tipo"
+            tipo = recipeTypeRepository.findByDescripcionIgnoreCase("Sin tipo")
+                    .orElseGet(() -> {
+                        RecipeType nuevoTipo = new RecipeType();
+                        nuevoTipo.setDescripcion("Sin tipo");
+                        return recipeTypeRepository.save(nuevoTipo);
+                    });
+        }
+
+// Asignar el tipo a la receta
         receta.setTipo(tipo);
         recipeRepository.save(receta);
 
@@ -140,7 +147,6 @@ public class RecipeService {
 
         return id;
     }
-
     public void creaReceta2(long id, RecipeCreate2Request dto, String email) {
         Optional<Recipe> recetaget = recipeRepository.findById(id);
         Recipe receta = recetaget.get();
@@ -167,7 +173,6 @@ public class RecipeService {
 
         recipeRepository.save(receta);
     }
-
     public void crearReceta3(long id, RecipeCreate3Request dto, List<MultipartFile> stepPhotos, String email){
         Optional<Recipe> recetaget = recipeRepository.findById(id);
         Recipe receta = recetaget.get();
@@ -202,14 +207,16 @@ public class RecipeService {
 
         recipeRepository.save(receta);
     }
-
     private String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
         try {
             Files.createDirectories(Paths.get(carpeta));
-            String path = carpeta + nombre + "_" + archivo.getOriginalFilename();
-            System.out.println("Intentando guardar en: " + path);
-            archivo.transferTo(new File(path));
-            return path;
+            String filename = nombre + "_" + archivo.getOriginalFilename();
+            String fullPath = carpeta + filename;
+            System.out.println("Intentando guardar en: " + fullPath);
+            archivo.transferTo(new File(fullPath));
+            File file = new File(fullPath);
+            System.out.println("Existe? " + file.exists());
+            return "/uploads/recetas/" + filename;
         } catch (IOException e) {
             throw new RuntimeException("No se pudo guardar el archivo", e);
         }
@@ -238,26 +245,28 @@ public class RecipeService {
         user.getFavoritos().add(recipe);
         userRepository.save(user);
     }
-
     public void desmarcarComoFavorito(Long recipeId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        Recipe recipe = recipeRepository.findById(recipeId)
+        recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        user.getFavoritos().remove(recipe);
+        user.getFavoritos().remove(recipeId);
         userRepository.save(user);
     }
-
     public void marcarRecetaComoModificada(Long recetaId, String emailUsuario) {
         User user = userRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        recipeRepository.findById(recetaId)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
         if (!user.getRecetasModificadas().contains(recetaId)) {
             user.getRecetasModificadas().add(recetaId);
+            if (user.getRecetasModificadas().size() > 10) {
+                user.getRecetasModificadas().remove(0);
+            }
             userRepository.save(user);
         }
     }
-
 
 
 }
