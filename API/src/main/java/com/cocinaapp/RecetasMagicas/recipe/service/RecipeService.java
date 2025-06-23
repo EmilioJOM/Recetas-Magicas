@@ -241,7 +241,17 @@ public class RecipeService {
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
         if (!receta.getAuthor().getId().equals(user.getId())) {
             throw new RuntimeException("No autorizado para eliminar esta receta.");
+
         }
+        List<User> usuariosConFavorito = userRepository.findAllByFavoritos_Id(recipeId);
+        for (User usera : usuariosConFavorito) {
+            // Remueve la receta de la lista de favoritos del usuario
+            usera.getFavoritos().removeIf(recipe -> recipe.getId().equals(recipeId));
+            userRepository.save(usera);
+        }
+
+// Ahora sí, podés borrar la receta
+        recipeRepository.deleteById(recipeId);
         recipeRepository.delete(receta);
     }
     public void marcarComoFavorito(Long recipeId, String userEmail) {
@@ -259,7 +269,7 @@ public class RecipeService {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        user.getFavoritos().remove(recipe);
+        user.getFavoritos().removeIf(r -> r.getId().equals(recipeId));
         userRepository.save(user);
     }
     public void marcarRecetaComoModificada(Long recetaId, String emailUsuario) {
