@@ -102,6 +102,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setErrors(null);
     await clearStorageData();
+    navigation.navigate('WelcomeScreen');
   };
 
   const handleError = (error) => {

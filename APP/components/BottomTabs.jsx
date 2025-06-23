@@ -44,7 +44,7 @@ export default function BottomTabs({ activeTab }) {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => handleTabPress('Profile')} style={styles.tabButton}>
+      <TouchableOpacity onPress={() => handleTabPress('ProfileScreen')} style={styles.tabButton}>
         <Icon
           name="account"
           size={28}

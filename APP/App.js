@@ -20,6 +20,7 @@ import CreateRecipeStepTwoScreen from './screens/CreateRecipeStepTwoScreen';
 import CreateRecipeStepThreeScreen from './screens/CreateRecipeStepThreeScreen';
 import SplashScreen from './screens/SplashScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -62,6 +63,7 @@ function MyStack() {
           <Stack.Screen name="ForgotPasswordStepOneScreen" component={ForgotPasswordStepOneScreen} />
           <Stack.Screen name="ForgotPasswordStepTwoScreen" component={ForgotPasswordStepTwoScreen} />
           <Stack.Screen name="ForgotPasswordStepThreeScreen" component={ForgotPasswordStepThreeScreen} />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         </>
       ) : (
         // Pantallas para usuarios autenticados (privadas)
@@ -72,6 +74,7 @@ function MyStack() {
           <Stack.Screen name="CreateRecipeStepThreeScreen" component={CreateRecipeStepThreeScreen} />
           <Stack.Screen name="DetailRecipeScreen" component={DetailRecipeScreen} />
           <Stack.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         </>
       )}
     </Stack.Navigator>
