@@ -46,7 +46,8 @@ def login(email, contraseña):
     login_url = f"{URL}auth/login"
     login_payload = {
     "email": email,
-    "password": contraseña
+    "password": contraseña,
+    "rememberMe": False
     }
     r = requests.post(login_url, json=login_payload)
     print("Login:", r.status_code, r.text)
@@ -290,6 +291,12 @@ def recuperarUnaReceta(id):
     if r.status_code != 200:
         print("validacion failed.")
     
+def eliminarReceta(id):
+    login_url = f"{URL}recipes/{id}"    
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.delete(login_url, headers= headers)
+    print("del RECETAS:", r.status_code, r.text)
+
 def marcarFavorito(id):
     login_url = f"{URL}recipes/{id}/favorito"
     headers = {'Authorization': f'Bearer {TOKEN}'}
@@ -301,7 +308,7 @@ def marcarFavorito(id):
 def desmarcarFavorito(id):
     login_url = f"{URL}recipes/{id}/favorito"
     headers = {'Authorization': f'Bearer {TOKEN}'}
-    r = requests.delete(login_url, headers= headers)
+    r = requests.post(login_url, headers= headers)
     print("marcar favorito:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
@@ -445,17 +452,19 @@ def testCrearReceta():
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
 login(emilio.mail,emilio.contraseña)
+eliminarReceta(1)
+subirDNI(emilio.dni, emilio.nroTramite)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-testCrearReceta()
-recuperarRecetas()
-recuperarUnaReceta(1)
-marcarFavorito(1)
-searchUser()
-desmarcarFavorito(1)
-searchUser()
-marcarModificado(1)
-searchUser()
+# testCrearReceta()
+# recuperarRecetas()
+# recuperarUnaReceta(1)
+# marcarFavorito(1)
+# searchUser()
+# desmarcarFavorito(1)
+# searchUser()
+# marcarModificado(1)
+# searchUser()
 
 # subirDNI(emilio.dni,emilio.nroTramite)
