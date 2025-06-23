@@ -255,7 +255,7 @@ public class RecipeService {
         recipeRepository.delete(receta);
     }
     public void marcarComoFavorito(Long recipeId, String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+        User user = userRepository.findByEmailWithFavoritos(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
@@ -264,11 +264,11 @@ public class RecipeService {
         userRepository.save(user);
     }
     public void desmarcarComoFavorito(Long recipeId, String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+        User user = userRepository.findByEmailWithFavoritos(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
-        
+
         user.getFavoritos().size();
 
         System.out.println("Favoritos antes: " + user.getFavoritos().stream().map(Recipe::getId).toList());
@@ -280,7 +280,7 @@ public class RecipeService {
         userRepository.save(user);
     }
     public void marcarRecetaComoModificada(Long recetaId, String emailUsuario) {
-        User user = userRepository.findByEmail(emailUsuario)
+        User user = userRepository.findByEmailWithRecetasModificadas(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         recipeRepository.findById(recetaId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
