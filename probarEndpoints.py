@@ -308,7 +308,7 @@ def marcarFavorito(id):
 def desmarcarFavorito(id):
     login_url = f"{URL}recipes/{id}/favorito"
     headers = {'Authorization': f'Bearer {TOKEN}'}
-    r = requests.post(login_url, headers= headers)
+    r = requests.delete(login_url, headers= headers)
     print("marcar favorito:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
@@ -451,7 +451,8 @@ def testCrearReceta():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-login(emilio.mail,emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
+validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(1)
 # subirDNI(emilio.dni, emilio.nroTramite)
 # testRecoverPassword(emilio.mail)
@@ -461,9 +462,9 @@ login(emilio.mail,emilio.contraseña)
 # recuperarRecetas()
 # recuperarUnaReceta(1)
 # marcarFavorito(2)
-searchUser()
-desmarcarFavorito(2)
-searchUser()
+# searchUser()
+# desmarcarFavorito(2)
+# searchUser()
 # marcarModificado(1)
 # searchUser()
 
