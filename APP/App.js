@@ -63,7 +63,8 @@ function MyStack() {
           <Stack.Screen name="ForgotPasswordStepOneScreen" component={ForgotPasswordStepOneScreen} />
           <Stack.Screen name="ForgotPasswordStepTwoScreen" component={ForgotPasswordStepTwoScreen} />
           <Stack.Screen name="ForgotPasswordStepThreeScreen" component={ForgotPasswordStepThreeScreen} />
-          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+
         </>
       ) : (
         // Pantallas para usuarios autenticados (privadas)
