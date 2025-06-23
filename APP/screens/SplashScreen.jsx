@@ -72,11 +72,13 @@ export default function SplashScreen({ navigation }) {
     magicasOpacity.value = withDelay(1600, withTiming(1, { duration: 600 }));
     subtitleOpacity.value = withDelay(2200, withTiming(1, { duration: 800 }));
 
+    /** 
     const timer = setTimeout(() => {
       navigation.replace('WelcomeScreen');
     }, 3600);
 
     return () => clearTimeout(timer);
+    */
   }, []);
 
   const animatedLogoStyle = useAnimatedStyle(() => ({

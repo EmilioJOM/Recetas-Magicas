@@ -19,30 +19,39 @@ export const AuthProvider = ({ children }) => {
 
   // Cargar token y usuario de AsyncStorage cuando se inicia la app
   useEffect(() => {
-    const loadStorageData = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('token');
-        if (storedToken) {
-          setToken(storedToken);
-          // Opcional: validar token y cargar perfil usuario
-          const userData = await fetchUserProfile(storedToken);
-          setUser(userData);
-        }
-      } catch (e) {
-        console.log('Error al cargar el token', e);
-      } finally {
-        setLoading(false);
+  const loadStorageData = async () => {
+    const MIN_LOADING_TIME = 3800; // 2 segundos mínimo
+
+    const startTime = Date.now();
+
+    try {
+      const storedToken = await AsyncStorage.getItem('token');
+      if (storedToken) {
+        setToken(storedToken);
+        const userData = await fetchUserProfile(storedToken);
+        setUser(userData);
       }
-    };
+    } catch (e) {
+      console.log('Error al cargar el token', e);
+    } finally {
+      const elapsed = Date.now() - startTime;
+      const remainingTime = MIN_LOADING_TIME - elapsed;
 
-    loadStorageData();
-  }, []);
+      if (remainingTime > 0) {
+        // Espero el tiempo restante para completar 2 segundos
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+      setLoading(false);
+    }
+  };
 
+  loadStorageData();
+}, []);
   // Guardar token y usuario en AsyncStorage
   const saveStorageData = async (token, userData) => {
     try {
       await AsyncStorage.setItem('token', token);
-      // Si querés guardar usuario completo (opcional)
+      // Guardar usuario como JSON
       await AsyncStorage.setItem('user', JSON.stringify(userData));
     } catch (e) {
       console.log('Error al guardar en AsyncStorage', e);
@@ -61,14 +70,14 @@ export const AuthProvider = ({ children }) => {
 
   // Signup
   const signup = async (userInfo) => {
-    setErrors(null); // limpiar errores previos
+    setErrors(null);
     try {
-      const res = await registerRequest(userInfo); // llamá a la API para registrar
-      const { token, user } = res.data; // asumo que el backend devuelve token y usuario
-      console.log(token, user)
+      const res = await registerRequest(userInfo);
+      const { token, user } = res.data;
+      setToken(token);
+      setUser(user);
       await saveStorageData(token, user);
     } catch (error) {
-      // Mejor manejo de errores, que puede ser un array o mensaje simple
       if (error.response?.data) {
         setErrors(
           Array.isArray(error.response.data)
@@ -85,17 +94,16 @@ export const AuthProvider = ({ children }) => {
   const signin = async ({ email, password, rememberMe }) => {
     setErrors(null);
     try {
-      const res = await loginRequest({ email, password }); // llamá a la API para login
+      const res = await loginRequest({ email, password });
       const { token, user } = res.data;
       setToken(token);
       setUser(user);
-      console.log(token);
-/** 
+
       if (rememberMe) {
         await saveStorageData(token, user);
       } else {
         await clearStorageData();
-      }*/
+      }
     } catch (error) {
       if (error.response?.data) {
         setErrors(
@@ -108,7 +116,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
   };
-
 
   // Logout
   const logout = async () => {
