@@ -63,9 +63,9 @@ export default function RegisterStepFourScreen() {
       setImageError('Por favor, subí las dos fotos del DNI.');
       return;
     }
-    navigation.navigate('RegisterStepFiveScreen');
+    //navigation.navigate('RegisterStepFiveScreen');
     setImageError('');
-    /** 
+    
     try {
       // Crear un FormData para enviar archivos
       const formData = new FormData();
@@ -91,7 +91,7 @@ export default function RegisterStepFourScreen() {
     } catch (error) {
       console.error('Error al enviar datos del DNI:', error);
       setImageError('Hubo un error al enviar los datos. Intentalo nuevamente.');
-    }*/
+    }
   };
 
 

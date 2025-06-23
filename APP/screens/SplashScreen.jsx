@@ -73,7 +73,7 @@ export default function SplashScreen({ navigation }) {
     subtitleOpacity.value = withDelay(2200, withTiming(1, { duration: 800 }));
 
     const timer = setTimeout(() => {
-      navigation.replace('HomeScreen');
+      navigation.replace('RegisterStepOneScreen');
     }, 3600);
 
     return () => clearTimeout(timer);
