@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Switch, StyleSheet, ScrollView  } from 'react-native';
+import { View, Text, TouchableOpacity, Switch, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Button from '../components/Button'
-import Input from '../components/Input'
-import InputShow from '../components/InputShow'
-import TermsAndConditions from '../components/TermsAndConditions'
+import Button from '../components/Button';
+import Input from '../components/Input';
+import InputShow from '../components/InputShow';
+import TermsAndConditions from '../components/TermsAndConditions';
 import { useAuth } from '../context/AuthContext';
 
-
-// Validación con Yup
 const schema = yup.object().shape({
     email: yup.string()
         .email('El email ingresado no es válido')
@@ -22,7 +20,7 @@ const schema = yup.object().shape({
         .required('La contraseña es obligatoria'),
 });
 
-export default function LoginForm() {
+export default function TestLoginScreen() {
     const [rememberMe, setRememberMe] = useState(false);
     const navigation = useNavigation();
 
@@ -34,15 +32,26 @@ export default function LoginForm() {
         resolver: yupResolver(schema),
     });
 
-    const { signin, errorsApi, user } = useAuth();
+    const { signin, errors: errorsApi, user } = useAuth();
+    const [loginError, setLoginError] = useState(null);
 
     const onSubmit = async (data) => {
-    await signin({ ...data, rememberMe });
+        setLoginError(null);
+        const success = await signin({ ...data, rememberMe });
 
-    if (user) {
-        navigation.navigate('HomeScreen');
-    }
-};
+        if (success) {
+            navigation.navigate('HomeScreen');
+        } else if (errorsApi && errorsApi.length > 0) {
+            // Mostrá el primer mensaje del backend
+            const firstError = errorsApi[0];
+            const msg = typeof firstError === 'object' && firstError.message
+                ? firstError.message
+                : firstError;
+            setLoginError(msg);
+        } else {
+            setLoginError('Email o contraseña incorrectas.');
+        }
+    };
 
     return (
         <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}>
@@ -51,7 +60,6 @@ export default function LoginForm() {
                     <Text style={styles.title}>Iniciar Sesión</Text>
                     <Text style={styles.subtitle}>Ingresa tu email para entrar en la app</Text>
 
-                    {/* Email */}
                     <Controller
                         control={control}
                         name="email"
@@ -66,7 +74,6 @@ export default function LoginForm() {
                     />
                     {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
-                    {/* Contraseña */}
                     <Controller
                         control={control}
                         name="password"
@@ -81,7 +88,8 @@ export default function LoginForm() {
                     />
                     {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
-                    {/* Recordarme */}
+                    {loginError && <Text style={styles.error}>{loginError}</Text>}
+
                     <View style={styles.rememberRow}>
                         <View style={styles.switchContainer}>
                             <Switch
@@ -94,7 +102,6 @@ export default function LoginForm() {
                         </View>
                     </View>
 
-                    {/* Botón */}
                     <Button title="Continuar" onPress={handleSubmit(onSubmit)} />
 
                     <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordStepOneScreen')}>
@@ -103,15 +110,14 @@ export default function LoginForm() {
                 </View>
                 <TermsAndConditions />
             </View>
-        </ScrollView >
+        </ScrollView>
     );
 }
 
-// Estilos con StyleSheet
 const styles = StyleSheet.create({
     containerPadre: {
         flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     container: {
         padding: 24,
@@ -154,5 +160,4 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         marginTop: 12,
     },
-
 });

@@ -44,7 +44,7 @@ export default function RegisterStepOneScreen() {
             const available = await authValidate({ alias: data.alias, email: data.email });
             console.log('Respuesta del backend:', available);
 
-            if (available.success) {
+            if (available) {
                 navigation.navigate('RegisterStepTwoScreen', {
                     alias: data.alias,
                     email: data.email,
@@ -136,7 +136,6 @@ export default function RegisterStepOneScreen() {
                         ))}
                     </Text>
                 )}
-
 
 
                 {/* Usuario de Pago */}

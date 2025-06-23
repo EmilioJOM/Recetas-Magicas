@@ -1,8 +1,7 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet } from 'react-native';
-
+import { StyleSheet} from 'react-native';
+import React, { useState, useEffect } from 'react';
 import HomeScreen from './screens/HomeScreen';
 import RegisterStepOneScreen from './screens/RegisterStepOneScreen';
 import RegisterStepTwoScreen from './screens/RegisterStepTwoScreen';
@@ -28,6 +27,28 @@ const Stack = createStackNavigator();
 
 function MyStack() {
   const { user, loading } = useAuth();
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const minSplashTime = 2100; 
+
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, minSplashTime);
+
+    // Cuando loading cambia a false, verificamos si ya pasó el tiempo mínimo
+    if (!loading) {
+      timer; // aseguramos que el timer siga su curso
+    }
+
+    return () => clearTimeout(timer);
+  }, [loading]);
+
+  if (loading || showSplash) {
+    return <SplashScreen />;
+  }
+
+
 
   if (loading) {
     // Mientras carga los datos del usuario mostramos el splash
@@ -76,6 +97,11 @@ function MyStack() {
           <Stack.Screen name="DetailRecipeScreen" component={DetailRecipeScreen} />
           <Stack.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="RegisterStepFourScreen" component={RegisterStepFourScreen} />
+          <Stack.Screen name="RegisterStepFiveScreen" component={RegisterStepFiveScreen} />
+          <Stack.Screen name="ForgotPasswordStepOneScreen" component={ForgotPasswordStepOneScreen} />
+          <Stack.Screen name="ForgotPasswordStepTwoScreen" component={ForgotPasswordStepTwoScreen} />
+          <Stack.Screen name="ForgotPasswordStepThreeScreen" component={ForgotPasswordStepThreeScreen} />
         </>
       )}
     </Stack.Navigator>
