@@ -11,4 +11,6 @@ public class RecipeCreate1Request {
     private String description;
     private Integer servings;
     private Long tipoId;
+    private String experienceLevel;
+
 }

@@ -25,6 +25,8 @@ public class Recipe {
     private String mainPhoto; // path o nombre archivo, o base64 si querés
 
     private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private ExperienceLevel experienceLevel;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

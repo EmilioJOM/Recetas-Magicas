@@ -39,6 +39,7 @@ public class RecipeService {
                         .title(r.getTitle())
                         .description(r.getDescription())
                         .servings(r.getServings())
+                        .experienceLevel(r.getExperienceLevel().name())
                         .mainPhoto(r.getMainPhoto())
                         .authorAlias(r.getAuthor().getAlias())
                         .createdAt(r.getCreatedAt())
@@ -60,6 +61,7 @@ public class RecipeService {
                 .title(recipe.getTitle())
                 .description(recipe.getDescription())
                 .servings(recipe.getServings())
+                .experienceLevel(recipe.getExperienceLevel().name())
                 .mainPhoto(recipe.getMainPhoto())
                 .authorAlias(recipe.getAuthor().getAlias())
                 .createdAt(recipe.getCreatedAt())
@@ -121,6 +123,12 @@ public class RecipeService {
         receta.setServings(dto.getServings());
         receta.setAuthor(user);
         receta.setStatus(RecipeStatus.APROBADA);
+
+        try {
+            receta.setExperienceLevel(ExperienceLevel.valueOf(dto.getExperienceLevel().toUpperCase()));
+        } catch (IllegalArgumentException | NullPointerException e) {
+            receta.setExperienceLevel(ExperienceLevel.PRINCIPIANTE); // default
+        }
 
 
         RecipeType tipo;
@@ -233,7 +241,17 @@ public class RecipeService {
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
         if (!receta.getAuthor().getId().equals(user.getId())) {
             throw new RuntimeException("No autorizado para eliminar esta receta.");
+
         }
+        List<User> usuariosConFavorito = userRepository.findAllByFavoritos_Id(recipeId);
+        for (User usera : usuariosConFavorito) {
+            // Remueve la receta de la lista de favoritos del usuario
+            usera.getFavoritos().removeIf(recipe -> recipe.getId().equals(recipeId));
+            userRepository.save(usera);
+        }
+
+// Ahora sí, podés borrar la receta
+        recipeRepository.deleteById(recipeId);
         recipeRepository.delete(receta);
     }
     public void marcarComoFavorito(Long recipeId, String userEmail) {
@@ -248,10 +266,10 @@ public class RecipeService {
     public void desmarcarComoFavorito(Long recipeId, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        recipeRepository.findById(recipeId)
+        Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        user.getFavoritos().remove(recipeId);
+        user.getFavoritos().removeIf(r -> r.getId().equals(recipeId));
         userRepository.save(user);
     }
     public void marcarRecetaComoModificada(Long recetaId, String emailUsuario) {
