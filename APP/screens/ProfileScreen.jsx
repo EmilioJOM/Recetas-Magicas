@@ -2,9 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import BottomTabs from '../components/BottomTabs';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
+const navigation = useNavigation();
 
   const handleLogout = () => {
     Alert.alert(
@@ -12,7 +14,7 @@ export default function ProfileScreen() {
       '¿Estás seguro de que querés cerrar sesión?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Cerrar sesión', style: 'destructive', onPress: logout }
+        { text: 'Cerrar sesión', style: 'destructive', onPress: () => logout(navigation) }
       ]
     );
   };

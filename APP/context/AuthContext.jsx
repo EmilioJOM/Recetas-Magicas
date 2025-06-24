@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
       const { token, user } = res.data;
       setToken(token);
       setUser(user);
-      await saveStorageData(token, user);
+      //await saveStorageData(token, user);
       return true;
     } catch (error) {
       handleError(error);
@@ -108,13 +108,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = async () => {
-    setToken(null);
-    setUser(null);
-    setErrors(null);
-    await clearStorageData();
-    // Asegurate de que navigation está accesible o hazlo desde componente
-  };
+  const logout = async (navigation) => {
+  setToken(null);
+  setUser(null);
+  setErrors(null);
+  await clearStorageData();
+
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'WelcomeScreen' }],
+  });
+};
+
 
   const handleError = (error) => {
     console.log('Error completo en handleError:', error);
