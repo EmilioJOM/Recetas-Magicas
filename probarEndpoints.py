@@ -1,6 +1,9 @@
 from time import sleep
 import requests
 import json
+from dataclasses import dataclass, field
+from typing import List
+from typing import Optional
 
 URL = "https://recetas-magicas-api.onrender.com/"
 global TOKEN
@@ -23,8 +26,39 @@ class Receta:
         self.main_photo_path = main_photo_path
         self.step_photos_paths = step_photos_paths or []
 
+@dataclass
+class Sede:
+    nombre: str
+    direccion: str
+    capacidad: int
+    telefono: str
+    mail: str
+    whatsapp: str
+    tipo_bonificacion: str = None
+    bonificacion_cursos: str = None
+    tipo_promocion: str = None
+    promocion_cursos: str = None
 
+@dataclass
+class Course:
+    title: str
+    description: str
+    main_photo: str
+    contenidos: List[str] = field(default_factory=list)
+    requirements: str = ""
+    duration: str = ""
+    price: float = 0.0
+    modality: str = ""
 
+@dataclass
+class CronogramaCurso:
+    course: int
+    sede: int
+    ubicacion: Optional[str] = None
+    promotion: Optional[float] = None
+    fecha_inicio: Optional[str] = None
+    fecha_fin: Optional[str] = None
+    vacantes: Optional[int] = None
 
 emilio = User()
 emilio.mail = "emijesus21@gmail.com"
@@ -398,6 +432,58 @@ def searchUser():
         print("Error:", response.status_code)
         print(response.text)
 
+
+def subirSede(sede: Sede):
+    login_url = f"{URL}admin/sede"
+    login_payload = {
+        "nombre": sede.nombre,
+        "direccion": sede.direccion,
+        "telefono": sede.telefono,
+        "mail": sede.mail,
+        "whatsapp": sede.whatsapp,
+        "tipoBonificacion": sede.tipo_bonificacion,
+        "bonificacionCursos": sede.bonificacion_cursos,
+        "tipoPromocion": sede.tipo_promocion,
+        "promocionCursos": sede.promocion_cursos,
+        "capacidadAlumnos":sede.capacidad
+        }
+    r = requests.post(login_url, json=login_payload)
+    print("registracion de sede:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+def subirCurso(curso: Course):
+    login_url = f"{URL}admin/courses"
+    login_payload = {
+        "title": curso.title,
+        "description": curso.description,
+        "mainPhoto": curso.main_photo,
+        "contenidos": curso.contenidos,
+        "requirements": curso.requirements,
+        "duration": curso.duration,
+        "price": curso.price,
+        "modality": curso.modality
+        }
+    r = requests.post(login_url, json=login_payload)
+    print("registracion de modelo de curso:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+def subirCatedra(catedra: CronogramaCurso):
+    login_url = f"{URL}admin/catedra"
+    login_payload = {
+        "courseId": catedra.course,
+        "sedeId": catedra.sede,
+        "ubicacion": catedra.ubicacion,
+        "promotion": catedra.promotion,
+        "fechaInicio": catedra.fecha_inicio,
+        "fechaFin": catedra.fecha_fin,
+        "vacantes": catedra.vacantes
+        }
+    r = requests.post(login_url, json=login_payload)
+    print("registracion de catedra:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
 #######################################################################
 
 def testRecoverPassword(email):
@@ -448,12 +534,49 @@ def testCrearReceta():
     print(id)
     crearRecetaPaso2(id, mi_receta)
     crearRecetaPaso3(id, mi_receta)
+
+def testSubirCatedra():
+    sede = Sede(
+        nombre="Sede Central",
+        direccion="Av. Siempre Viva 123",
+        capacidad=30,
+        telefono="1122334455",
+        mail="central@cocina.com",
+        whatsapp="1144556677"
+    )
+
+    # Crear un curso
+    curso = Course(
+        title="Pastelería Avanzada",
+        description="Curso profesional de pastelería.",
+        main_photo="pasteleria.jpg",
+        contenidos=["Masa quebrada", "Tortas clásicas"],
+        requirements="Haber completado Pastelería Básica.",
+        duration="8 semanas",
+        price=30000,
+        modality="presencial"
+    )
+
+    # Crear un cronograma de curso
+    cronograma = CronogramaCurso(
+        course=1,
+        sede=1,
+        ubicacion="Aula 3",
+        promotion=20.0,
+        fecha_inicio="2024-07-10",
+        fecha_fin="2024-08-10",
+        vacantes=25
+    )
+    subirCurso(curso)
+    subirSede(sede)
+    subirCatedra(cronograma)
+
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-login(emilio.mail,emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
 # validarAlias(emilio.mail, emilio.alias)
-eliminarReceta(2)
+# eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
@@ -467,5 +590,6 @@ eliminarReceta(2)
 # searchUser()
 # marcarModificado(1)
 # searchUser()
+testSubirCatedra()
 
 # subirDNI(emilio.dni,emilio.nroTramite)

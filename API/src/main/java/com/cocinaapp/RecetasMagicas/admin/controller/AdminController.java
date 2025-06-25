@@ -6,6 +6,8 @@ import com.cocinaapp.RecetasMagicas.course.dto.SedeCreateRequestDto;
 import com.cocinaapp.RecetasMagicas.course.model.CronogramaCurso;
 import com.cocinaapp.RecetasMagicas.course.model.Sede;
 import com.cocinaapp.RecetasMagicas.course.repository.CourseRepository;
+import com.cocinaapp.RecetasMagicas.course.repository.CronogramaCursoRepository;
+import com.cocinaapp.RecetasMagicas.course.repository.SedeRepository;
 import com.cocinaapp.RecetasMagicas.course.service.CourseService;
 import com.cocinaapp.RecetasMagicas.course.service.CronogramaCursoService;
 import com.cocinaapp.RecetasMagicas.course.service.SedeService;
@@ -26,9 +28,12 @@ public class AdminController {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final RecipeRepository recipeRepository;
+    private final SedeRepository sedeRepository;
+    private final CronogramaCursoRepository cronogramaCursoRepository;
 
     @DeleteMapping("/user/{id}")
     public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
+        System.out.println("DELETE /admin/user/" + id);
         return userRepository.findById(id).map(user -> {
             userRepository.delete(user);
             return ResponseEntity.ok("Usuario eliminado correctamente");
@@ -37,6 +42,7 @@ public class AdminController {
 
     @DeleteMapping("/course/{id}")
     public ResponseEntity<?> eliminarCurso(@PathVariable Long id) {
+        System.out.println("DELETE /admin/course/" + id);
         if (courseRepository.existsById(id)) {
             courseRepository.deleteById(id);
             return ResponseEntity.ok("Curso eliminado correctamente");
@@ -47,6 +53,7 @@ public class AdminController {
 
     @DeleteMapping("/recipe/{id}")
     public ResponseEntity<?> eliminarReceta(@PathVariable Long id) {
+        System.out.println("DELETE /admin/recipe/" + id);
         if (recipeRepository.existsById(id)) {
             recipeRepository.deleteById(id);
             return ResponseEntity.ok("Receta eliminada correctamente");
@@ -55,21 +62,45 @@ public class AdminController {
         }
     }
 
+    @DeleteMapping("/sede/{id}")
+    public ResponseEntity<?> eliminarSede(@PathVariable Long id) {
+        System.out.println("DELETE /admin/sede/" + id);
+        if (sedeRepository.existsById(id)) {
+            sedeRepository.deleteById(id);
+            return ResponseEntity.ok("sede eliminada correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/Catedra/{id}")
+    public ResponseEntity<?> eliminarCatedra(@PathVariable Long id) {
+        System.out.println("DELETE /admin/Catedra/" + id);
+        if (cronogramaCursoRepository.existsById(id)) {
+            cronogramaCursoRepository.deleteById(id);
+            return ResponseEntity.ok("catedra eliminada correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping("/courses")
     public ResponseEntity<?> crearCurso(@RequestBody CourseCreateRequestDto dto) {
+        System.out.println("POST /admin/courses");
         courseService.crearCurso(dto);
         return ResponseEntity.ok("Curso creado correctamente");
     }
 
     @PostMapping("/sede")
     public ResponseEntity<Sede> crearSede(@RequestBody SedeCreateRequestDto dto) {
+        System.out.println("POST /admin/sede");
         Sede sede = sedeService.crearSede(dto);
         return ResponseEntity.ok(sede);
     }
 
-    @PostMapping("/Catedra")
+    @PostMapping("/catedra")
     public ResponseEntity<CronogramaCurso> crearCronogramaCurso(@RequestBody CronogramaCursoCreateRequestDto dto) {
+        System.out.println("POST /admin/catedra");
         CronogramaCurso cronograma = cronogramaCursoService.crearCronogramaCurso(dto);
         return ResponseEntity.ok(cronograma);
     }
