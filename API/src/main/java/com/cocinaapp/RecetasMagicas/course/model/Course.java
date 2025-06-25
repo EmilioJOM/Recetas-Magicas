@@ -15,25 +15,16 @@ public class Course {
     private String title;
     private String description;
     private String mainPhoto;
-    private String dateStart;
 
-    // Cronograma de clases o temas
+    // Lista de temas o contenidos principales
     @ElementCollection
-    private List<String> cronograma;
+    private List<String> contenidos;
 
-    // Relación a sedes
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CronogramaCurso> locations;
-
-    // Precio y promoción (pueden ser null si no aplican)
-    private Double price;
-
-    // Modalidad: presencial, virtual, online, etc.
-    private String modality;
-
-    // Requisitos, insumos o utensilios
     private String requirements;
 
-    // Estado del curso (puede ser "Abierto", "Cerrado", etc.)
-    private String status;
+    private String duration; // Ej: "4 meses", "8 semanas"
+
+    private Double price;
+
+    private String modality; // Ej: "presencial", "virtual", "online"
 }

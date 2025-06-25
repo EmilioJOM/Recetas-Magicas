@@ -451,9 +451,9 @@ def testCrearReceta():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-# login(emilio.mail,emilio.contraseña)
-validarAlias(emilio.mail, emilio.alias)
-# eliminarReceta(1)
+login(emilio.mail,emilio.contraseña)
+# validarAlias(emilio.mail, emilio.alias)
+eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])

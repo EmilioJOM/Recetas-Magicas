@@ -11,17 +11,17 @@ public class CronogramaCurso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String ubicacion;   // dirección u otros datos
-
-    // Promoción particular para esa sede (opcional)
-    private Double promotion; // o porcentaje, como prefieras
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     @ManyToOne
     @JoinColumn(name = "sede_id", nullable = false)
     private Sede sede;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
-
+    private String ubicacion; // Aula, sala, etc (opcional)
+    private Double promotion; // Porcentaje/descuento especial para esa edición (opcional)
+    private String fechaInicio;
+    private String fechaFin;
+    private Integer vacantes;
 }
