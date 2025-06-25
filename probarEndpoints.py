@@ -621,7 +621,7 @@ def testSubirCatedra():
 
 #############################################
 # sleep(300)
-# testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
+testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
 # login(emilio.mail,emilio.contraseña)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
@@ -629,7 +629,7 @@ def testSubirCatedra():
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-# testCrearReceta()
+testCrearReceta()
 # recuperarRecetas()
 # recuperarUnaReceta(1)
 # marcarFavorito(2)
@@ -638,7 +638,7 @@ def testSubirCatedra():
 # searchUser()
 # marcarModificado(1)
 # searchUser()
-testSubirCatedra()
+# testSubirCatedra()
 
 # eliminar_usuario_admin(1)
 # eliminar_catedra_admin(1)
