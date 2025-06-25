@@ -34,6 +34,7 @@ class Sede:
     telefono: str
     mail: str
     whatsapp: str
+    main_foto: str
     tipo_bonificacion: str = None
     bonificacion_cursos: str = None
     tipo_promocion: str = None
@@ -447,24 +448,34 @@ def subirSede(sede: Sede):
         "promocionCursos": sede.promocion_cursos,
         "capacidadAlumnos":sede.capacidad
         }
-    r = requests.post(login_url, json=login_payload)
+    files = [
+        ('data', ('data', json.dumps(login_payload), 'application/json'))
+    ]
+    if sede.main_foto:
+        files.append(('mainPhoto', open(sede.main_foto, 'rb')))
+    r = requests.post(login_url, files=files)
     print("registracion de sede:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
 
 def subirCurso(curso: Course):
     login_url = f"{URL}admin/courses"
+
     login_payload = {
         "title": curso.title,
         "description": curso.description,
-        "mainPhoto": curso.main_photo,
         "contenidos": curso.contenidos,
         "requirements": curso.requirements,
         "duration": curso.duration,
         "price": curso.price,
         "modality": curso.modality
         }
-    r = requests.post(login_url, json=login_payload)
+    files = [
+        ('data', ('data', json.dumps(login_payload), 'application/json'))
+    ]
+    if curso.main_photo:
+        files.append(('mainPhoto', open(curso.main_photo, 'rb')))
+    r = requests.post(login_url, files=files)
     print("registracion de modelo de curso:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
@@ -484,6 +495,42 @@ def subirCatedra(catedra: CronogramaCurso):
     print("registracion de catedra:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
+
+def eliminar_usuario_admin(id):
+    url = f"{URL}admin/user/{id}"
+    r = requests.delete(url)
+    print(f"DELETE /admin/user/{id}: {r.status_code} {r.text}")
+    if r.status_code != 200:
+        print("No se pudo eliminar el usuario.")
+
+def eliminar_curso_admin(id):
+    url = f"{URL}admin/course/{id}"
+    r = requests.delete(url)
+    print(f"DELETE /admin/course/{id}: {r.status_code} {r.text}")
+    if r.status_code != 200:
+        print("No se pudo eliminar el curso.")
+
+def eliminar_receta_admin(id):
+    url = f"{URL}admin/recipe/{id}"
+    r = requests.delete(url)
+    print(f"DELETE /admin/recipe/{id}: {r.status_code} {r.text}")
+    if r.status_code != 200:
+        print("No se pudo eliminar la receta.")
+
+def eliminar_sede_admin(id):
+    url = f"{URL}admin/sede/{id}"
+    r = requests.delete(url)
+    print(f"DELETE /admin/sede/{id}: {r.status_code} {r.text}")
+    if r.status_code != 200:
+        print("No se pudo eliminar la sede.")
+
+def eliminar_catedra_admin(id):
+    url = f"{URL}admin/Catedra/{id}"
+    r = requests.delete(url)
+    print(f"DELETE /admin/Catedra/{id}: {r.status_code} {r.text}")
+    if r.status_code != 200:
+        print("No se pudo eliminar la catedra.")
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -542,14 +589,15 @@ def testSubirCatedra():
         capacidad=30,
         telefono="1122334455",
         mail="central@cocina.com",
-        whatsapp="1144556677"
+        whatsapp="1144556677",
+        main_foto=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\aula-2-de-cocina-en-mausi.jpg"
     )
 
     # Crear un curso
     curso = Course(
         title="Pastelería Avanzada",
         description="Curso profesional de pastelería.",
-        main_photo="pasteleria.jpg",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\6941723985_960d764b2a_o.jpg",
         contenidos=["Masa quebrada", "Tortas clásicas"],
         requirements="Haber completado Pastelería Básica.",
         duration="8 semanas",
@@ -591,5 +639,12 @@ def testSubirCatedra():
 # marcarModificado(1)
 # searchUser()
 testSubirCatedra()
+
+# eliminar_usuario_admin(1)
+# eliminar_catedra_admin(1)
+# eliminar_curso_admin(1)
+# eliminar_sede_admin(1)
+# eliminar_receta_admin(1)
+
 
 # subirDNI(emilio.dni,emilio.nroTramite)

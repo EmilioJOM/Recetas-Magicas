@@ -6,10 +6,12 @@ import com.cocinaapp.RecetasMagicas.course.model.Course;
 import com.cocinaapp.RecetasMagicas.course.model.CronogramaCurso;
 import com.cocinaapp.RecetasMagicas.course.repository.CourseRepository;
 import com.cocinaapp.RecetasMagicas.course.repository.CronogramaCursoRepository;
+import com.cocinaapp.RecetasMagicas.util.GuardarImagenes;
 import lombok.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,11 +36,16 @@ public class CourseService {
     }
 
     @Transactional
-    public Course crearCurso(CourseCreateRequestDto dto) {
+    public Course crearCurso(CourseCreateRequestDto dto, MultipartFile mainPhoto) {
+        String mainPhotoPath = null;
+        if (mainPhoto != null && !mainPhoto.isEmpty()) {
+            mainPhotoPath = GuardarImagenes.guardarArchivo(mainPhoto, "cursos", "principal");
+        }
+
         Course course = Course.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .mainPhoto(dto.getMainPhoto())
+                .mainPhoto(mainPhotoPath)
                 .contenidos(dto.getContenidos())
                 .requirements(dto.getRequirements())
                 .duration(dto.getDuration())

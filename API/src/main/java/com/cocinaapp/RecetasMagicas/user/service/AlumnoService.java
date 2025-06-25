@@ -5,6 +5,7 @@ import com.cocinaapp.RecetasMagicas.user.model.User;
 
 import com.cocinaapp.RecetasMagicas.user.repository.AlumnoRepository;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
+import com.cocinaapp.RecetasMagicas.util.GuardarImagenes;
 import com.cocinaapp.RecetasMagicas.util.ValidateDNI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,26 +34,8 @@ public class AlumnoService {
             throw new IllegalArgumentException("Numero de Tramite o dni ya registrado");
         }
 
-        String baseDir = "/tmp/uploads/dni/";
-        // SI CORRÉS LOCAL, podés dejar: String baseDir = "uploads/dni/";
-
-        // Creá el directorio si no existe (no falla si ya existe)
-        try {
-            Files.createDirectories(Paths.get(baseDir));
-        } catch (IOException e) {
-            throw new RuntimeException("No se pudo crear la carpeta de destino para los DNIs", e);
-        }
-
-        String pathFrente = baseDir + "dni_frente_" + user.getId() + "_" + dniFrente.getOriginalFilename();
-        String pathDorso = baseDir + "dni_dorso_" + user.getId() + "_" + dniDorso.getOriginalFilename();
-
-        try {
-            Files.createDirectories(Paths.get(baseDir));
-            dniFrente.transferTo(new File(pathFrente));
-            dniDorso.transferTo(new File(pathDorso));
-        } catch (IOException e) {
-            throw new RuntimeException("Error guardando las fotos del DNI", e);
-        }
+        String pathFrente = GuardarImagenes.guardarArchivo(dniFrente,"dni",user.getId()+"_frente");
+        String pathDorso = GuardarImagenes.guardarArchivo(dniDorso,"dni",user.getId()+"_dorso");
 
         // Crear y guardar el alumno
         Alumno alumno = new Alumno();
@@ -61,7 +44,6 @@ public class AlumnoService {
         alumno.setNumeroDNI(numeroDNI);
         alumno.setPathDniFrente(pathFrente);
         alumno.setPathDniDorso(pathDorso);
-        // ... otros campos si hacen falta
         user.setRole("ALUMNO");
         user.setEsPago(true);
 

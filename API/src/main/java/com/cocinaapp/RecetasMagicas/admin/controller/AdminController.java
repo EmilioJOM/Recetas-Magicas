@@ -16,6 +16,7 @@ import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin")
@@ -85,16 +86,22 @@ public class AdminController {
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<?> crearCurso(@RequestBody CourseCreateRequestDto dto) {
+    public ResponseEntity<?> crearCurso(
+            @RequestPart("data") CourseCreateRequestDto dto,
+            @RequestPart(value = "mainPhoto", required = false) MultipartFile mainPhoto
+    )  {
         System.out.println("POST /admin/courses");
-        courseService.crearCurso(dto);
+        courseService.crearCurso(dto, mainPhoto);
         return ResponseEntity.ok("Curso creado correctamente");
     }
 
     @PostMapping("/sede")
-    public ResponseEntity<Sede> crearSede(@RequestBody SedeCreateRequestDto dto) {
+    public ResponseEntity<Sede> crearSede(
+            @RequestPart("data") SedeCreateRequestDto dto,
+            @RequestPart(value = "mainPhoto", required = false) MultipartFile mainPhoto
+    ){
         System.out.println("POST /admin/sede");
-        Sede sede = sedeService.crearSede(dto);
+        Sede sede = sedeService.crearSede(dto, mainPhoto);
         return ResponseEntity.ok(sede);
     }
 

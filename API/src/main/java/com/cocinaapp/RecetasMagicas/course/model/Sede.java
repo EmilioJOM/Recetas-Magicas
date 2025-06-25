@@ -28,4 +28,6 @@ public class Sede {
     private String promocionCursos;
 
     private int capacidadAlumnos;
+
+    private String mainPhoto;
 }

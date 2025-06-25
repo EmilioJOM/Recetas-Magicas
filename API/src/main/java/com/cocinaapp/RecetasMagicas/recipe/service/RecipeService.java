@@ -8,6 +8,7 @@ import com.cocinaapp.RecetasMagicas.recipe.repository.RecipeRepository;
 import com.cocinaapp.RecetasMagicas.recipe.repository.RecipeTypeRepository;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.UserRepository;
+import com.cocinaapp.RecetasMagicas.util.GuardarImagenes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -112,7 +113,7 @@ public class RecipeService {
 
         // Guardar foto principal con ruta adecuada
         if (mainPhoto != null && !mainPhoto.isEmpty()) {
-            String mainPhotoPath = guardarArchivo(mainPhoto, getBaseRecipeImageDir(), "principal_" + System.currentTimeMillis());
+            String mainPhotoPath = GuardarImagenes.guardarArchivo(mainPhoto, "recetas", "principal");
             receta.setMainPhoto(mainPhotoPath);
         } else {
             receta.setMainPhoto(null);
@@ -198,7 +199,7 @@ public class RecipeService {
 
             List<StepMedia> mediaList = new ArrayList<>();
             if (stepPhotos != null && stepPhotos.size() > idx && stepPhotos.get(idx) != null && !stepPhotos.get(idx).isEmpty()) {
-                String stepPhotoPath = guardarArchivo(stepPhotos.get(idx), getBaseRecipeImageDir(), "step_" + idx + "_" + System.currentTimeMillis());
+                String stepPhotoPath = GuardarImagenes.guardarArchivo(stepPhotos.get(idx), "pasos", "step_" + idx);
                 StepMedia media = StepMedia.builder()
                         .tipoContenido("foto")
                         .extension(getExtension(stepPhotos.get(idx).getOriginalFilename()))
@@ -214,20 +215,6 @@ public class RecipeService {
         receta.getSteps().addAll(steps);
 
         recipeRepository.save(receta);
-    }
-    private String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
-        try {
-            Files.createDirectories(Paths.get(carpeta));
-            String filename = nombre + "_" + archivo.getOriginalFilename();
-            String fullPath = carpeta + filename;
-            System.out.println("Intentando guardar en: " + fullPath);
-            archivo.transferTo(new File(fullPath));
-            File file = new File(fullPath);
-            System.out.println("Existe? " + file.exists());
-            return "/uploads/recetas/" + filename;
-        } catch (IOException e) {
-            throw new RuntimeException("No se pudo guardar el archivo", e);
-        }
     }
     private String getExtension (String filename) {
         if (filename == null) return "";
