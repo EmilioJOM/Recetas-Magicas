@@ -13,7 +13,7 @@ public class GuardarImagenes {
         String carpetaPath = "/tmp/uploads/"+carpeta+"/";
         try {
             Files.createDirectories(Paths.get(carpetaPath));
-            String filename = nombre + "_" + archivo.getOriginalFilename() +"_"+ System.currentTimeMillis();
+            String filename = nombre + "_" + System.currentTimeMillis() +"_"+ archivo.getOriginalFilename()  ;
             String fullPath = carpeta + filename;
             System.out.println("Intentando guardar en: " + fullPath);
             archivo.transferTo(new File(fullPath));
