@@ -7,7 +7,7 @@ from enum import Enum
 from definicionEntidades import *
 
 
-URL = "https://recetas-magicas-api.onrender.com/"
+# URL = "https://recetas-magicas-api.onrender.com/"
 URL = "http://localhost:8080/"
 global TOKEN
 
@@ -83,6 +83,7 @@ def validarCodigo(codigo, email):
     "codigo": codigo,
     "email": email
     }
+    print(login_payload)
     r = requests.post(login_url, json=login_payload)
     print("validacion de codigo:", r.status_code, r.text)
     if r.status_code != 200:
@@ -393,6 +394,7 @@ def subirSede(sede: Sede):
     login_payload = {
         "nombre": sede.nombre,
         "direccion": sede.direccion,
+        "coordenadas": sede.coordenadas,
         "telefono": sede.telefono,
         "mail": sede.mail,
         "whatsapp": sede.whatsapp,

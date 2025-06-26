@@ -9,7 +9,7 @@ recetas = [
         description="Un clásico italiano cremoso y sabroso.",
         servings=2,
         tipoId=1,
-        dificultad=NivelDificultad.PRINCIPIANTE.name,
+        experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 200, "detail": "espaguetis", "unit": "gramos", "observations": ""},
             {"quantity": 100, "detail": "panceta", "unit": "gramos", "observations": "o bacon"},
@@ -33,7 +33,7 @@ recetas = [
         description="Tarta salada de espinaca y ricota, ideal para almuerzos o cenas.",
         servings=6,
         tipoId=2,
-        dificultad=NivelDificultad.INTERMEDIO.name,
+        experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 2, "detail": "masa de tarta", "unit": "unidad", "observations": "tapas"},
             {"quantity": 300, "detail": "espinaca", "unit": "gramos", "observations": "fresca o congelada"},
@@ -60,7 +60,7 @@ recetas = [
         description="Filetes de lomo con salsa cremosa de mostaza.",
         servings=4,
         tipoId=3,
-        dificultad=NivelDificultad.EXPERTO.name,
+        experiencia=NivelDificultad.EXPERTO.name,
         ingredients=[
             {"quantity": 4, "detail": "filetes de lomo", "unit": "unidad", "observations": "de vaca"},
             {"quantity": 2, "detail": "cucharadas de mostaza Dijon", "unit": "cucharada", "observations": ""},
@@ -86,7 +86,7 @@ recetas = [
         description="Milanesas crocantes y sabrosas, aptas para vegetarianos.",
         servings=4,
         tipoId=2,
-        dificultad=NivelDificultad.PRINCIPIANTE.name,
+        experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 2, "detail": "berenjenas", "unit": "unidad", "observations": "grandes"},
             {"quantity": 2, "detail": "huevos", "unit": "unidad", "observations": ""},
@@ -110,7 +110,7 @@ recetas = [
         description="Galletas dulces, ideales para merendar.",
         servings=12,
         tipoId=4,
-        dificultad=NivelDificultad.PRINCIPIANTE.name,
+        experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 150, "detail": "avena arrollada", "unit": "gramos", "observations": ""},
             {"quantity": 100, "detail": "harina", "unit": "gramos", "observations": ""},
@@ -134,7 +134,7 @@ recetas = [
         description="Guarnición de verduras al horno típica francesa.",
         servings=4,
         tipoId=2,
-        dificultad=NivelDificultad.INTERMEDIO.name,
+        experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 1, "detail": "berenjena", "unit": "unidad", "observations": "mediana"},
             {"quantity": 1, "detail": "zucchini", "unit": "unidad", "observations": "mediano"},
@@ -160,7 +160,7 @@ recetas = [
         description="Postre húmedo y chocolatoso, ideal para acompañar con helado.",
         servings=8,
         tipoId=4,
-        dificultad=NivelDificultad.INTERMEDIO.name,
+        experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 200, "detail": "chocolate semiamargo", "unit": "gramos", "observations": ""},
             {"quantity": 120, "detail": "manteca", "unit": "gramos", "observations": ""},
@@ -183,7 +183,7 @@ recetas = [
         description="Pollo especiado en salsa cremosa, acompañado con arroz blanco.",
         servings=4,
         tipoId=3,
-        dificultad=NivelDificultad.INTERMEDIO.name,
+        experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 500, "detail": "pechuga de pollo", "unit": "gramos", "observations": "en cubos"},
             {"quantity": 1, "detail": "cebolla", "unit": "unidad", "observations": "picada"},
@@ -209,7 +209,7 @@ recetas = [
         description="Rolls de sushi con arroz, alga nori, salmón y palta.",
         servings=2,
         tipoId=5,
-        dificultad=NivelDificultad.EXPERTO.name,
+        experiencia=NivelDificultad.EXPERTO.name,
         ingredients=[
             {"quantity": 2, "detail": "hojas de alga nori", "unit": "unidad", "observations": ""},
             {"quantity": 200, "detail": "arroz para sushi", "unit": "gramos", "observations": "cocido y enfriado"},
@@ -234,7 +234,7 @@ recetas = [
         description="Dulce clásico, ideal para la merienda o postre.",
         servings=8,
         tipoId=4,
-        dificultad=NivelDificultad.PRINCIPIANTE.name,
+        experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 2, "detail": "huevos", "unit": "unidad", "observations": ""},
             {"quantity": 250, "detail": "leche", "unit": "mililitros", "observations": ""},
@@ -257,7 +257,7 @@ recetas = [
         description="Ensalada fresca con pollo, crutones y aderezo César.",
         servings=2,
         tipoId=2,
-        dificultad=NivelDificultad.INTERMEDIO.name,
+        experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 1, "detail": "pechuga de pollo", "unit": "unidad", "observations": "a la plancha"},
             {"quantity": 1, "detail": "lechuga romana", "unit": "unidad", "observations": ""},
@@ -282,6 +282,213 @@ recetas = [
     )
 ]
 
+sedes = [
+    Sede(
+        nombre="Sede Central Palermo",
+        direccion="Av. Santa Fe 3500, CABA",
+        coordenadas="-34.5895,-58.4206",
+        capacidad=120,
+        telefono="+54 11 4899-1122",
+        mail="palermo@recetasmagicas.com",
+        whatsapp="+54 9 11 6000-1122",
+        main_foto="",
+        tipo_bonificacion="Descuento",
+        bonificacion_cursos="10% en cursos de pastelería",
+        tipo_promocion=None,
+        promocion_cursos=None
+    ),
+    Sede(
+        nombre="Sede Belgrano",
+        direccion="Juramento 2400, CABA",
+        coordenadas="-34.5591,-58.4573",
+        capacidad=90,
+        telefono="+54 11 4702-3344",
+        mail="belgrano@recetasmagicas.com",
+        whatsapp="+54 9 11 4500-3344",
+        main_foto="",
+        tipo_bonificacion=None,
+        bonificacion_cursos=None,
+        tipo_promocion="2x1",
+        promocion_cursos="2x1 en cursos de cocina internacional"
+    ),
+    Sede(
+        nombre="Sede La Plata",
+        direccion="Calle 7 N° 850, La Plata, Buenos Aires",
+        coordenadas="-34.9214,-57.9544",
+        capacidad=70,
+        telefono="+54 221 444-5678",
+        mail="laplata@recetasmagicas.com",
+        whatsapp="+54 9 221 555-6789",
+        main_foto="",
+        tipo_bonificacion="Beca parcial",
+        bonificacion_cursos="50% para estudiantes universitarios",
+        tipo_promocion=None,
+        promocion_cursos=None
+    ),
+    Sede(
+        nombre="Sede Córdoba Centro",
+        direccion="Av. Colón 500, Córdoba",
+        coordenadas="-31.4135,-64.1811",
+        capacidad=100,
+        telefono="+54 351 500-1122",
+        mail="cordoba@recetasmagicas.com",
+        whatsapp="+54 9 351 400-1122",
+        main_foto="",
+        tipo_bonificacion=None,
+        bonificacion_cursos=None,
+        tipo_promocion=None,
+        promocion_cursos=None
+    ),
+    Sede(
+        nombre="Sede Mar del Plata",
+        direccion="Av. Colón 2300, Mar del Plata, Buenos Aires",
+        coordenadas="-38.0023,-57.5575",
+        capacidad=80,
+        telefono="+54 223 477-9090",
+        mail="mardelplata@recetasmagicas.com",
+        whatsapp="+54 9 223 588-9090",
+        main_foto="",
+        tipo_bonificacion="Descuento",
+        bonificacion_cursos="15% en cursos de cocina saludable",
+        tipo_promocion="Regalo",
+        promocion_cursos="Set de utensilios para inscriptos"
+    )
+]
 
+cursos = [
+    Course(
+        title="Panadería Artesanal",
+        description="Aprendé a preparar panes clásicos y especiales con técnicas de panadería artesanal.",
+        main_photo="",
+        contenidos=[
+            "Historia y tipos de pan",
+            "Técnicas de amasado",
+            "Fermentación y levado",
+            "Pan de campo, baguette y focaccia",
+            "Panificados integrales"
+        ],
+        requirements="No se requieren conocimientos previos.",
+        duration="8 clases de 2 horas",
+        price=35000.0,
+        modality="Presencial"
+    ),
+    Course(
+        title="Cocina Vegana Creativa",
+        description="Recetas innovadoras y saludables sin ingredientes de origen animal.",
+        main_photo="",
+        contenidos=[
+            "Bases de la cocina vegana",
+            "Sustitutos vegetales",
+            "Entradas, platos principales y postres",
+            "Fermentos y quesos veganos",
+            "Planificación de menús"
+        ],
+        requirements="Apto para todo público.",
+        duration="6 clases de 2 horas",
+        price=30000.0,
+        modality="Presencial y online"
+    ),
+    Course(
+        title="Pastelería Profesional",
+        description="Formación integral en técnicas de pastelería clásica y moderna.",
+        main_photo="",
+        contenidos=[
+            "Masas base: sableé, hojaldre, choux",
+            "Tortas y entremets",
+            "Decoración y glasé",
+            "Bombonería y petit fours",
+            "Pastelería internacional"
+        ],
+        requirements="Conocimientos básicos de cocina recomendados.",
+        duration="12 clases de 3 horas",
+        price=65000.0,
+        modality="Presencial"
+    ),
+    Course(
+        title="Cocina Italiana de Autor",
+        description="Recorrido por las recetas tradicionales y modernas de la cocina italiana.",
+        main_photo="",
+        contenidos=[
+            "Pasta fresca y seca",
+            "Risottos y salsas tradicionales",
+            "Antipasti y focaccias",
+            "Postres italianos: tiramisú, panna cotta",
+            "Platos regionales"
+        ],
+        requirements="No se requieren conocimientos previos.",
+        duration="8 clases de 2 horas y media",
+        price=42000.0,
+        modality="Presencial"
+    ),
+    Course(
+        title="Sushi y Cocina Asiática",
+        description="Técnicas básicas y avanzadas de sushi, woks y sabores de Asia.",
+        main_photo="",
+        contenidos=[
+            "Sushi rolls y nigiris",
+            "Preparación de arroz",
+            "Salsas y marinados asiáticos",
+            "Wok y salteados",
+            "Postres orientales"
+        ],
+        requirements="Tener cuchillo propio recomendable.",
+        duration="5 clases de 2 horas",
+        price=50000.0,
+        modality="Presencial"
+    ),
+    Course(
+        title="Cocina Saludable para el Día a Día",
+        description="Ideas, técnicas y recetas para comer rico y sano sin complicaciones.",
+        main_photo="",
+        contenidos=[
+            "Ensaladas y bowls",
+            "Legumbres y cereales integrales",
+            "Snacks saludables",
+            "Menús semanales y meal prep",
+            "Reemplazos nutritivos"
+        ],
+        requirements="Para todas las edades.",
+        duration="4 clases de 2 horas",
+        price=22000.0,
+        modality="Online"
+    ),
+    Course(
+        title="Repostería sin TACC",
+        description="Recetas dulces libres de gluten, ideales para celíacos y todo público.",
+        main_photo="",
+        contenidos=[
+            "Bases de la repostería sin TACC",
+            "Tortas y muffins",
+            "Galletitas y budines",
+            "Decoración sin gluten",
+            "Control de contaminación cruzada"
+        ],
+        requirements="No se requiere experiencia previa.",
+        duration="6 clases de 1 hora y media",
+        price=32000.0,
+        modality="Online"
+    ),
+]
 
-
+cronogramas = [
+    CronogramaCurso(course=1, sede=1, ubicacion="Aula Panadería", promotion=10.0, fecha_inicio="2024-08-05", fecha_fin="2024-08-28", vacantes=25),
+    CronogramaCurso(course=2, sede=2, ubicacion="Cocina Grande", promotion=None, fecha_inicio="2024-09-01", fecha_fin="2024-09-30", vacantes=18),
+    CronogramaCurso(course=3, sede=3, ubicacion="Sala 1", promotion=15.0, fecha_inicio="2024-10-15", fecha_fin="2024-11-26", vacantes=15),
+    CronogramaCurso(course=4, sede=4, ubicacion="Aula 2", promotion=5.0, fecha_inicio="2024-07-10", fecha_fin="2024-08-30", vacantes=20),
+    CronogramaCurso(course=5, sede=5, ubicacion="Salón Oriental", promotion=None, fecha_inicio="2024-11-02", fecha_fin="2024-12-07", vacantes=12),
+    CronogramaCurso(course=6, sede=1, ubicacion="Aula Saludable", promotion=20.0, fecha_inicio="2024-09-05", fecha_fin="2024-10-01", vacantes=30),
+    CronogramaCurso(course=7, sede=2, ubicacion="Aula 4", promotion=None, fecha_inicio="2024-08-20", fecha_fin="2024-09-24", vacantes=10),
+    CronogramaCurso(course=2, sede=4, ubicacion="Cocina Experimental", promotion=12.5, fecha_inicio="2024-07-18", fecha_fin="2024-08-22", vacantes=16),
+    CronogramaCurso(course=3, sede=1, ubicacion="Sala Pastelería", promotion=None, fecha_inicio="2024-10-10", fecha_fin="2024-11-25", vacantes=20),
+    CronogramaCurso(course=4, sede=5, ubicacion="Aula Italiana", promotion=10.0, fecha_inicio="2024-07-05", fecha_fin="2024-08-15", vacantes=14),
+    CronogramaCurso(course=5, sede=3, ubicacion="Sala Sushi", promotion=None, fecha_inicio="2024-09-10", fecha_fin="2024-10-08", vacantes=8),
+    CronogramaCurso(course=1, sede=4, ubicacion="Aula Panadería", promotion=None, fecha_inicio="2024-11-20", fecha_fin="2024-12-15", vacantes=22),
+    CronogramaCurso(course=6, sede=2, ubicacion="Aula 7", promotion=25.0, fecha_inicio="2024-08-01", fecha_fin="2024-08-31", vacantes=18),
+    CronogramaCurso(course=7, sede=3, ubicacion="Aula Sin TACC", promotion=15.0, fecha_inicio="2024-10-01", fecha_fin="2024-11-05", vacantes=10),
+    CronogramaCurso(course=2, sede=5, ubicacion="Cocina Vegana", promotion=None, fecha_inicio="2024-09-03", fecha_fin="2024-09-28", vacantes=12),
+    CronogramaCurso(course=3, sede=5, ubicacion="Sala 2", promotion=5.0, fecha_inicio="2024-11-01", fecha_fin="2024-12-12", vacantes=12),
+    CronogramaCurso(course=4, sede=3, ubicacion="Aula 6", promotion=None, fecha_inicio="2024-08-12", fecha_fin="2024-09-19", vacantes=20),
+    CronogramaCurso(course=5, sede=2, ubicacion="Salón Oriente", promotion=10.0, fecha_inicio="2024-07-22", fecha_fin="2024-08-22", vacantes=10),
+    CronogramaCurso(course=6, sede=4, ubicacion="Aula Salud", promotion=None, fecha_inicio="2024-10-08", fecha_fin="2024-10-29", vacantes=25),
+    CronogramaCurso(course=7, sede=1, ubicacion="Aula Celíacos", promotion=None, fecha_inicio="2024-09-14", fecha_fin="2024-10-19", vacantes=16),
+]

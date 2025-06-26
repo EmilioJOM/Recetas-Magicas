@@ -7,7 +7,9 @@ import datosParaPrecargar as datos
 from definicionEntidades import *
 
 
-URL = "https://recetas-magicas-api.onrender.com/"
+# URL = "https://recetas-magicas-api.onrender.com/"
+URL = "http://localhost:8080/"
+
 global TOKEN
 
 
@@ -19,16 +21,16 @@ emilio = User(
     nroTramite = "12345678910"
     )
 
-recetas = datos.receta
-sedes = datos.sedes()
-cursos = datos.cursos()
-catedras = datos.catedras()
+recetas = datos.recetas
+sedes = datos.sedes
+cursos = datos.cursos
+catedras = datos.cronogramas
 
 def login(user):
     global TOKEN
     login_url = f"{URL}auth/login"
     login_payload = {
-    "email": user.email,
+    "email": user.mail,
     "password": user.contraseña,
     "rememberMe": False
     }
@@ -111,6 +113,7 @@ def subirSede(sede: Sede):
     login_payload = {
         "nombre": sede.nombre,
         "direccion": sede.direccion,
+        "coordenadas": sede.coordenadas,
         "telefono": sede.telefono,
         "mail": sede.mail,
         "whatsapp": sede.whatsapp,
@@ -173,4 +176,16 @@ def testCrearReceta(receta):
     print(id)
     crearRecetaPaso2(id, receta)
     crearRecetaPaso3(id, receta)
+
+login(emilio)
+
+for receta in recetas:
+    testCrearReceta(receta=receta)
+
+for sede in sedes:
+    subirSede(sede)
+for curso in cursos:
+    subirCurso(curso)
+for catedra in catedras:
+    subirCatedra(catedra)
 
