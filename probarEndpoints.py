@@ -531,6 +531,15 @@ def eliminar_catedra_admin(id):
     if r.status_code != 200:
         print("No se pudo eliminar la catedra.")
 
+def recuperarCursos():
+    login_url = f"{URL}courses/latest/5"
+    r = requests.get(login_url)
+    print("get CURSOS:", r.status_code, r.text)
+    for i in r.json():
+        print(i)
+    if r.status_code != 200:
+        print("validacion failed.")
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -553,7 +562,7 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana b",
+        title="Pizza napolitana c",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,  # Debe existir ese tipo en tu DB
@@ -607,8 +616,8 @@ def testSubirCatedra():
 
     # Crear un cronograma de curso
     cronograma = CronogramaCurso(
-        course=1,
-        sede=1,
+        course=2,
+        sede=2,
         ubicacion="Aula 3",
         promotion=20.0,
         fecha_inicio="2024-07-10",
@@ -622,14 +631,14 @@ def testSubirCatedra():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-login(emilio.mail,emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-testCrearReceta()
+# testCrearReceta()
 # recuperarRecetas()
 # recuperarUnaReceta(1)
 # marcarFavorito(2)
@@ -639,6 +648,7 @@ testCrearReceta()
 # marcarModificado(1)
 # searchUser()
 # testSubirCatedra()
+recuperarCursos()
 
 # eliminar_usuario_admin(1)
 # eliminar_catedra_admin(1)
