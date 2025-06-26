@@ -14,5 +14,6 @@ class StepDto {
 
     private Integer nroPaso;
     private String instruction;
+    private boolean foto;
     private List<StepMediaDto> media;
 }

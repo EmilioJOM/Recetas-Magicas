@@ -7,6 +7,7 @@ import lombok.*;
 public class SedeCreateRequestDto {
     private String nombre;
     private String direccion;
+    private String coordenadas;
     private String telefono;
     private String mail;
     private String whatsapp;

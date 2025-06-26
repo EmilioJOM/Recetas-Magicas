@@ -22,6 +22,7 @@ public class SedeService {
         Sede sede = Sede.builder()
                 .nombre(dto.getNombre())
                 .direccion(dto.getDireccion())
+                .coordenadas(dto.getCoordenadas())
                 .telefono(dto.getTelefono())
                 .mail(dto.getMail())
                 .whatsapp(dto.getWhatsapp())

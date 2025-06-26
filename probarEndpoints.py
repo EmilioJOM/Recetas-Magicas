@@ -2,34 +2,43 @@ from time import sleep
 import requests
 import json
 from dataclasses import dataclass, field
-from typing import List
-from typing import Optional
+from typing import *
+from enum import Enum
 
 URL = "https://recetas-magicas-api.onrender.com/"
 global TOKEN
 
+@dataclass
 class User:
-    mail = str
-    alias = str
-    contraseña = str
-    dni = str
-    nroTramite = str
+    mail: str
+    alias: str
+    contraseña: str
+    dni: str
+    nroTramite: str
 
+
+class NivelDificultad(Enum):
+    PRINCIPIANTE = "PRINCIPIANTE"
+    INTERMEDIO = "INTERMEDIO"
+    EXPERTO = "EXPERTO"
+
+@dataclass
 class Receta:
-    def __init__(self, title, description, servings, tipoId, ingredients, steps, main_photo_path, step_photos_paths=None):
-        self.title = title
-        self.description = description
-        self.servings = servings
-        self.tipoId = tipoId  # Long en backend
-        self.ingredients = ingredients  # lista de dicts: quantity, detail, unit, observations
-        self.steps = steps  # lista de dicts: instruction
-        self.main_photo_path = main_photo_path
-        self.step_photos_paths = step_photos_paths or []
+    title: str
+    description: str
+    servings: int
+    tipoId: int  # Long en backend
+    ingredients: List[Dict]  # lista de dicts: quantity, detail, unit, observations
+    steps: List[Dict]        # lista de dicts: instruction
+    main_photo_path: str
+    step_photos_paths: Optional[List[str]] = field(default_factory=list)
+    experiencia: NivelDificultad = NivelDificultad.PRINCIPIANTE
 
 @dataclass
 class Sede:
     nombre: str
     direccion: str
+    coordenadas: str
     capacidad: int
     telefono: str
     mail: str
@@ -61,12 +70,13 @@ class CronogramaCurso:
     fecha_fin: Optional[str] = None
     vacantes: Optional[int] = None
 
-emilio = User()
-emilio.mail = "emijesus21@gmail.com"
-emilio.contraseña = "claveSetghyygura123"
-emilio.alias = "emilio123"
-emilio.dni = "12345678"
-emilio.nroTramite = "12345678910"
+emilio = User(
+    mail = "emijesus21@gmail.com",
+    contraseña = "claveSergura123",
+    alias = "emilio123",
+    dni = "12345678",
+    nroTramite = "12345678910"
+    )
 
 tarjeta1 = {
     "nroTarjeta": "1234567890",
@@ -249,7 +259,8 @@ def crearRecetaPaso1(receta):
         "title": receta.title,
         "description": receta.description,
         "servings": receta.servings,
-        "tipoId": receta.tipoId
+        "tipoId": receta.tipoId,
+        "experienceLevel": receta.experiencia
     }
     files = [
         ('data', ('data', json.dumps(data_json), 'application/json'))
@@ -258,6 +269,7 @@ def crearRecetaPaso1(receta):
         files.append(('mainPhoto', open(receta.main_photo_path, 'rb')))
     headers = {'Authorization': f'Bearer {TOKEN}'}
     response = requests.post(url, files=files, headers=headers)
+    print(response.text)
     try:
         resp = response.json()
         print("Paso 1:", response.status_code, resp)
@@ -289,7 +301,7 @@ def crearRecetaPaso2(id, receta):
 def crearRecetaPaso3(id, receta):
     url = URL + f"recipes/crearReceta3/{id}"
     data_json = {
-        "steps": [{"instruction": s["instruction"]} for s in receta.steps]
+        "steps": [{"instruction": s["instruction"],"foto": s["foto"]} for s in receta.steps]
     }
     files = [
         ('data', ('data', json.dumps(data_json), 'application/json'))
@@ -540,6 +552,15 @@ def recuperarCursos():
     if r.status_code != 200:
         print("validacion failed.")
 
+def recuperarUnCurso(id):
+    login_url = f"{URL}courses/{id}"
+    r = requests.get(login_url)
+    print("get CURSO:", r.status_code, r.text)
+    for clave, valor in r.json().items():
+            print(f"{clave}: {valor}")
+    if r.status_code != 200:
+        print("validacion failed.")
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -562,10 +583,11 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana c",
+        title="Pizza napolitana e",
         description="Pizza casera con masa fina",
         servings=4,
-        tipoId=1,  # Debe existir ese tipo en tu DB
+        tipoId=1,
+        experiencia= NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {
                 "quantity": 500,
@@ -576,14 +598,15 @@ def testCrearReceta():
             # Más ingredientes...
         ],
         steps=[
-            {"instruction": "Mezclar la harina con el agua"},
-            {"instruction": "Amasar hasta obtener una masa suave"},
+            {"instruction": "Mezclar la harina con el agua","foto":True},
+            {"instruction": "Amasar hasta obtener una masa suave","foto":False},
+            {"instruction": "Cortar cebolla","foto":True},
             # Más pasos...
         ],
         main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[
             r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
-            # Más imágenes si tenés más pasos
+            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
         ]
     )
     id = crearRecetaPaso1(mi_receta)
@@ -595,6 +618,7 @@ def testSubirCatedra():
     sede = Sede(
         nombre="Sede Central",
         direccion="Av. Siempre Viva 123",
+        coordenadas= "-34.61704597628892, -58.381914081793745",
         capacidad=30,
         telefono="1122334455",
         mail="central@cocina.com",
@@ -635,10 +659,10 @@ def testSubirCatedra():
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
-# testRecoverPassword(emilio.mail)
+testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-# testCrearReceta()
+testCrearReceta()
 # recuperarRecetas()
 # recuperarUnaReceta(1)
 # marcarFavorito(2)
@@ -647,8 +671,9 @@ def testSubirCatedra():
 # searchUser()
 # marcarModificado(1)
 # searchUser()
-# testSubirCatedra()
-recuperarCursos()
+testSubirCatedra()
+# recuperarCursos()
+# recuperarUnCurso(7)
 
 # eliminar_usuario_admin(1)
 # eliminar_catedra_admin(1)

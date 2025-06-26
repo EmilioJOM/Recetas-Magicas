@@ -12,6 +12,7 @@ public class Sede {
 
     private String nombre;
     private String direccion;
+    private String coordenadas;
     @Column(nullable = true)
     private String telefono;
     @Column(nullable = true)

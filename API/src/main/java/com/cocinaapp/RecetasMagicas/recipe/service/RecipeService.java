@@ -178,11 +178,14 @@ public class RecipeService {
     public void crearReceta3(long id, RecipeCreate3Request dto, List<MultipartFile> stepPhotos, String email){
         Optional<Recipe> recetaget = recipeRepository.findById(id);
         Recipe receta = recetaget.get();
-        if (receta.getAuthor().getEmail() == email){
-            new RuntimeException("hubo un error al identificar el autor de la receta");
+        if (!receta.getAuthor().getEmail().equals(email)){
+            throw new RuntimeException("hubo un error al identificar el autor de la receta");
         }
+
         // Pasos
         List<Step> steps = new ArrayList<>();
+        int photoIndex = 0; // índice para stepPhotos
+
         for (int idx = 0; idx < dto.getSteps().size(); idx++) {
             StepDto stepDto = dto.getSteps().get(idx);
             Step step = new Step();
@@ -191,15 +194,19 @@ public class RecipeService {
             step.setRecipe(receta);
 
             List<StepMedia> mediaList = new ArrayList<>();
-            if (stepPhotos != null && stepPhotos.size() > idx && stepPhotos.get(idx) != null && !stepPhotos.get(idx).isEmpty()) {
-                String stepPhotoPath = GuardarImagenes.guardarArchivo(stepPhotos.get(idx), "pasos", "step_" + idx);
-                StepMedia media = StepMedia.builder()
-                        .tipoContenido("foto")
-                        .extension(getExtension(stepPhotos.get(idx).getOriginalFilename()))
-                        .urlContenido(stepPhotoPath)
-                        .step(step)
-                        .build();
-                mediaList.add(media);
+            if (Boolean.TRUE.equals(stepDto.getFoto())) { // <-- solo si el paso tiene foto
+                // Usar photoIndex, no idx!
+                if (stepPhotos != null && photoIndex < stepPhotos.size() && stepPhotos.get(photoIndex) != null && !stepPhotos.get(photoIndex).isEmpty()) {
+                    String stepPhotoPath = GuardarImagenes.guardarArchivo(stepPhotos.get(photoIndex), "pasos", "step_" + idx);
+                    StepMedia media = StepMedia.builder()
+                            .tipoContenido("foto")
+                            .extension(getExtension(stepPhotos.get(photoIndex).getOriginalFilename()))
+                            .urlContenido(stepPhotoPath)
+                            .step(step)
+                            .build();
+                    mediaList.add(media);
+                    photoIndex++; // sólo aumento si usé una foto
+                }
             }
             step.setMedia(mediaList);
             steps.add(step);
