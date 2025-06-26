@@ -90,13 +90,6 @@ public class RecipeService {
                 .build();
 
     }
-    private String getBaseRecipeImageDir() {
-//        String env = System.getenv("APP_ENV");
-//        if (env != null && env.equalsIgnoreCase("production")) {
-//            return "src/main/resources/static/uploads/recetas/";
-//        }
-        return "/tmp/uploads/recetas/";
-    }
     public long crearReceta1(
             RecipeCreate1Request dto,
             MultipartFile mainPhoto,

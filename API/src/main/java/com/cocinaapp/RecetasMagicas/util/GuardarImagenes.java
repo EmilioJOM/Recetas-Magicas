@@ -16,7 +16,7 @@ public class GuardarImagenes {
             File dir = new File(carpetaPath);
             if (!dir.exists()) dir.mkdirs();
             String filename = nombre + "_" + System.currentTimeMillis() +"_"+ archivo.getOriginalFilename();
-            String fullPath = carpeta + filename;
+            String fullPath = carpetaPath + filename;
             System.out.println("Intentando guardar en: " + fullPath);
             archivo.transferTo(new File(fullPath));
             File file = new File(fullPath);

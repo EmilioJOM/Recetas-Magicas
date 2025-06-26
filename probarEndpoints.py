@@ -553,7 +553,7 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana a",
+        title="Pizza napolitana b",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,  # Debe existir ese tipo en tu DB
@@ -621,8 +621,8 @@ def testSubirCatedra():
 
 #############################################
 # sleep(300)
-testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-# login(emilio.mail,emilio.contraseña)
+# testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
+login(emilio.mail,emilio.contraseña)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
