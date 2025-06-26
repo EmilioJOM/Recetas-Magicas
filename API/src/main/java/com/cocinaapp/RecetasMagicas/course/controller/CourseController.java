@@ -13,9 +13,9 @@ import java.util.List;
 public class CourseController {
     private final CourseService courseService;
 
-    @GetMapping("/latest")
-    public List<CourseListItemDto> getLatestCourses(@RequestParam(defaultValue = "3") int n) {
-        System.out.println("course/latest");
+    @GetMapping("/latest/{n}")
+    public List<CourseListItemDto> getLatestCourses(@PathVariable int n) {
+        System.out.println("courses/latest/" + n);
         return courseService.getLatestCourses(n);
     }
 }
