@@ -194,7 +194,7 @@ public class RecipeService {
             step.setRecipe(receta);
 
             List<StepMedia> mediaList = new ArrayList<>();
-            if (Boolean.TRUE.equals(stepDto.getFoto())) { // <-- solo si el paso tiene foto
+            if (Boolean.TRUE.equals(stepDto.isFoto())) {
                 // Usar photoIndex, no idx!
                 if (stepPhotos != null && photoIndex < stepPhotos.size() && stepPhotos.get(photoIndex) != null && !stepPhotos.get(photoIndex).isEmpty()) {
                     String stepPhotoPath = GuardarImagenes.guardarArchivo(stepPhotos.get(photoIndex), "pasos", "step_" + idx);
