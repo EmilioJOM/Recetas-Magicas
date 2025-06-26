@@ -16,7 +16,6 @@ public class SearchFilterDto {
     private List<String> ingredientesIncluidos;
     private List<String> ingredientesExcluidos;
     private Integer porciones;             // o cantidadPersonas
-    private Integer tiempoPreparacionMax;  // si lo tenés en el modelo
     private Long autorId;
     private Boolean favoritos;
     private Boolean modificados;

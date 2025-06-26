@@ -492,3 +492,270 @@ cronogramas = [
     CronogramaCurso(course=6, sede=4, ubicacion="Aula Salud", promotion=None, fecha_inicio="2024-10-08", fecha_fin="2024-10-29", vacantes=25),
     CronogramaCurso(course=7, sede=1, ubicacion="Aula Celíacos", promotion=None, fecha_inicio="2024-09-14", fecha_fin="2024-10-19", vacantes=16),
 ]
+
+filtros_receta = [
+
+    # 1. Buscar por texto libre que aparece en el título
+    {
+        "query": "tarta",
+        "tipoReceta": None,
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": [],
+        "porciones": None,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": "APROBADA",
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 2. Buscar por tipo de receta "Postre" y porciones = 8
+    {
+        "query": None,
+        "tipoReceta": "Postre",
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": [],
+        "porciones": 8,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": "APROBADA",
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 3. Buscar recetas que contengan palta como ingrediente
+    {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": ["palta"],
+        "ingredientesExcluidos": [],
+        "porciones": None,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": "APROBADA",
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 4. Buscar recetas que NO contengan ajo
+    {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": ["ajo"],
+        "porciones": None,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": "APROBADA",
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 5. Buscar recetas con pollo y valoración mínima 4.0
+    {
+        "query": "pollo",
+        "tipoReceta": None,
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": [],
+        "porciones": None,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": 4.0,
+        "estado": "APROBADA",
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 6. Buscar recetas publicadas dentro de un rango de fechas
+    {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": [],
+        "porciones": None,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": "APROBADA",
+        "fechaDesde": "2024-01-01",
+        "fechaHasta": "2025-01-01"
+    },
+
+    # 7. Buscar recetas vegetarianas con berenjena, sin carne
+    {
+        "query": "berenjena",
+        "tipoReceta": "Vegetariano",
+        "ingredientesIncluidos": ["berenjena"],
+        "ingredientesExcluidos": ["carne"],
+        "porciones": 4,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": "APROBADA",
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 8. Buscar todas las recetas creadas por autor ID 1
+    {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": [],
+        "porciones": None,
+        "autorId": 1,
+        "favoritos": False,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": None,
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 9. Buscar recetas guardadas como favoritas (requiere token)
+    {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": [],
+        "porciones": None,
+        "autorId": None,
+        "favoritos": True,
+        "modificados": False,
+        "valoracionMinima": None,
+        "estado": None,
+        "fechaDesde": None,
+        "fechaHasta": None
+    },
+
+    # 10. Buscar recetas modificadas por el usuario (requiere token)
+    {
+        "query": None,
+        "tipoReceta": None,
+        "ingredientesIncluidos": [],
+        "ingredientesExcluidos": [],
+        "porciones": None,
+        "autorId": None,
+        "favoritos": False,
+        "modificados": True,
+        "valoracionMinima": None,
+        "estado": None,
+        "fechaDesde": None,
+        "fechaHasta": None
+    }
+]
+
+filtros_cursos = [
+
+    # 1. Buscar por texto libre en título
+    {
+        "query": "panadería",
+        "modalidad": None,
+        "precioMinimo": None,
+        "precioMaximo": None,
+        "duracion": None,
+        "contenidos": []
+    },
+
+    # 2. Buscar por modalidad exacta
+    {
+        "query": None,
+        "modalidad": "Online",
+        "precioMinimo": None,
+        "precioMaximo": None,
+        "duracion": None,
+        "contenidos": []
+    },
+
+    # 3. Buscar por rango de precio
+    {
+        "query": None,
+        "modalidad": None,
+        "precioMinimo": 30000.0,
+        "precioMaximo": 50000.0,
+        "duracion": None,
+        "contenidos": []
+    },
+
+    # 4. Buscar por duración exacta
+    {
+        "query": None,
+        "modalidad": None,
+        "precioMinimo": None,
+        "precioMaximo": None,
+        "duracion": "6 clases de 2 horas",
+        "contenidos": []
+    },
+
+    # 5. Buscar por contenido específico (curso que mencione "pasta fresca")
+    {
+        "query": None,
+        "modalidad": None,
+        "precioMinimo": None,
+        "precioMaximo": None,
+        "duracion": None,
+        "contenidos": ["Pasta fresca y seca"]
+    },
+
+    # 6. Buscar por combinación de modalidad y precio
+    {
+        "query": None,
+        "modalidad": "Presencial",
+        "precioMinimo": 40000.0,
+        "precioMaximo": 70000.0,
+        "duracion": None,
+        "contenidos": []
+    },
+
+    # 7. Buscar por contenido múltiple (debe tener al menos uno)
+    {
+        "query": None,
+        "modalidad": None,
+        "precioMinimo": None,
+        "precioMaximo": None,
+        "duracion": None,
+        "contenidos": ["Sushi rolls y nigiris", "Wok y salteados"]
+    },
+
+    # 8. Buscar por texto libre en descripción
+    {
+        "query": "recetas sin gluten",
+        "modalidad": None,
+        "precioMinimo": None,
+        "precioMaximo": None,
+        "duracion": None,
+        "contenidos": []
+    },
+
+    # 9. Buscar curso económico
+    {
+        "query": None,
+        "modalidad": None,
+        "precioMinimo": 0.0,
+        "precioMaximo": 25000.0,
+        "duracion": None,
+        "contenidos": []
+    },
+
+    # 10. Búsqueda amplia: por texto y modalidad combinados
+    {
+        "query": "vegana",
+        "modalidad": "Presencial y online",
+        "precioMinimo": None,
+        "precioMaximo": None,
+        "duracion": None,
+        "contenidos": []
+    }
+
+]

@@ -6,7 +6,6 @@ from typing import *
 from enum import Enum
 from definicionEntidades import *
 
-
 # URL = "https://recetas-magicas-api.onrender.com/"
 URL = "http://localhost:8080/"
 global TOKEN
@@ -311,84 +310,6 @@ def marcarModificado(id):
     if r.status_code != 200:
         print("validacion failed.")
 
-def search():
-    BASE_URL = f"{URL}search/search"
-
-    # Payload de ejemplo compatible con SearchFilterDto
-    payload = {
-        "query": None,
-        "tipoReceta": None,
-        "ingredientesIncluidos": None,
-        "ingredientesExcluidos": None,
-        "porciones": None,
-        "tiempoPreparacionMax": None,
-        "autorId": None,
-        "favoritos": True,
-        "modificados": True,
-        "valoracionMinima": None,
-        "estado": None,
-        "fechaDesde": None,
-        "fechaHasta": None,
-        "orden": None,
-        "modalidad": None,
-        "sede": None,
-        "precioMax": None,
-        "vacantesMin": None,
-        "misCursos": None
-    }
-
-    # Realizar la petición POST
-    response = requests.post(BASE_URL, json=payload)
-
-    # Verificar respuesta
-    if response.status_code == 200:
-        resultados = response.json()
-        for r in resultados:
-            print(f"{r['tipo'].capitalize()}: {r['titulo']} - {r['descripcion']}")
-    else:
-        print("Error:", response.status_code)
-        print(response.text)
-def searchUser():
-    BASE_URL = f"{URL}search/search/user"
-
-    # Payload de ejemplo compatible con SearchFilterDto
-    payload = {
-        "query": None,
-        "tipoReceta": None,
-        "ingredientesIncluidos": None,
-        "ingredientesExcluidos": None,
-        "porciones": None,
-        "tiempoPreparacionMax": None,
-        "autorId": None,
-        "favoritos": True,
-        "modificados": True,
-        "valoracionMinima": None,
-        "estado": None,
-        "fechaDesde": None,
-        "fechaHasta": None,
-        "orden": None,
-        "modalidad": None,
-        "sede": None,
-        "precioMax": None,
-        "vacantesMin": None,
-        "misCursos": None
-    }
-
-    headers = {'Authorization': f'Bearer {TOKEN}'}
-
-    # Realizar la petición POST
-    response = requests.post(BASE_URL, json=payload, headers=headers)
-
-    # Verificar respuesta
-    if response.status_code == 200:
-        resultados = response.json()
-        for r in resultados:
-            print(f"{r['tipo'].capitalize()}: {r['titulo']} - {r['descripcion']}")
-    else:
-        print("Error:", response.status_code)
-        print(response.text)
-
-
 def subirSede(sede: Sede):
     login_url = f"{URL}admin/sede"
     login_payload = {
@@ -518,6 +439,24 @@ def recuperarCatedras(id):
     if r.status_code != 200:
         print("validacion failed.")
 
+def buscarRecetas(filtros):
+    url = f"{URL}search/receta"
+    headers = {
+        # "Authorization": f"Bearer {TOKEN}",
+        "Content-Type": "application/json"
+    }
+    response = requests.post(url, headers=headers, data=json.dumps(filtros))
+    print(response.status_code, response.text)
+
+def buscarCursos(filtros):
+    url = f"{URL}search/curso"
+    headers = {
+        # "Authorization": f"Bearer {TOKEN}",
+        "Content-Type": "application/json"
+    }
+    response = requests.post(url, headers=headers, data=json.dumps(filtros))
+    print(response.status_code, response.text)
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -612,7 +551,7 @@ def testSubirCatedra():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-# login(emilio.mail,emilio.contraseña)
+login(emilio.mail,emilio.contraseña)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
