@@ -1,6 +1,7 @@
 package com.cocinaapp.RecetasMagicas.course.service;
 
 import com.cocinaapp.RecetasMagicas.course.dto.CourseCreateRequestDto;
+import com.cocinaapp.RecetasMagicas.course.dto.CourseDetailDto;
 import com.cocinaapp.RecetasMagicas.course.dto.CourseListItemDto;
 import com.cocinaapp.RecetasMagicas.course.model.Course;
 import com.cocinaapp.RecetasMagicas.course.model.CronogramaCurso;
@@ -26,7 +27,7 @@ public class CourseService {
         return courses.stream()
                 .map(c -> CourseListItemDto.builder()
                         .id(c.getId())
-                        .descripcion(c.getDescription())
+                        .title(c.getTitle())
                         .modalidad(c.getModality())
                         .precio(c.getPrice())
                         .portada(c.getMainPhoto())
@@ -53,6 +54,22 @@ public class CourseService {
                 .modality(dto.getModality())
                 .build();
         return courseRepository.save(course);
+    }
+
+    public CourseDetailDto getCourseDetail(Long id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+        return CourseDetailDto.builder()
+                .id(course.getId())
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .mainPhoto(course.getMainPhoto())
+                .contenidos(course.getContenidos())
+                .requirements(course.getRequirements())
+                .duration(course.getDuration())
+                .price(course.getPrice())
+                .modality(course.getModality())
+                .build();
     }
 
 }

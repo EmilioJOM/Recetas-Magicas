@@ -6,7 +6,7 @@ import lombok.*;
 @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class CourseListItemDto {
     private Long id;
-    private String descripcion;
+    private String title;
     private String modalidad;
     private Double precio;
     private String portada; // Si usás imagen principal
