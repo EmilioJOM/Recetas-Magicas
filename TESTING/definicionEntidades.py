@@ -1,6 +1,7 @@
 from typing import *
 from enum import Enum
-import datosParaPrecargar
+from dataclasses import dataclass, field
+
 
 @dataclass
 class User:

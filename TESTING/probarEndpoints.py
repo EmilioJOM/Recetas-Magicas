@@ -8,6 +8,7 @@ from definicionEntidades import *
 
 
 URL = "https://recetas-magicas-api.onrender.com/"
+URL = "http://localhost:8080/"
 global TOKEN
 
 emilio = User(
@@ -76,10 +77,11 @@ def validarAlias(email,alias):
         print("validacion failed.")
         
 
-def validarCodigo(codigo):
+def validarCodigo(codigo, email):
     login_url = f"{URL}auth/validateCode"
     login_payload = {
-    "codigo": codigo
+    "codigo": codigo,
+    "email": email
     }
     r = requests.post(login_url, json=login_payload)
     print("validacion de codigo:", r.status_code, r.text)
@@ -513,7 +515,7 @@ def testRecoverPassword(email):
 
 def testRegistrarUsuario(email,alias,contraseña):
     validarAlias(email,alias)
-    validarCodigo(input("codigo recibido desde el email"))
+    validarCodigo(input("codigo recibido desde el email"),email)
     registrarse(email,contraseña,alias)
 
 def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
@@ -523,7 +525,7 @@ def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana e",
+        title="Pizza napolitana f",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,
@@ -594,24 +596,24 @@ def testSubirCatedra():
 
 #############################################
 # sleep(300)
-# testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-login(emilio.mail,emilio.contraseña)
+testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
 # getTarjetas()
-testCrearReceta()
+# testCrearReceta()
 # recuperarRecetas()
-# recuperarUnaReceta(1)
+# recuperarUnaReceta(8)
 # marcarFavorito(2)
 # searchUser()
 # desmarcarFavorito(2)
 # searchUser()
 # marcarModificado(1)
 # searchUser()
-testSubirCatedra()
+# testSubirCatedra()
 # recuperarCursos()
 # recuperarUnCurso(7)
 
