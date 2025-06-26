@@ -1,5 +1,6 @@
 package com.cocinaapp.RecetasMagicas.course.service;
 
+import com.cocinaapp.RecetasMagicas.course.dto.CronogramaCursoConSedeDto;
 import com.cocinaapp.RecetasMagicas.course.dto.CronogramaCursoCreateRequestDto;
 import com.cocinaapp.RecetasMagicas.course.model.Course;
 import com.cocinaapp.RecetasMagicas.course.model.CronogramaCurso;
@@ -9,6 +10,8 @@ import com.cocinaapp.RecetasMagicas.course.repository.CronogramaCursoRepository;
 import com.cocinaapp.RecetasMagicas.course.repository.SedeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,4 +38,22 @@ public class CronogramaCursoService {
 
         return cronogramaCursoRepository.save(cronograma);
     }
+
+    public List<CronogramaCursoConSedeDto> getCronogramasPorCurso(Long courseId) {
+        List<CronogramaCurso> cronogramas = cronogramaCursoRepository.findByCourseId(courseId);
+        return cronogramas.stream().map(c -> CronogramaCursoConSedeDto.builder()
+                .id(c.getId())
+                .fechaInicio(c.getFechaInicio())
+                .fechaFin(c.getFechaFin())
+                .vacantes(c.getVacantes())
+                .ubicacion(c.getUbicacion())
+                .promotion(c.getPromotion())
+                .sedeId(c.getSede().getId())
+                .sedeNombre(c.getSede().getNombre())
+                .sedeDireccion(c.getSede().getDireccion())
+                .sedeCoordenadas(c.getSede().getCoordenadas())
+                .sedeMainPhoto(c.getSede().getMainPhoto())
+                .build()).toList();
+    }
+
 }

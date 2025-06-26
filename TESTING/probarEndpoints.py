@@ -505,6 +505,19 @@ def recuperarUnCurso(id):
     if r.status_code != 200:
         print("validacion failed.")
 
+def recuperarCatedras(id):
+    login_url = f"{URL}courses/catedras/{id}"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.get(login_url,headers=headers)
+    print("get CATEDRAS:", r.status_code, r.text)
+    for i in r.json():
+        print()
+        for clave, valor in i.items():
+                print(f"{clave}: {valor}")
+        print()
+    if r.status_code != 200:
+        print("validacion failed.")
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -598,7 +611,7 @@ def testSubirCatedra():
 
 #############################################
 # sleep(300)
-testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
+# testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
 # login(emilio.mail,emilio.contraseña)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
@@ -618,6 +631,7 @@ testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
 # testSubirCatedra()
 # recuperarCursos()
 # recuperarUnCurso(7)
+# recuperarCatedras(5)
 
 # eliminar_usuario_admin(1)
 # eliminar_catedra_admin(1)
