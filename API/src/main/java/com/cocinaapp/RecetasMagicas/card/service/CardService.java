@@ -10,6 +10,7 @@ import lombok.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +29,8 @@ public class CardService {
         card.setVencimiento(req.getExpirationDate());
         card.setUser(user);
         card.setCodigo(req.getSecurityCode());
+        card.setTipo(tipoTarjeta(req.getCardNumber()));
+        card.setEmailMP(req.getEmailMP());
         return cardRepository.save(card);
     }
     public List<CardResponseDto> getCardsByUser(String emailUsuario) {
@@ -68,6 +71,38 @@ public class CardService {
 
         cardRepository.delete(card);
     }
+
+    private String tipoTarjeta(String numeroTarjeta) {
+        String numeroSinEspacios = numeroTarjeta.replaceAll("\\s+", "");
+
+        int prefix1 = Integer.parseInt(numeroSinEspacios.substring(0, 1));
+        int prefix2 = Integer.parseInt(numeroSinEspacios.substring(0, 2));
+        int prefix3 = Integer.parseInt(numeroSinEspacios.substring(0, 3));
+        int prefix4 = Integer.parseInt(numeroSinEspacios.substring(0, 4));
+        int prefix6 = Integer.parseInt(numeroSinEspacios.substring(0, 6));
+
+        if (prefix1 == 4) {
+            return "visa";
+        } else if (prefix2 >= 50 && prefix2 <= 55) {
+            return "master";
+        } else if (prefix4 >= 2221 && prefix4 <= 2720) {
+            return "master";
+        } else if (prefix2 == 34 || prefix2 == 37) {
+            return "amex";
+        } else if (prefix4 == 6011 ||
+                (prefix6 >= 622126 && prefix6 <= 622925) ||
+                (prefix3 >= 644 && prefix3 <= 649) ||
+                prefix2 == 65) {
+            return "discover";
+        } else if (prefix2 == 35) {
+            return "jcb";
+        } else if (prefix2 == 36 || prefix2 == 38 || prefix2 == 39) {
+            return "diners";
+        }
+
+        else throw new IllegalArgumentException("Tipo de tarjeta no reconocido: " + prefix4);
+    }
+
 
 
 

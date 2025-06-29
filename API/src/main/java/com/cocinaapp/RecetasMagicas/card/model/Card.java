@@ -19,8 +19,21 @@ public class Card {
     private String titular;
     private String vencimiento;
     private String codigo;
+    private String tipo;
+    private String emailMP;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private User user;
+
+    public int getMesExp(){
+        String[] partes = vencimiento.split("/");  // divide en ["12", "26"]
+
+        return Integer.parseInt(partes[0]);
+    }
+    public int getAnioExp(){
+        String[] partes = vencimiento.split("/");  // divide en ["12", "26"]
+
+        return 2000 + Integer.parseInt(partes[1]);
+    }
 }

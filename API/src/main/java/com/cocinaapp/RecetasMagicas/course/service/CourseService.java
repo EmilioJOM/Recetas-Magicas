@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final GuardarImagenes guardarImagenes;
     private final CronogramaCursoRepository cronogramaCursoRepository;
 
     public List<CourseListItemDto> getLatestCourses(int n) {
@@ -40,7 +41,7 @@ public class CourseService {
     public Course crearCurso(CourseCreateRequestDto dto, MultipartFile mainPhoto) {
         String mainPhotoPath = null;
         if (mainPhoto != null && !mainPhoto.isEmpty()) {
-            mainPhotoPath = GuardarImagenes.guardarArchivo(mainPhoto, "cursos", "principal");
+            mainPhotoPath = guardarImagenes.guardarArchivo(mainPhoto, "cursos", "principal");
         }
 
         Course course = Course.builder()

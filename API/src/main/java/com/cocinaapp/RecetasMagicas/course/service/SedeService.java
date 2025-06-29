@@ -12,11 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class SedeService {
     private final SedeRepository sedeRepository;
+    private final GuardarImagenes guardarImagenes;
+
 
     public Sede crearSede(SedeCreateRequestDto dto, MultipartFile mainPhoto) {
         String mainPhotoPath = null;
         if (mainPhoto != null && !mainPhoto.isEmpty()) {
-            mainPhotoPath = GuardarImagenes.guardarArchivo(mainPhoto, "sedes", "principal");
+            mainPhotoPath = guardarImagenes.guardarArchivo(mainPhoto, "sedes", "principal");
         }
 
         Sede sede = Sede.builder()

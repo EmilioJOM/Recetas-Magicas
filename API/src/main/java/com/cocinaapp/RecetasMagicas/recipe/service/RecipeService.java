@@ -12,10 +12,6 @@ import com.cocinaapp.RecetasMagicas.util.GuardarImagenes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +26,8 @@ public class RecipeService {
     private final UserRepository userRepository;
     private final RecipeTypeRepository recipeTypeRepository;
     private final IngredientRepository ingredientRepository;
+    private final GuardarImagenes guardarImagenes;
+
 
 
     public List<RecipeListItemDto> getLatestRecipes(int n) {
@@ -106,7 +104,7 @@ public class RecipeService {
 
         // Guardar foto principal con ruta adecuada
         if (mainPhoto != null && !mainPhoto.isEmpty()) {
-            String mainPhotoPath = GuardarImagenes.guardarArchivo(mainPhoto, "recetas", "principal");
+            String mainPhotoPath = guardarImagenes.guardarArchivo(mainPhoto, "recetas", "principal");
             receta.setMainPhoto(mainPhotoPath);
         } else {
             receta.setMainPhoto(null);
@@ -197,7 +195,7 @@ public class RecipeService {
             if (Boolean.TRUE.equals(stepDto.isFoto())) {
                 // Usar photoIndex, no idx!
                 if (stepPhotos != null && photoIndex < stepPhotos.size() && stepPhotos.get(photoIndex) != null && !stepPhotos.get(photoIndex).isEmpty()) {
-                    String stepPhotoPath = GuardarImagenes.guardarArchivo(stepPhotos.get(photoIndex), "pasos", "step_" + idx);
+                    String stepPhotoPath = guardarImagenes.guardarArchivo(stepPhotos.get(photoIndex), "pasos", "step_" + idx);
                     StepMedia media = StepMedia.builder()
                             .tipoContenido("foto")
                             .extension(getExtension(stepPhotos.get(photoIndex).getOriginalFilename()))

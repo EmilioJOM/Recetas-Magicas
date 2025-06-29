@@ -1,5 +1,9 @@
 package com.cocinaapp.RecetasMagicas.util;
 
+
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -7,10 +11,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@Component
 public class GuardarImagenes {
+    @Value("${uploads.dir}")
+    private String uploadsDir;
+    public String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
 
-    public static String guardarArchivo(MultipartFile archivo, String carpeta, String nombre) {
-        String carpetaPath = "/tmp/uploads/"+carpeta+"/";
+        String carpetaPath = uploadsDir+carpeta+"/";
         try {
             Files.createDirectories(Paths.get(carpetaPath));
             File dir = new File(carpetaPath);

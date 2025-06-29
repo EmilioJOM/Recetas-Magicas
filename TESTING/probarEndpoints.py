@@ -19,12 +19,12 @@ emilio = User(
     )
 
 tarjeta1 = {
-    "nroTarjeta": "1234567890",
-    "nroSeguridad": "077",
-    "titular": "Juan pepito peres alfonsin",
-    "vencimiento": "2331"
+    "nroTarjeta": "5031755734530604",
+    "nroSeguridad": "123",
+    "titular": "comprador",
+    "vencimiento": "11/30",
+    "mailMP" : "test_user_2526826844@testuser.com"
     }
-
 
 def login(email, contraseña):
     global TOKEN
@@ -155,19 +155,20 @@ def datosPersonales():
         print("validacion failed.")
         
 
-def registrarTarjeta(nroTarjeta,nroSeguridad, titular, vencimiento):
+def registrarTarjeta(tarjeta1):
     login_url = f"{URL}tarjetas/registrar"
     login_payload = {
-    "cardNumber": nroTarjeta,
-    "cardHolderName": titular,
-    "expirationDate": vencimiento,
-    "securityCode": nroSeguridad
+    "cardNumber": tarjeta1["nroTarjeta"],
+    "cardHolderName": tarjeta1["titular"],
+    "expirationDate": tarjeta1["vencimiento"],
+    "securityCode": tarjeta1["nroSeguridad"],
+    "emailMP": tarjeta1["mailMP"]
     }
     headers = {
         'Authorization': f'Bearer {TOKEN}'
     }
     r = requests.post(login_url, json=login_payload, headers=headers)
-    print("se cambio la contraseña del usuario a la ingresada por mail:", r.status_code, r.text)
+    print("tarjeta registrada:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
         
@@ -457,6 +458,35 @@ def buscarCursos(filtros):
     response = requests.post(url, headers=headers, data=json.dumps(filtros))
     print(response.status_code, response.text)
 
+def getOrdenCompra(catedra):
+    login_url = f"{URL}courses/catedras/{catedra}/ordenCompra"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.get(login_url,headers=headers)
+    print("get CATEDRAS:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+    return r.json()
+
+def Inscribirse(catedra):
+    login_url = f"{URL}inscripciones/{catedra}"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.post(login_url,headers=headers)
+    print("get CATEDRAS:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+def pagar(ordenCompra):
+    login_url = f"{URL}pagar"
+    payload = {
+        "cardID": ordenCompra["mediosPago"][0]["id"],
+        "monto": ordenCompra["precio"]
+    }
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.post(login_url, json=payload, headers=headers)
+    print("get CATEDRAS:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
 #######################################################################
 
 def testRecoverPassword(email):
@@ -472,8 +502,8 @@ def testRegistrarUsuario(email,alias,contraseña):
     validarCodigo(input("codigo recibido desde el email"),email)
     registrarse(email,contraseña,alias)
 
-def testTarjetas(nroTarjeta,nroSeguridad, titular, vencimiento):
-    registrarTarjeta(nroTarjeta,nroSeguridad, titular, vencimiento)
+def testTarjetas(tarjeta):
+    registrarTarjeta(tarjeta)
     getTarjetas()
     DeleteTarjeta(input("ingresarID: "))
 
@@ -548,15 +578,27 @@ def testSubirCatedra():
     subirSede(sede)
     subirCatedra(cronograma)
 
+def testInscribirme():
+    recuperarCursos()
+    curso = int(input("ingrese el id del curso a inscribirse: "))
+    recuperarUnCurso(curso)
+    recuperarCatedras(curso)
+    catedra = int(input("ingrese el id de la catedra a inscribirse: "))
+    ordenCompra = getOrdenCompra(catedra)
+    Inscribirse(catedra)
+    pagar(ordenCompra)
+
+
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-login(emilio.mail,emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
+# registrarTarjeta(tarjeta1)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
 # testRecoverPassword(emilio.mail)
-# testTarjetas(tarjeta1["nroTarjeta"], tarjeta1["nroSeguridad"], tarjeta1["titular"], tarjeta1["vencimiento"])
+# testTarjetas(tarjeta1)
 # getTarjetas()
 # testCrearReceta()
 # recuperarRecetas()
@@ -580,3 +622,31 @@ login(emilio.mail,emilio.contraseña)
 
 
 # subirDNI(emilio.dni,emilio.nroTramite)
+
+# registrarTarjeta(tarjeta1=tarjeta1)
+# testInscribirme()
+
+
+def crearUsuarioPrueba():
+    URLMP = "https://api.mercadopago.com/users/test"
+    payload = {
+        "site_id": "MLA",
+        # "description": "comprador RM"
+    }
+    headers = {
+        'Content-Type': r'application/json',
+        'Authorization': r'Bearer TEST-114115270506611-062616-29f11e69f33b84499bc96c280724d26f-1014507004'
+    }
+    r = requests.post(URLMP, json=payload, headers=headers)
+    print("El USUARIO:", r.status_code, r.text)
+crearUsuarioPrueba()
+
+"""def RecuperarUsuarios():
+    URLMP = "https://api.mercadopago.com/users/me"
+    headers = {
+        'Content-Type': r'application/json',
+        'Authorization': r'Bearer TEST-114115270506611-062616-29f11e69f33b84499bc96c280724d26f-1014507004'
+    }
+    r = requests.get(URLMP, headers=headers)
+    print("USUARIOS:", r.status_code, r.text)
+RecuperarUsuarios()"""

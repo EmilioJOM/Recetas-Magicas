@@ -22,6 +22,8 @@ import java.nio.file.Paths;
 public class AlumnoService {
     private final PasswordEncoder passwordEncoder;
     private final AlumnoRepository alumnoRepository;
+    private final GuardarImagenes guardarImagenes;
+
 
     private final UserRepository userRepository;
 
@@ -34,8 +36,8 @@ public class AlumnoService {
             throw new IllegalArgumentException("Numero de Tramite o dni ya registrado");
         }
 
-        String pathFrente = GuardarImagenes.guardarArchivo(dniFrente,"dni",user.getId()+"_frente");
-        String pathDorso = GuardarImagenes.guardarArchivo(dniDorso,"dni",user.getId()+"_dorso");
+        String pathFrente = guardarImagenes.guardarArchivo(dniFrente,"dni",user.getId()+"_frente");
+        String pathDorso = guardarImagenes.guardarArchivo(dniDorso,"dni",user.getId()+"_dorso");
 
         // Crear y guardar el alumno
         Alumno alumno = new Alumno();

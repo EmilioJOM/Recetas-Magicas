@@ -8,4 +8,5 @@ public class CardRegisterRequestDto {
     private String cardHolderName;
     private String expirationDate;
     private String securityCode;
+    private String emailMP;
 }
