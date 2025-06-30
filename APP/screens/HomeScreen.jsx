@@ -805,7 +805,18 @@ export default function HomeScreen() {
               title="Explorá cursos"
               data={exploraRecetas}
               onItemPress={(curso) =>
-                navigation.navigate('CursoDetalle', { curso })
+                navigation.navigate('DetailCourseScreen', {
+                  course: {
+                    title: 'Programa de pastelería experto profesional',
+                    description: 'El objetivo es formar profesionales que no solo trabajen operativamente...',
+                    startDate: '14 de abril',
+                    duration: '3 meses',
+                    level: 'Intermedio',
+                    language: 'Español',
+                    rating: 4.8,
+                    reviews: 183,
+                  },
+                })
               }
             />
           </>
