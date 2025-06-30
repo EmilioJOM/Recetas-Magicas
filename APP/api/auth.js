@@ -22,7 +22,7 @@ export const userDni = (formData, token) => {
   return API.post('/user/dni', formData, {
     headers: {
       Authorization: `Bearer ${token}`,
-      
+
     },
   });
 };
@@ -68,5 +68,13 @@ export const getRecipesFilter = (filterData) => API.get('/search/search');
 
 //---------- Crear Receta --------------------
 
-// Funcion para crear receta etapa 1 ( title, description, servings, tipoId)
-export const createRecipeStepOne = (recipeData) => API.post('/recipes/crearReceta1');
+// Funcion para crear receta etapa 1 ( title, description, servings, tipoId, image) ARREGLAR
+export const createRecipeStepOne = (formData, token) => {
+  console.log('Token recibido en createRecipeStepOne:', token);
+  return API.post('/recipes/crearReceta1', formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+
+    },
+  });
+};

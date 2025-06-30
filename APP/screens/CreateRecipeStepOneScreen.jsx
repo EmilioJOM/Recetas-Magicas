@@ -14,8 +14,11 @@ import { Ionicons } from '@expo/vector-icons';
 import BottomTabs from '../components/BottomTabs';
 import * as Yup from 'yup';
 import { createRecipeStepOne } from '../api/auth';
+import { useAuth } from '../context/AuthContext';  // <-- importás el contexto
 
 const CreateRecipeStepOneScreen = ({ navigation }) => {
+  const { token } = useAuth();  // <-- sacás el token del contexto
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [experience, setExperience] = useState('');
@@ -101,8 +104,11 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
         name: 'recipe-image.jpg',
         type: 'image/jpeg',
       });
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
 
-      const response = await createRecipeStepOne(formData);
+      const response = await createRecipeStepOne(formData, token); // <-- le pasás el token
 
       if (response?.status === 200 || response?.status === 201) {
         Alert.alert('¡Éxito!', 'Receta creada correctamente.');
@@ -222,7 +228,7 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Continuar</Text>
         </TouchableOpacity>
       </View>
-      
+
     </ScrollView>
   );
 };
