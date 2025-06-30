@@ -107,7 +107,10 @@ export default function DetailCourseScreen() {
 
       {/* Botón de inscripción */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('SelectSedeScreen')} // <- ACA el navigate
+        >
           <Text style={styles.buttonText}>✨ Inscribite ahora — ¡Cupos limitados!</Text>
         </TouchableOpacity>
       </View>

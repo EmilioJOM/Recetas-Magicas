@@ -1,43 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import HorizontalCards from '../components/HorizontalCards';
+import { View, Text, ScrollView, Alert, StyleSheet } from 'react-native';
+import SedeCard from '../components/SedeCard';
 
-const sedesData = [
-  { id: 1, title: 'Sede Buenos Aires', image: require('../assets/sede_ba.jpg') },
-  { id: 2, title: 'Sede Córdoba', image: require('../assets/sede_cba.jpg') },
-  { id: 3, title: 'Sede Rosario', image: require('../assets/sede_rosario.jpg') },
-  { id: 4, title: 'Sede Mendoza', image: require('../assets/sede_mendoza.jpg') },
-  { id: 5, title: 'Sede Mar del Plata', image: require('../assets/sede_mdq.jpg') },
-  { id: 6, title: 'Sede La Plata', image: require('../assets/sede_laplata.jpg') },
-  // podés agregar más sedes acá
+const sedes = [
+  {
+    id: '1',
+    title: 'Sede Buenos Aires',
+    direccion: 'Av. Corrientes 1234',
+    ciudad: 'Buenos Aires',
+    image: require('../assets/Lasagna.jpg'),
+    userImage: require('../assets/FotoPerfil1.jpg'),
+    userName: 'Juan Pérez',
+    userAlias: '@juanp',
+  },
+  // ... las otras sedes igual
 ];
 
 export default function SelectSedeScreen() {
-  const [selectedSedeId, setSelectedSedeId] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
 
-  const handleSelectSede = (item) => {
-    setSelectedSedeId(item.id);
+  const onSelect = (item) => {
+    setSelectedId(item.id);
     Alert.alert('Sede seleccionada', `Elegiste: ${item.title}`);
-    // Acá podrías navegar o guardar la selección globalmente
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Elegí tu sede</Text>
-      <HorizontalCards
-        title="Nuestras sedes"
-        data={sedesData}
-        onItemPress={handleSelectSede}
-      />
-      {selectedSedeId && (
-        <Text style={styles.selectedText}>
-          Sede seleccionada: {sedesData.find(s => s.id === selectedSedeId)?.title}
-        </Text>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {sedes.map((sede) => (
+          <SedeCard
+            key={sede.id}
+            title={sede.title}
+            direccion={sede.direccion}
+            ciudad={sede.ciudad}
+            image={sede.image}
+            userImage={sede.userImage}
+            userName={sede.userName}
+            userAlias={sede.userAlias}
+            onPress={() => onSelect(sede)}
+          />
+        ))}
+      </ScrollView>
+      {selectedId && (
+        <View style={styles.selectedContainer}>
+          <Text style={styles.selectedText}>
+            Sede seleccionada: {sedes.find(s => s.id === selectedId)?.title}
+          </Text>
+        </View>
       )}
     </View>
   );
 }
 
+// estilos iguales a los anteriores
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -51,11 +67,19 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginBottom: 16,
   },
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 40,
+  },
+  selectedContainer: {
+    paddingVertical: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    alignItems: 'center',
+  },
   selectedText: {
-    marginTop: 20,
     fontSize: 16,
     fontWeight: '600',
     color: '#E08D3E',
-    textAlign: 'center',
   },
 });
