@@ -29,7 +29,7 @@ public class GuardarImagenes {
             File file = new File(fullPath);
             System.out.println("Existe? " + file.exists());
             System.out.println("¿Permiso escritura? " + new File(carpetaPath).canWrite());
-            return "/uploads/"+carpeta+"/" + filename;
+            return "https://recetas-magicas-api.onrender.com/uploads/"+carpeta+"/" + filename;
         } catch (IOException e) {
             throw new RuntimeException("No se pudo guardar el archivo", e);
         }

@@ -10,7 +10,7 @@ public class RecipeCreate1Request {
     private String title;
     private String description;
     private Integer servings;
-    private Long tipoId;
+    private String detalleTipo;
     private String experienceLevel;
 
 }

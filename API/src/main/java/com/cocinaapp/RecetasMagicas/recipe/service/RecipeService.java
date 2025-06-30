@@ -125,7 +125,7 @@ public class RecipeService {
 
         RecipeType tipo;
         try {
-            tipo = recipeTypeRepository.findById(dto.getTipoId())
+            tipo = recipeTypeRepository.findByDescripcionIgnoreCase(dto.getDetalleTipo())
                     .orElseThrow(() -> new RuntimeException("Tipo de receta no encontrado"));
         } catch (RuntimeException e) {
             // Si no se encuentra el tipo, buscar o crear el tipo genérico "Sin tipo"

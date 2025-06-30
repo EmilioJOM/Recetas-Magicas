@@ -6,8 +6,8 @@ from typing import *
 from enum import Enum
 from definicionEntidades import *
 
-# URL = "https://recetas-magicas-api.onrender.com/"
-URL = "http://localhost:8080/"
+URL = "https://recetas-magicas-api.onrender.com/"
+# URL = "http://localhost:8080/"
 global TOKEN
 
 emilio = User(
@@ -525,7 +525,7 @@ def testTarjetas(tarjeta):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana f",
+        title="Pizza napolitana nueva",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,
@@ -616,7 +616,7 @@ login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1)
 # getTarjetas()
-# testCrearReceta()
+testCrearReceta()
 # recuperarRecetas()
 # recuperarUnaReceta(8)
 # marcarFavorito(2)
@@ -641,28 +641,5 @@ login(emilio.mail,emilio.contraseña)
 
 # registrarTarjeta(tarjeta1=tarjeta1)
 # testInscribirme()
-pagar()
-
-"""def crearUsuarioPrueba():
-    URLMP = "https://api.mercadopago.com/users/test"
-    payload = {
-        "site_id": "MLA",
-        # "description": "comprador RM"
-    }
-    headers = {
-        'Content-Type': r'application/json',
-        'Authorization': r'Bearer TEST-114115270506611-062616-29f11e69f33b84499bc96c280724d26f-1014507004'
-    }
-    r = requests.post(URLMP, json=payload, headers=headers)
-    print("El USUARIO:", r.status_code, r.text)
-crearUsuarioPrueba()"""
-
-"""def RecuperarUsuarios():
-    URLMP = "https://api.mercadopago.com/users/me"
-    headers = {
-        'Content-Type': r'application/json',
-        'Authorization': r'Bearer TEST-114115270506611-062616-29f11e69f33b84499bc96c280724d26f-1014507004'
-    }
-    r = requests.get(URLMP, headers=headers)
-    print("USUARIOS:", r.status_code, r.text)
-RecuperarUsuarios()"""
+# pagar()
+recuperarRecetas()
