@@ -101,6 +101,7 @@ public class CronogramaCursoService {
                 .descuentoCatedra(descuento)
                 .curso(curso.getTitle())
                 .fotoCurso(curso.getMainPhoto())
+                .catedraID(catedra.getId())
                 .build();
     }
 

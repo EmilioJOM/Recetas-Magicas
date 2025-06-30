@@ -1,5 +1,6 @@
 package com.cocinaapp.RecetasMagicas.Inscripcion.service;
 
+import com.cocinaapp.RecetasMagicas.Inscripcion.dto.InscripcionResponseDto;
 import com.cocinaapp.RecetasMagicas.Inscripcion.model.Inscripcion;
 import com.cocinaapp.RecetasMagicas.Inscripcion.repository.InscripcionRepository;
 import com.cocinaapp.RecetasMagicas.course.model.CronogramaCurso;
@@ -24,7 +25,7 @@ public class InscripcionService {
     private final InscripcionRepository inscripcionRepository;
     private final RegistrarPago registrarPago;
 
-    public void inscribirse(Long idCronograma, String email) {
+    public InscripcionResponseDto inscribirse(Long idCronograma, String email) {
 
         User usuario = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -51,8 +52,16 @@ public class InscripcionService {
 
         long precioFinal = Math.round(precioBase * (100 - descuento) / 100.0);
 
-        registrarPago.pagoPendiente(usuario, (double) precioFinal,usuario.getEmail()+"#"+cronograma.getId().toString());
+        registrarPago.pagoPendiente(
+                usuario,
+                (double) precioFinal,
+                usuario.getEmail()+"#"+cronograma.getId().toString()
+        );
         inscripcionRepository.save(inscripcion);
+        return new InscripcionResponseDto(
+                email+"#"+cronograma.getId(),
+                email,
+                precioFinal);
     }
 
     public void darBaja(String email, Long idCronograma){

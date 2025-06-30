@@ -6,8 +6,8 @@ from typing import *
 from enum import Enum
 from definicionEntidades import *
 
-URL = "https://recetas-magicas-api.onrender.com/"
-# URL = "http://localhost:8080/"
+# URL = "https://recetas-magicas-api.onrender.com/"
+URL = "http://localhost:8080/"
 global TOKEN
 
 emilio = User(
@@ -475,18 +475,6 @@ def Inscribirse(catedra):
     if r.status_code != 200:
         print("validacion failed.")
 
-def pagar(ordenCompra):
-    login_url = f"{URL}pagar/mercadoPago"
-    payload = {
-        "cardID": ordenCompra["mediosPago"][0]["id"],
-        "monto": ordenCompra["precio"]
-    }
-    headers = {'Authorization': f'Bearer {TOKEN}'}
-    r = requests.post(login_url, json=payload, headers=headers)
-    print("get CATEDRAS:", r.status_code, r.text)
-    if r.status_code != 200:
-        print("validacion failed.")
-
 def pagar():
     login_url = f"{URL}pagar/payu"
     headers = {'Authorization': f'Bearer {TOKEN}'}
@@ -502,6 +490,13 @@ def pagar():
     print("get CATEDRAS:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
+
+def getRecetas():
+    login_url = f"{URL}recipes"
+    r = requests.get(login_url)
+    print("get RECETAS:", r.status_code, r.text)
+    for i in r.json():
+        print(i)
 
 #######################################################################
 
@@ -525,7 +520,7 @@ def testTarjetas(tarjeta):
 
 def testCrearReceta():
     mi_receta = Receta(
-        title="Pizza napolitana nueva",
+        title="Pizza napolitana g",
         description="Pizza casera con masa fina",
         servings=4,
         tipoId=1,
@@ -602,7 +597,7 @@ def testInscribirme():
     catedra = int(input("ingrese el id de la catedra a inscribirse: "))
     ordenCompra = getOrdenCompra(catedra)
     Inscribirse(catedra)
-    pagar(ordenCompra)
+    pagar()
 
 
 #############################################
@@ -616,7 +611,7 @@ login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1)
 # getTarjetas()
-testCrearReceta()
+# testCrearReceta()
 # recuperarRecetas()
 # recuperarUnaReceta(8)
 # marcarFavorito(2)
@@ -642,4 +637,5 @@ testCrearReceta()
 # registrarTarjeta(tarjeta1=tarjeta1)
 # testInscribirme()
 # pagar()
-recuperarRecetas()
+# recuperarRecetas()
+getRecetas()

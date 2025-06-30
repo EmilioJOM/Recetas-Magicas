@@ -26,6 +26,11 @@ public class RecipeController {
         System.out.println("recipe/latest/" + n);
         return recipeService.getLatestRecipes(n);
     }
+    @GetMapping
+    public List<RecipeListItemDto> getRecipes() {
+        System.out.println("GET recipe");
+        return recipeService.getRecipes();
+    }
 
     @GetMapping("/{id}")
     public RecipeDetailDto getRecipeDetail(@PathVariable Long id) {

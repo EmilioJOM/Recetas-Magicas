@@ -137,7 +137,7 @@ public class RecipeService {
                     });
         }
 
-// Asignar el tipo a la receta
+
         receta.setTipo(tipo);
         recipeRepository.save(receta);
 
@@ -279,4 +279,19 @@ public class RecipeService {
     }
 
 
+    public List<RecipeListItemDto> getRecipes() {
+        List<Recipe> recipes = recipeRepository.findByStatus(RecipeStatus.APROBADA);
+        return recipes.stream()
+                .map(r -> RecipeListItemDto.builder()
+                        .id(r.getId())
+                        .title(r.getTitle())
+                        .description(r.getDescription())
+                        .servings(r.getServings())
+                        .experienceLevel(r.getExperienceLevel().name())
+                        .mainPhoto(r.getMainPhoto())
+                        .authorAlias(r.getAuthor().getAlias())
+                        .createdAt(r.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

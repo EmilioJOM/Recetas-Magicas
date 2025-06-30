@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/search/**").permitAll()
                         .requestMatchers("/admin/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/recipes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/recipes/latest/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/courses/latest/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/recipes/{id}").permitAll()

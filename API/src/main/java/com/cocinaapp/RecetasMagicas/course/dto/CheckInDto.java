@@ -18,4 +18,5 @@ public class CheckInDto {
     private Double descuentoCatedra;
     private String curso;
     private String fotoCurso;
+    private Long catedraID;
 }

@@ -4,6 +4,7 @@ package com.cocinaapp.RecetasMagicas.recipe.repository;
 import com.cocinaapp.RecetasMagicas.recipe.model.Recipe;
 import com.cocinaapp.RecetasMagicas.recipe.model.RecipeStatus;
 import com.cocinaapp.RecetasMagicas.user.model.User;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -22,4 +23,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecif
 
     boolean existsByTitleAndAuthor(String title, User user);
     Optional<Recipe> findByTitleAndAuthor(String title, User user);
+
+    List<Recipe> findByStatus(RecipeStatus aprobada);
 }
