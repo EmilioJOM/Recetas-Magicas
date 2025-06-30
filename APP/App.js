@@ -12,9 +12,10 @@ import TestLoginScreen from './screens/TestLoginScreen';
 import ForgotPasswordStepOneScreen from './screens/ForgotPasswordStepOneScreen';
 import ForgotPasswordStepTwoScreen from './screens/ForgotPasswordStepTwoScreen';
 import ForgotPasswordStepThreeScreen from './screens/ForgotPasswordStepThreeScreen';
-import DetailCourseScreen from './screens/DetailCourseScreen';
 import DetailRecipeScreen from './screens/DetailRecipeScreen';
+import DetailCourseScreen from './screens/DetailCourseScreen';
 import SelectSedeScreen from './screens/SelectSedeScreen';
+import PaymentSummaryScreen from './screens/PaymentSummaryScreen';
 import CreateRecipeStepOneScreen from './screens/CreateRecipeStepOneScreen';
 import CreateRecipeStepTwoScreen from './screens/CreateRecipeStepTwoScreen';
 import CreateRecipeStepThreeScreen from './screens/CreateRecipeStepThreeScreen';
@@ -98,6 +99,7 @@ function MyStack() {
           <Stack.Screen name="DetailRecipeScreen" component={DetailRecipeScreen} />
           <Stack.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
           <Stack.Screen name="SelectSedeScreen" component={SelectSedeScreen} />
+          <Stack.Screen name="PaymentSummaryScreen" component={PaymentSummaryScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="RegisterStepFourScreen" component={RegisterStepFourScreen} />
           <Stack.Screen name="RegisterStepFiveScreen" component={RegisterStepFiveScreen} />

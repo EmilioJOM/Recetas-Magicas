@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, Alert, StyleSheet } from 'react-native';
 import SedeCard from '../components/SedeCard';
-
+import { useNavigation } from '@react-navigation/native';
 const sedes = [
   {
     id: '1',
@@ -18,10 +18,16 @@ const sedes = [
 
 export default function SelectSedeScreen() {
   const [selectedId, setSelectedId] = useState(null);
+  const navigation = useNavigation();
 
   const onSelect = (item) => {
     setSelectedId(item.id);
-    Alert.alert('Sede seleccionada', `Elegiste: ${item.title}`);
+    Alert.alert('Sede seleccionada', `Elegiste: ${item.title}`, [
+      {
+        text: 'Continuar al pago',
+        onPress: () => navigation.navigate('PaymentSummaryScreen', { sede: item }),
+      },
+    ]);
   };
 
   return (
