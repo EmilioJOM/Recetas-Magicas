@@ -52,7 +52,11 @@ function RecipeItem({ title, image, onPress }) {
       onPressOut={handlePressOut}
     >
       <Animated.View style={[styles.item, { transform: [{ scale }] }]}>
-        <Image source={image} style={styles.image} />
+        <Image
+          source={typeof image === 'string' ? { uri: image } : image}
+          style={styles.image}
+        />
+
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>

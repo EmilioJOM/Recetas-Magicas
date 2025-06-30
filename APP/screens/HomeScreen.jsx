@@ -585,7 +585,7 @@ const recetasBuscador = [
 
 
 export default function HomeScreen() {
-  /** 
+
   const [latestRecipes, setLatestRecipes] = useState([]);
 
   useEffect(() => {
@@ -616,7 +616,7 @@ export default function HomeScreen() {
     fetchRecipes();
   }, []);
 
-*/
+
 
 
   const [searchText, setSearchText] = useState('');
@@ -787,8 +787,8 @@ export default function HomeScreen() {
           <>
             <ImageCarousel data={imagenes} />
             <LatestRecipesPreview
-              //recipes={latestRecipes} endpoint
-              recipes={ultimasRecetas} //constante
+              recipes={latestRecipes}// endpoint
+              //recipes={ultimasRecetas} //constante
               onPressRecipe={(receta) =>
                 navigation.navigate('DetailRecipeScreen', { receta })
               }

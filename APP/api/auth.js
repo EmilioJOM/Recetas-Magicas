@@ -57,7 +57,9 @@ export const changePassword = (Data, token) =>
 //--------recipes--------
 
 // Función para recuperar 5 ultimas recetas ( )
-export const getLatestRecipes = (limit = 5) => API.get(`/recipes/latest?n=${limit}`);
+export const getLatestRecipes = (limit = 5) => API.get(`/recipes/latest/${limit}`);
+
+//export const getLatestRecipes = (limit = 5) => API.get(`/recipes/latest?n=${limit}`);
 //export const getLatestRecipes = () => API.get('/recipes/latest');
 
 // Función para recuperar todas las recetas ( )
