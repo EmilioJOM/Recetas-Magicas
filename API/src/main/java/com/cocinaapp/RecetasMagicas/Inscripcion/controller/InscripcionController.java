@@ -4,10 +4,7 @@ import com.cocinaapp.RecetasMagicas.Inscripcion.service.InscripcionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/inscripciones")
@@ -23,6 +20,16 @@ public class InscripcionController {
         System.out.print("/inscripciones/"+idCronograma.toString());
         String email = authentication.getName();
         inscripcionService.inscribirse(idCronograma, email);
+        return ResponseEntity.ok("Inscripción exitosa");
+    }
+
+    @DeleteMapping("/{idCronograma}")
+    public ResponseEntity<?> darBaja(
+            @PathVariable Long idCronograma,
+            Authentication authentication) {
+        System.out.print("DELETE /inscripciones/"+idCronograma.toString());
+        String email = authentication.getName();
+        inscripcionService.darBaja(email, idCronograma);
         return ResponseEntity.ok("Inscripción exitosa");
     }
 }

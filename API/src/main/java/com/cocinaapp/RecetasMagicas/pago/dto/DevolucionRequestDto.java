@@ -2,15 +2,12 @@ package com.cocinaapp.RecetasMagicas.pago.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-public class PagoRequestDto {
-    private Long cardID;
-    private Double monto;
-    private String codigoPago;
-
+public class DevolucionRequestDto {
+    private String referencia; // referenceCode de PayU
 }

@@ -23,4 +23,5 @@ public class Inscripcion {
     private CronogramaCurso cronograma;
 
     private LocalDate fechaInscripcion;
+    private String estado;
 }

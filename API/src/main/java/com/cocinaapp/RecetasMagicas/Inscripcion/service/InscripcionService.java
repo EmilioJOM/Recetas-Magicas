@@ -4,6 +4,7 @@ import com.cocinaapp.RecetasMagicas.Inscripcion.model.Inscripcion;
 import com.cocinaapp.RecetasMagicas.Inscripcion.repository.InscripcionRepository;
 import com.cocinaapp.RecetasMagicas.course.model.CronogramaCurso;
 import com.cocinaapp.RecetasMagicas.course.repository.CronogramaCursoRepository;
+import com.cocinaapp.RecetasMagicas.pago.service.RegistrarPago;
 import com.cocinaapp.RecetasMagicas.user.model.Alumno;
 import com.cocinaapp.RecetasMagicas.user.model.User;
 import com.cocinaapp.RecetasMagicas.user.repository.AlumnoRepository;
@@ -21,6 +22,7 @@ public class InscripcionService {
     private final AlumnoRepository alumnoRepository;
     private final CronogramaCursoRepository cronogramaCursoRepository;
     private final InscripcionRepository inscripcionRepository;
+    private final RegistrarPago registrarPago;
 
     public void inscribirse(Long idCronograma, String email) {
 
@@ -41,8 +43,30 @@ public class InscripcionService {
                 .usuario(usuario)
                 .cronograma(cronograma)
                 .fechaInscripcion(LocalDate.now())
+                .estado("INSCRIPTO")
                 .build();
 
+        double precioBase = cronograma.getCourse().getPrice();  // o getPrecio()
+        double descuento = cronograma.getPromotion() == null ? cronograma.getPromotion() : 0;  // en porcentaje
+
+        long precioFinal = Math.round(precioBase * (100 - descuento) / 100.0);
+
+        registrarPago.pagoPendiente(usuario, (double) precioFinal,usuario.getEmail()+"#"+cronograma.getId().toString());
+        inscripcionRepository.save(inscripcion);
+    }
+
+    public void darBaja(String email, Long idCronograma){
+
+        User usuario = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        CronogramaCurso cronograma = cronogramaCursoRepository.findById(idCronograma)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        Inscripcion inscripcion = inscripcionRepository.findByUsuarioAndCronograma(usuario, cronograma)
+                .orElseThrow(() -> new RuntimeException("inscripcion no encontrado"));
+
+        inscripcion.setEstado("BAJA");
         inscripcionRepository.save(inscripcion);
     }
 }

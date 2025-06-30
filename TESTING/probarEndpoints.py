@@ -476,13 +476,29 @@ def Inscribirse(catedra):
         print("validacion failed.")
 
 def pagar(ordenCompra):
-    login_url = f"{URL}pagar"
+    login_url = f"{URL}pagar/mercadoPago"
     payload = {
         "cardID": ordenCompra["mediosPago"][0]["id"],
         "monto": ordenCompra["precio"]
     }
     headers = {'Authorization': f'Bearer {TOKEN}'}
     r = requests.post(login_url, json=payload, headers=headers)
+    print("get CATEDRAS:", r.status_code, r.text)
+    if r.status_code != 200:
+        print("validacion failed.")
+
+def pagar():
+    login_url = f"{URL}pagar/payu"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    payload = {
+        "amount": 1500,
+        "card": "4850110000000000",
+        "cvv": "123",
+        "expiry": "2025/12",
+        "name": "APPROVED",
+        "email": "demo@correo.com"
+        }
+    r = requests.post(login_url,json = payload, headers=headers)
     print("get CATEDRAS:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
@@ -592,7 +608,7 @@ def testInscribirme():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-# login(emilio.mail,emilio.contraseña)
+login(emilio.mail,emilio.contraseña)
 # registrarTarjeta(tarjeta1)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
@@ -625,9 +641,9 @@ def testInscribirme():
 
 # registrarTarjeta(tarjeta1=tarjeta1)
 # testInscribirme()
+pagar()
 
-
-def crearUsuarioPrueba():
+"""def crearUsuarioPrueba():
     URLMP = "https://api.mercadopago.com/users/test"
     payload = {
         "site_id": "MLA",
@@ -639,7 +655,7 @@ def crearUsuarioPrueba():
     }
     r = requests.post(URLMP, json=payload, headers=headers)
     print("El USUARIO:", r.status_code, r.text)
-crearUsuarioPrueba()
+crearUsuarioPrueba()"""
 
 """def RecuperarUsuarios():
     URLMP = "https://api.mercadopago.com/users/me"
