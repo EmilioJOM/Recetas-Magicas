@@ -58,5 +58,6 @@ public class RegistrarPago {
     if (pagos.isEmpty()) {
         throw new RuntimeException("No se encontraron pagos para: " + email);
     }
+    return pagos;
     }
 }
