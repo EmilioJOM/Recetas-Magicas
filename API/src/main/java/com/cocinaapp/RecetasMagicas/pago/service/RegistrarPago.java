@@ -53,8 +53,11 @@ public class RegistrarPago {
         pagoRepository.save(pago);
     }
 
-    public List<Pago> getPagos(String email){
-        return pagoRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("No se encontraron pagos para: " + email));
+    public List<Pago> getPagos(String email) {
+    List<Pago> pagos = pagoRepository.findByUsuarioEmail(email);
+    if (pagos.isEmpty()) {
+        throw new RuntimeException("No se encontraron pagos para: " + email);
+    }
+    return pagos;
     }
 }

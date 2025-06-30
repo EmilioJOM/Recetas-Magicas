@@ -13,6 +13,5 @@ import java.util.Optional;
 public interface PagoRepository extends JpaRepository<Pago, Long> {
     Optional<Pago> findByReferencia(String referencia);
 
-    @Query("SELECT p FROM Pago p WHERE p.usuarioEmail = :email")
-    Optional<List<Pago>> buscarPorEmail(@Param("email") String email);
+    List<Pago> findByUsuarioEmail(String email); // ✅ campo exacto
 }
