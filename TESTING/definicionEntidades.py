@@ -21,7 +21,7 @@ class Receta:
     title: str
     description: str
     servings: int
-    tipoId: int  # Long en backend
+    tipoId: str  # Long en backend
     ingredients: List[Dict]  # lista de dicts: quantity, detail, unit, observations
     steps: List[Dict]        # lista de dicts: instruction
     main_photo_path: str

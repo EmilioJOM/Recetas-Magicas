@@ -1,5 +1,6 @@
 package com.cocinaapp.RecetasMagicas.Inscripcion.controller;
 
+import com.cocinaapp.RecetasMagicas.Inscripcion.dto.InscripcionResponseDto;
 import com.cocinaapp.RecetasMagicas.Inscripcion.service.InscripcionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,13 @@ public class InscripcionController {
     private final InscripcionService inscripcionService;
 
     @PostMapping("/{idCronograma}")
-    public ResponseEntity<?> inscribirse(
+    public InscripcionResponseDto inscribirse(
             @PathVariable Long idCronograma,
             Authentication authentication) {
         System.out.print("/inscripciones/"+idCronograma.toString());
         String email = authentication.getName();
         inscripcionService.inscribirse(idCronograma, email);
-        return ResponseEntity.ok("Inscripción exitosa");
+        return inscripcionService.inscribirse(idCronograma, email);
     }
 
     @DeleteMapping("/{idCronograma}")

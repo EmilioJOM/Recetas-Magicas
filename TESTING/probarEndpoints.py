@@ -79,7 +79,7 @@ def validarAlias(email,alias):
 def validarCodigo(codigo, email):
     login_url = f"{URL}auth/validateCode"
     login_payload = {
-    "codigo": codigo,
+    "code": codigo,
     "email": email
     }
     print(login_payload)
@@ -162,7 +162,7 @@ def registrarTarjeta(tarjeta1):
     "cardHolderName": tarjeta1["titular"],
     "expirationDate": tarjeta1["vencimiento"],
     "securityCode": tarjeta1["nroSeguridad"],
-    "emailMP": tarjeta1["mailMP"]
+    # "emailMP": tarjeta1["mailMP"]
     }
     headers = {
         'Authorization': f'Bearer {TOKEN}'
@@ -462,7 +462,7 @@ def getOrdenCompra(catedra):
     login_url = f"{URL}courses/catedras/{catedra}/ordenCompra"
     headers = {'Authorization': f'Bearer {TOKEN}'}
     r = requests.get(login_url,headers=headers)
-    print("get CATEDRAS:", r.status_code, r.text)
+    print("GET OrdenCompra:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
     return r.json()
@@ -471,23 +471,21 @@ def Inscribirse(catedra):
     login_url = f"{URL}inscripciones/{catedra}"
     headers = {'Authorization': f'Bearer {TOKEN}'}
     r = requests.post(login_url,headers=headers)
-    print("get CATEDRAS:", r.status_code, r.text)
+    print("POST Inscripcion:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
+    return r.json()
 
-def pagar():
+def pagar(ordenCompra,isncripcion):
     login_url = f"{URL}pagar/payu"
     headers = {'Authorization': f'Bearer {TOKEN}'}
     payload = {
-        "amount": 1500,
-        "card": "4850110000000000",
-        "cvv": "123",
-        "expiry": "2025/12",
-        "name": "APPROVED",
-        "email": "demo@correo.com"
+        "monto": isncripcion["precioFinal"],
+        "cardID": ordenCompra["mediosPago"][0]["id"],
+        "codigoPago": isncripcion["codigoPago"]
         }
     r = requests.post(login_url,json = payload, headers=headers)
-    print("get CATEDRAS:", r.status_code, r.text)
+    print("POST Pago:", r.status_code, r.text)
     if r.status_code != 200:
         print("validacion failed.")
 
@@ -518,38 +516,39 @@ def testTarjetas(tarjeta):
     getTarjetas()
     DeleteTarjeta(input("ingresarID: "))
 
-def testCrearReceta():
-    mi_receta = Receta(
-        title="Pizza napolitana g",
-        description="Pizza casera con masa fina",
-        servings=4,
-        tipoId=1,
-        experiencia= NivelDificultad.PRINCIPIANTE.name,
-        ingredients=[
-            {
-                "quantity": 500,
-                "detail": "harina 000",
-                "unit": "gramos",
-                "observations": ""
-            },
-            # Más ingredientes...
-        ],
-        steps=[
-            {"instruction": "Mezclar la harina con el agua","foto":True},
-            {"instruction": "Amasar hasta obtener una masa suave","foto":False},
-            {"instruction": "Cortar cebolla","foto":True},
-            # Más pasos...
-        ],
-        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
-        step_photos_paths=[
-            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
-            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
-        ]
-    )
+def testCrearReceta(receta):
+    mi_receta = receta
+    # mi_receta = Receta(
+    #     title="Pizza napolitana g",
+    #     description="Pizza casera con masa fina",
+    #     servings=4,
+    #     tipoId=1,
+    #     experiencia= NivelDificultad.PRINCIPIANTE.name,
+    #     ingredients=[
+    #         {
+    #             "quantity": 500,
+    #             "detail": "harina 000",
+    #             "unit": "gramos",
+    #             "observations": ""
+    #         },
+    #         # Más ingredientes...
+    #     ],
+    #     steps=[
+    #         {"instruction": "Mezclar la harina con el agua","foto":True},
+    #         {"instruction": "Amasar hasta obtener una masa suave","foto":False},
+    #         {"instruction": "Cortar cebolla","foto":True},
+    #         # Más pasos...
+    #     ],
+    #     main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
+    #     step_photos_paths=[
+    #         r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
+    #         r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
+    #     ]
+    # )
     id = crearRecetaPaso1(mi_receta)
     print(id)
     crearRecetaPaso2(id, mi_receta)
-    crearRecetaPaso3(id, mi_receta)
+    # crearRecetaPaso3(id, mi_receta)
 
 def testSubirCatedra():
     sede = Sede(
@@ -596,8 +595,8 @@ def testInscribirme():
     recuperarCatedras(curso)
     catedra = int(input("ingrese el id de la catedra a inscribirse: "))
     ordenCompra = getOrdenCompra(catedra)
-    Inscribirse(catedra)
-    pagar()
+    isncripcion = Inscribirse(catedra)
+    pagar(ordenCompra=ordenCompra,isncripcion=isncripcion)
 
 
 #############################################
@@ -635,7 +634,8 @@ login(emilio.mail,emilio.contraseña)
 # subirDNI(emilio.dni,emilio.nroTramite)
 
 # registrarTarjeta(tarjeta1=tarjeta1)
-# testInscribirme()
+testInscribirme()
 # pagar()
 # recuperarRecetas()
-getRecetas()
+# getRecetas()
+

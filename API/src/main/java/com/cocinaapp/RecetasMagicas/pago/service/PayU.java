@@ -30,14 +30,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PayU {
 
-    private CardRepository cardRepository;
-    private UserRepository userRepository;
-    private AlumnoRepository alumnoRepository;
-    private CronogramaCursoRepository cronogramaCursoRepository;
+    private final CardRepository cardRepository;
+    private final UserRepository userRepository;
+    private final AlumnoRepository alumnoRepository;
+    private final CronogramaCursoRepository cronogramaCursoRepository;
     private final RegistrarPago registrarPago;
     private final PagoRepository pagoRepository;
 
     public ResponseEntity<String> pagar(PagoRequestDto dto, String email) throws JsonProcessingException {
+        if (dto.getCardID() == null) {
+            throw new IllegalArgumentException("El ID de la tarjeta no puede ser null");
+        }
         Card card = cardRepository.findById(dto.getCardID())
                 .orElseThrow(() -> new RuntimeException("Tarjeta no encontrada"));
 

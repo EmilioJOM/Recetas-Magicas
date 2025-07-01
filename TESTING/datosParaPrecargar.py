@@ -8,7 +8,7 @@ recetas = [
         title="Espaguetis a la carbonara",
         description="Un clásico italiano cremoso y sabroso.",
         servings=2,
-        tipoId=1,
+        tipoId="1",
         experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 200, "detail": "espaguetis", "unit": "gramos", "observations": ""},
@@ -25,14 +25,14 @@ recetas = [
             {"instruction": "Escurrir la pasta y mezclar rápidamente con la panceta y la mezcla de huevo y queso."},
             {"instruction": "Servir con sal y pimienta a gusto."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Tarta de espinaca y ricota",
         description="Tarta salada de espinaca y ricota, ideal para almuerzos o cenas.",
         servings=6,
-        tipoId=2,
+        tipoId="2",
         experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 2, "detail": "masa de tarta", "unit": "unidad", "observations": "tapas"},
@@ -52,14 +52,14 @@ recetas = [
             {"instruction": "Colocar una tapa de tarta en un molde, agregar el relleno y cubrir con la otra tapa."},
             {"instruction": "Hornear a 180°C por 40 minutos o hasta dorar."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Lomo a la mostaza",
         description="Filetes de lomo con salsa cremosa de mostaza.",
         servings=4,
-        tipoId=3,
+        tipoId="3",
         experiencia=NivelDificultad.EXPERTO.name,
         ingredients=[
             {"quantity": 4, "detail": "filetes de lomo", "unit": "unidad", "observations": "de vaca"},
@@ -78,14 +78,14 @@ recetas = [
             {"instruction": "Volver a colocar los filetes en la sartén, cocinar 5 minutos más."},
             {"instruction": "Servir caliente con la salsa por encima."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Milanesas de berenjena",
         description="Milanesas crocantes y sabrosas, aptas para vegetarianos.",
         servings=4,
-        tipoId=2,
+        tipoId="2",
         experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 2, "detail": "berenjenas", "unit": "unidad", "observations": "grandes"},
@@ -102,14 +102,14 @@ recetas = [
             {"instruction": "Freír en abundante aceite caliente hasta dorar."},
             {"instruction": "Escurrir sobre papel absorbente y servir."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Galletitas de avena y miel",
         description="Galletas dulces, ideales para merendar.",
         servings=12,
-        tipoId=4,
+        tipoId="4",
         experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 150, "detail": "avena arrollada", "unit": "gramos", "observations": ""},
@@ -126,14 +126,14 @@ recetas = [
             {"instruction": "Formar bolitas y aplastar en una placa para horno."},
             {"instruction": "Hornear a 180°C por 12 minutos o hasta dorar."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Ratatouille clásico",
         description="Guarnición de verduras al horno típica francesa.",
         servings=4,
-        tipoId=2,
+        tipoId="2",
         experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 1, "detail": "berenjena", "unit": "unidad", "observations": "mediana"},
@@ -152,14 +152,14 @@ recetas = [
             {"instruction": "Salpimentar y rociar con aceite."},
             {"instruction": "Hornear a 180°C durante 40 minutos."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Brownie de chocolate",
         description="Postre húmedo y chocolatoso, ideal para acompañar con helado.",
         servings=8,
-        tipoId=4,
+        tipoId="4",
         experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 200, "detail": "chocolate semiamargo", "unit": "gramos", "observations": ""},
@@ -175,14 +175,14 @@ recetas = [
             {"instruction": "Agregar la harina e integrar suavemente."},
             {"instruction": "Volcar en molde enmantecado y hornear a 180°C por 25 minutos."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Pollo al curry con arroz",
         description="Pollo especiado en salsa cremosa, acompañado con arroz blanco.",
         servings=4,
-        tipoId=3,
+        tipoId="3",
         experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 500, "detail": "pechuga de pollo", "unit": "gramos", "observations": "en cubos"},
@@ -201,14 +201,14 @@ recetas = [
             {"instruction": "Añadir la crema de leche y cocinar 10 minutos."},
             {"instruction": "Servir caliente con arroz blanco cocido."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Sushi rolls clásicos",
         description="Rolls de sushi con arroz, alga nori, salmón y palta.",
         servings=2,
-        tipoId=5,
+        tipoId="5",
         experiencia=NivelDificultad.EXPERTO.name,
         ingredients=[
             {"quantity": 2, "detail": "hojas de alga nori", "unit": "unidad", "observations": ""},
@@ -226,14 +226,14 @@ recetas = [
             {"instruction": "Enrollar firmemente ayudándose con una esterilla."},
             {"instruction": "Cortar en porciones con cuchillo mojado."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Panqueques con dulce de leche",
         description="Dulce clásico, ideal para la merienda o postre.",
         servings=8,
-        tipoId=4,
+        tipoId="4",
         experiencia=NivelDificultad.PRINCIPIANTE.name,
         ingredients=[
             {"quantity": 2, "detail": "huevos", "unit": "unidad", "observations": ""},
@@ -249,14 +249,14 @@ recetas = [
             {"instruction": "Repetir hasta acabar la mezcla."},
             {"instruction": "Rellenar los panqueques con dulce de leche y enrollar."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     ),
     Receta(
         title="Ensalada César",
         description="Ensalada fresca con pollo, crutones y aderezo César.",
         servings=2,
-        tipoId=2,
+        tipoId="2",
         experiencia=NivelDificultad.INTERMEDIO.name,
         ingredients=[
             {"quantity": 1, "detail": "pechuga de pollo", "unit": "unidad", "observations": "a la plancha"},
@@ -277,7 +277,7 @@ recetas = [
             {"instruction": "Mezclar la lechuga con el pollo, crutones y parmesano."},
             {"instruction": "Agregar el aderezo justo antes de servir."}
         ],
-        main_photo_path="",
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         step_photos_paths=[]
     )
 ]
@@ -291,7 +291,7 @@ sedes = [
         telefono="+54 11 4899-1122",
         mail="palermo@recetasmagicas.com",
         whatsapp="+54 9 11 6000-1122",
-        main_foto="",
+        main_foto=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         tipo_bonificacion="Descuento",
         bonificacion_cursos="10% en cursos de pastelería",
         tipo_promocion=None,
@@ -305,7 +305,7 @@ sedes = [
         telefono="+54 11 4702-3344",
         mail="belgrano@recetasmagicas.com",
         whatsapp="+54 9 11 4500-3344",
-        main_foto="",
+        main_foto=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         tipo_bonificacion=None,
         bonificacion_cursos=None,
         tipo_promocion="2x1",
@@ -319,7 +319,7 @@ sedes = [
         telefono="+54 221 444-5678",
         mail="laplata@recetasmagicas.com",
         whatsapp="+54 9 221 555-6789",
-        main_foto="",
+        main_foto=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         tipo_bonificacion="Beca parcial",
         bonificacion_cursos="50% para estudiantes universitarios",
         tipo_promocion=None,
@@ -333,7 +333,7 @@ sedes = [
         telefono="+54 351 500-1122",
         mail="cordoba@recetasmagicas.com",
         whatsapp="+54 9 351 400-1122",
-        main_foto="",
+        main_foto=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         tipo_bonificacion=None,
         bonificacion_cursos=None,
         tipo_promocion=None,
@@ -347,7 +347,7 @@ sedes = [
         telefono="+54 223 477-9090",
         mail="mardelplata@recetasmagicas.com",
         whatsapp="+54 9 223 588-9090",
-        main_foto="",
+        main_foto=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         tipo_bonificacion="Descuento",
         bonificacion_cursos="15% en cursos de cocina saludable",
         tipo_promocion="Regalo",
@@ -359,7 +359,7 @@ cursos = [
     Course(
         title="Panadería Artesanal",
         description="Aprendé a preparar panes clásicos y especiales con técnicas de panadería artesanal.",
-        main_photo="",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         contenidos=[
             "Historia y tipos de pan",
             "Técnicas de amasado",
@@ -375,7 +375,7 @@ cursos = [
     Course(
         title="Cocina Vegana Creativa",
         description="Recetas innovadoras y saludables sin ingredientes de origen animal.",
-        main_photo="",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         contenidos=[
             "Bases de la cocina vegana",
             "Sustitutos vegetales",
@@ -391,7 +391,7 @@ cursos = [
     Course(
         title="Pastelería Profesional",
         description="Formación integral en técnicas de pastelería clásica y moderna.",
-        main_photo="",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         contenidos=[
             "Masas base: sableé, hojaldre, choux",
             "Tortas y entremets",
@@ -407,7 +407,7 @@ cursos = [
     Course(
         title="Cocina Italiana de Autor",
         description="Recorrido por las recetas tradicionales y modernas de la cocina italiana.",
-        main_photo="",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         contenidos=[
             "Pasta fresca y seca",
             "Risottos y salsas tradicionales",
@@ -423,7 +423,7 @@ cursos = [
     Course(
         title="Sushi y Cocina Asiática",
         description="Técnicas básicas y avanzadas de sushi, woks y sabores de Asia.",
-        main_photo="",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         contenidos=[
             "Sushi rolls y nigiris",
             "Preparación de arroz",
@@ -439,7 +439,7 @@ cursos = [
     Course(
         title="Cocina Saludable para el Día a Día",
         description="Ideas, técnicas y recetas para comer rico y sano sin complicaciones.",
-        main_photo="",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         contenidos=[
             "Ensaladas y bowls",
             "Legumbres y cereales integrales",
@@ -455,7 +455,7 @@ cursos = [
     Course(
         title="Repostería sin TACC",
         description="Recetas dulces libres de gluten, ideales para celíacos y todo público.",
-        main_photo="",
+        main_photo=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
         contenidos=[
             "Bases de la repostería sin TACC",
             "Tortas y muffins",
@@ -472,25 +472,25 @@ cursos = [
 
 cronogramas = [
     CronogramaCurso(course=1, sede=1, ubicacion="Aula Panadería", promotion=10.0, fecha_inicio="2024-08-05", fecha_fin="2024-08-28", vacantes=25),
-    CronogramaCurso(course=2, sede=2, ubicacion="Cocina Grande", promotion=None, fecha_inicio="2024-09-01", fecha_fin="2024-09-30", vacantes=18),
+    CronogramaCurso(course=2, sede=2, ubicacion="Cocina Grande", promotion=0, fecha_inicio="2024-09-01", fecha_fin="2024-09-30", vacantes=18),
     CronogramaCurso(course=3, sede=3, ubicacion="Sala 1", promotion=15.0, fecha_inicio="2024-10-15", fecha_fin="2024-11-26", vacantes=15),
     CronogramaCurso(course=4, sede=4, ubicacion="Aula 2", promotion=5.0, fecha_inicio="2024-07-10", fecha_fin="2024-08-30", vacantes=20),
-    CronogramaCurso(course=5, sede=5, ubicacion="Salón Oriental", promotion=None, fecha_inicio="2024-11-02", fecha_fin="2024-12-07", vacantes=12),
+    CronogramaCurso(course=5, sede=5, ubicacion="Salón Oriental", promotion=0, fecha_inicio="2024-11-02", fecha_fin="2024-12-07", vacantes=12),
     CronogramaCurso(course=6, sede=1, ubicacion="Aula Saludable", promotion=20.0, fecha_inicio="2024-09-05", fecha_fin="2024-10-01", vacantes=30),
-    CronogramaCurso(course=7, sede=2, ubicacion="Aula 4", promotion=None, fecha_inicio="2024-08-20", fecha_fin="2024-09-24", vacantes=10),
+    CronogramaCurso(course=7, sede=2, ubicacion="Aula 4", promotion=0, fecha_inicio="2024-08-20", fecha_fin="2024-09-24", vacantes=10),
     CronogramaCurso(course=2, sede=4, ubicacion="Cocina Experimental", promotion=12.5, fecha_inicio="2024-07-18", fecha_fin="2024-08-22", vacantes=16),
-    CronogramaCurso(course=3, sede=1, ubicacion="Sala Pastelería", promotion=None, fecha_inicio="2024-10-10", fecha_fin="2024-11-25", vacantes=20),
+    CronogramaCurso(course=3, sede=1, ubicacion="Sala Pastelería", promotion=0, fecha_inicio="2024-10-10", fecha_fin="2024-11-25", vacantes=20),
     CronogramaCurso(course=4, sede=5, ubicacion="Aula Italiana", promotion=10.0, fecha_inicio="2024-07-05", fecha_fin="2024-08-15", vacantes=14),
-    CronogramaCurso(course=5, sede=3, ubicacion="Sala Sushi", promotion=None, fecha_inicio="2024-09-10", fecha_fin="2024-10-08", vacantes=8),
-    CronogramaCurso(course=1, sede=4, ubicacion="Aula Panadería", promotion=None, fecha_inicio="2024-11-20", fecha_fin="2024-12-15", vacantes=22),
+    CronogramaCurso(course=5, sede=3, ubicacion="Sala Sushi", promotion=0, fecha_inicio="2024-09-10", fecha_fin="2024-10-08", vacantes=8),
+    CronogramaCurso(course=1, sede=4, ubicacion="Aula Panadería", promotion=0, fecha_inicio="2024-11-20", fecha_fin="2024-12-15", vacantes=22),
     CronogramaCurso(course=6, sede=2, ubicacion="Aula 7", promotion=25.0, fecha_inicio="2024-08-01", fecha_fin="2024-08-31", vacantes=18),
     CronogramaCurso(course=7, sede=3, ubicacion="Aula Sin TACC", promotion=15.0, fecha_inicio="2024-10-01", fecha_fin="2024-11-05", vacantes=10),
-    CronogramaCurso(course=2, sede=5, ubicacion="Cocina Vegana", promotion=None, fecha_inicio="2024-09-03", fecha_fin="2024-09-28", vacantes=12),
+    CronogramaCurso(course=2, sede=5, ubicacion="Cocina Vegana", promotion=0, fecha_inicio="2024-09-03", fecha_fin="2024-09-28", vacantes=12),
     CronogramaCurso(course=3, sede=5, ubicacion="Sala 2", promotion=5.0, fecha_inicio="2024-11-01", fecha_fin="2024-12-12", vacantes=12),
-    CronogramaCurso(course=4, sede=3, ubicacion="Aula 6", promotion=None, fecha_inicio="2024-08-12", fecha_fin="2024-09-19", vacantes=20),
+    CronogramaCurso(course=4, sede=3, ubicacion="Aula 6", promotion=0, fecha_inicio="2024-08-12", fecha_fin="2024-09-19", vacantes=20),
     CronogramaCurso(course=5, sede=2, ubicacion="Salón Oriente", promotion=10.0, fecha_inicio="2024-07-22", fecha_fin="2024-08-22", vacantes=10),
-    CronogramaCurso(course=6, sede=4, ubicacion="Aula Salud", promotion=None, fecha_inicio="2024-10-08", fecha_fin="2024-10-29", vacantes=25),
-    CronogramaCurso(course=7, sede=1, ubicacion="Aula Celíacos", promotion=None, fecha_inicio="2024-09-14", fecha_fin="2024-10-19", vacantes=16),
+    CronogramaCurso(course=6, sede=4, ubicacion="Aula Salud", promotion=0, fecha_inicio="2024-10-08", fecha_fin="2024-10-29", vacantes=25),
+    CronogramaCurso(course=7, sede=1, ubicacion="Aula Celíacos", promotion=0, fecha_inicio="2024-09-14", fecha_fin="2024-10-19", vacantes=16),
 ]
 
 filtros_receta = [

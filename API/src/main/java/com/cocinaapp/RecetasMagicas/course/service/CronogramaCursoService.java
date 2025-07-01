@@ -88,7 +88,7 @@ public class CronogramaCursoService {
 
         // 3. Calcular precio final con descuento
         double precioBase = curso.getPrice();  // o getPrecio()
-        Double descuento = catedra.getPromotion() == null ? catedra.getPromotion() : 0;  // en porcentaje
+        Double descuento = (catedra.getPromotion() == 0.0 || catedra.getPromotion() == null) ? catedra.getPromotion() : 0;  // en porcentaje
 
         long precioFinal = Math.round(precioBase * (100 - descuento) / 100.0);
 

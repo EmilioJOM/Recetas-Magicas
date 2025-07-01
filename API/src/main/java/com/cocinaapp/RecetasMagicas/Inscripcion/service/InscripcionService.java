@@ -31,7 +31,7 @@ public class InscripcionService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Alumno alumno = alumnoRepository.findByUser(usuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
 
         CronogramaCurso cronograma = cronogramaCursoRepository.findById(idCronograma)
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
