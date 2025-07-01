@@ -104,3 +104,6 @@ export const getLastestCourses = (limit = 5) => API.get(`courses/latest/${limit}
 
 // Función para recuperar todos los cursos ( )
 export const getCourses = () => API.get('/courses');
+
+//Función para recuperar un curso (id)
+export const getCourseById = (id) => API.get(`courses/${id}`);
