@@ -1,28 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, Alert, StyleSheet } from 'react-native';
 import SedeCard from '../components/SedeCard';
-import { useNavigation } from '@react-navigation/native';
-const sedes = [
-  {
-    id: '1',
-    title: 'Sede Buenos Aires',
-    direccion: 'Av. Corrientes 1234',
-    ciudad: 'Buenos Aires',
-    image: require('../assets/Lasagna.jpg'),
-    userImage: require('../assets/FotoPerfil1.jpg'),
-    userName: 'Juan Pérez',
-    userAlias: '@juanp',
-  },
-  // ... las otras sedes igual
-];
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { getCatedraByCourseId } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 export default function SelectSedeScreen() {
   const [selectedId, setSelectedId] = useState(null);
+  const [sedes, setSedes] = useState([]);
   const navigation = useNavigation();
+  const route = useRoute();
+  const { courseId } = route.params || {};
+  const { token } = useAuth();
+
+  useEffect(() => {
+    const fetchSedes = async () => {
+      try {
+        console.log('Course ID:', courseId);
+        console.log('Token:', token);
+        const response = await getCatedraByCourseId(courseId, token);
+        console.log('Sedes recibidas:', response.data);
+        setSedes(response.data);
+      } catch (error) {
+        console.error('Error al obtener las sedes:', error);
+      }
+    };
+    if (courseId && token) {
+      fetchSedes();
+    }
+  }, [courseId, token]);
 
   const onSelect = (item) => {
     setSelectedId(item.id);
-    Alert.alert('Sede seleccionada', `Elegiste: ${item.title}`, [
+    Alert.alert('Sede seleccionada', `Elegiste: ${item.sedeNombre}`, [
       {
         text: 'Continuar al pago',
         onPress: () => navigation.navigate('PaymentSummaryScreen', { sede: item }),
@@ -37,13 +47,13 @@ export default function SelectSedeScreen() {
         {sedes.map((sede) => (
           <SedeCard
             key={sede.id}
-            title={sede.title}
-            direccion={sede.direccion}
-            ciudad={sede.ciudad}
-            image={sede.image}
-            userImage={sede.userImage}
-            userName={sede.userName}
-            userAlias={sede.userAlias}
+            title={sede.sedeNombre}
+            direccion={sede.sedeDireccion}
+            ciudad={'Ubicación: ' + (sede.ubicacion || 'No especificada')}
+            image={{ uri: sede.sedeMainPhoto }}
+            userImage={require('../assets/FotoPerfil1.jpg')}
+            userName={`Vacantes: ${sede.vacantes}`}
+            userAlias={`Promo: ${sede.promotion}%`}
             onPress={() => onSelect(sede)}
           />
         ))}
@@ -51,7 +61,7 @@ export default function SelectSedeScreen() {
       {selectedId && (
         <View style={styles.selectedContainer}>
           <Text style={styles.selectedText}>
-            Sede seleccionada: {sedes.find(s => s.id === selectedId)?.title}
+            Sede seleccionada: {sedes.find(s => s.id === selectedId)?.sedeNombre}
           </Text>
         </View>
       )}
@@ -59,7 +69,6 @@ export default function SelectSedeScreen() {
   );
 }
 
-// estilos iguales a los anteriores
 const styles = StyleSheet.create({
   container: {
     flex: 1,

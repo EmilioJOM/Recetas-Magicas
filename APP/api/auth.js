@@ -107,3 +107,20 @@ export const getCourses = () => API.get('/courses');
 
 //Función para recuperar un curso (id)
 export const getCourseById = (id) => API.get(`courses/${id}`);
+
+//------------Catedras--------------
+
+//Funcion para recuperar catedras que den un curso especifico
+export const getCatedraByCourseId = (id, token) => {
+  return API.get(`courses/catedras/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+
+    },
+  });
+};
+
+//--------- Pagos---------------
+
+//Funcion para mostrar datos de la factura
+export const getOrdenCompra = (id) => API.get(`courses/catedras/${id}/ordenCompra`);
