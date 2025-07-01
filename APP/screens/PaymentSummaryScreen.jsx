@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,44 +6,59 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getOrdenCompra } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
+import { getOrdenCompra, inscribirseCurso, pagarCurso } from '../api/auth';
 
 export default function PaymentSummaryScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { sede } = route.params || {}; // ← contiene la cátedra entera
+  const { sede } = route.params || {}; // viene de la screen anterior
   const { token } = useAuth();
 
-  const [data, setData] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState('efectivo');
+  const [orden, setOrden] = useState(null);
 
   useEffect(() => {
     const fetchOrden = async () => {
       try {
-        console.log('Obteniendo orden para cátedra id:', sede?.id);
-        const response = await getOrdenCompra(sede?.id, token); // ← PASA EL ID DE LA CÁTEDRA
-        console.log('OrdenCompra data:', response.data);
-        setData(response.data);
+        const response = await getOrdenCompra(sede.id, token);
+        console.log('Orden:', response.data);
+        setOrden(response.data);
       } catch (error) {
-        console.error('Error al obtener orden de compra:', error);
+        console.error('Error al obtener la orden de compra:', error);
+        Alert.alert('Error', 'No se pudo cargar el resumen de inscripción.');
       }
     };
-    if (sede?.id && token) fetchOrden();
+    if (sede?.id && token) {
+      fetchOrden();
+    }
   }, [sede, token]);
 
-  if (!data) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.header}>Cargando resumen...</Text>
-      </View>
-    );
-  }
+  const handleSubmit = async () => {
+    try {
+      if (selectedPayment === 'efectivo') {
+        await inscribirseCurso(orden.catedraID, token);
+      } else {
+        const medioPagoId = orden?.MediosPago?.[0]?.id;
+        if (!medioPagoId) throw new Error('No hay tarjeta disponible');
+        await pagarCurso(orden.catedraID, medioPagoId, token);
+      }
+      navigation.navigate('HomeScreen');
+    } catch (error) {
+      console.error('Error al procesar inscripción/pago:', error);
+      Alert.alert('Error', 'No se pudo completar la inscripción.');
+    }
+  };
 
-  const totalConDescuento = data.precio * (1 - (data.descuentoCatedra || 0) / 100);
+  if (!orden) return null;
+
+  const totalConDescuento = orden.precio * (1 - (orden.descuentoCatedra || 0) / 100);
+
+  const tarjeta = orden.MediosPago?.[0];
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -54,44 +69,35 @@ export default function PaymentSummaryScreen() {
         <Text style={styles.sectionTitle}>Medio de pago</Text>
 
         <TouchableOpacity
-          style={[
-            styles.paymentOption,
-            selectedPayment === 'efectivo' && styles.selectedOption,
-          ]}
+          style={[styles.paymentOption, selectedPayment === 'efectivo' && styles.selectedOption]}
           onPress={() => setSelectedPayment('efectivo')}
         >
           <Icon name="money" size={20} color="#4CAF50" />
           <Text style={styles.paymentText}>Efectivo</Text>
         </TouchableOpacity>
 
-        {data.MediosPago?.map((medio) => (
+        {tarjeta && (
           <TouchableOpacity
-            key={medio.id}
-            style={[
-              styles.paymentOption,
-              selectedPayment === medio.id && styles.selectedOption,
-            ]}
-            onPress={() => setSelectedPayment(medio.id)}
+            style={[styles.paymentOption, selectedPayment === 'tarjeta' && styles.selectedOption]}
+            onPress={() => setSelectedPayment('tarjeta')}
           >
             <Icon name="credit-card" size={20} color="#2196F3" />
             <View style={{ marginLeft: 8 }}>
-              <Text style={styles.paymentText}>
-                **** **** **** {medio.numero.slice(-4)}
-              </Text>
-              <Text style={styles.subText}>Tipo: {medio.tipo}</Text>
+              <Text style={styles.paymentText}>{tarjeta.numero}</Text>
+              <Text style={styles.subText}>Tipo: {tarjeta.tipo}</Text>
             </View>
           </TouchableOpacity>
-        ))}
+        )}
       </View>
 
       {/* Descuento */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Descuento por sede</Text>
         <Text style={styles.discountText}>
-          {data.sede} aplica un {data.descuentoCatedra || 0}% de descuento
+          {orden.sede} aplica un {orden.descuentoCatedra}% de descuento
         </Text>
-        {data.promocionSede && (
-          <Text style={styles.subText}>Promo: {data.promocionSede}</Text>
+        {orden.promocionSede && (
+          <Text style={styles.subText}>Promoción: {orden.promocionSede}</Text>
         )}
       </View>
 
@@ -99,13 +105,10 @@ export default function PaymentSummaryScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Curso</Text>
         <View style={styles.courseCard}>
-          <Image source={{ uri: data.fotoCurso }} style={styles.courseImage} />
+          <Image source={{ uri: orden.fotoCurso }} style={styles.courseImage} />
           <View style={styles.courseInfo}>
-            <Text style={styles.courseName}>{data.curso}</Text>
-            <Text style={styles.courseDescription}>Curso intensivo con certificación oficial.</Text>
-            <Text style={styles.coursePrice}>
-              ${data.precio.toLocaleString()}
-            </Text>
+            <Text style={styles.courseName}>{orden.curso}</Text>
+            <Text style={styles.coursePrice}>${orden.precio.toLocaleString()}</Text>
           </View>
         </View>
       </View>
@@ -117,13 +120,7 @@ export default function PaymentSummaryScreen() {
       </View>
 
       {/* Botón */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          console.log('Método de pago seleccionado:', selectedPayment);
-          navigation.navigate('SuccessScreen');
-        }}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>💳 Confirmar e inscribirse</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -200,11 +197,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#333',
-  },
-  courseDescription: {
-    fontSize: 14,
-    color: '#666',
-    marginVertical: 4,
   },
   coursePrice: {
     fontSize: 16,
