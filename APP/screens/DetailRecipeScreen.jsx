@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,12 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { AntDesign, Feather } from '@expo/vector-icons';
+import { getRecipeById } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -21,19 +24,53 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
+function MinimalLoading() {
+  return (
+    <View style={styles.loadingContainer}>
+      <View style={styles.loadingContent}>
+        <ActivityIndicator size="large" color="#555" />
+        <Text style={styles.loadingText}>Cocinando la magia...</Text>
+      </View>
+    </View>
+  );
+}
+
 export default function DetailRecipeScreen() {
   const route = useRoute();
-  const { receta } = route.params;
-  const [porciones, setPorciones] = useState(receta.porciones || 10);
+  const { id } = route.params;
+  const { token } = useAuth();
+  const [receta, setReceta] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [porciones, setPorciones] = useState(1);
+
+  useEffect(() => {
+    const fetchReceta = async () => {
+      try {
+        const response = await getRecipeById(id);
+        setReceta(response.data);
+        console.log(response.data);
+        setPorciones(response.data.servings || 1);
+      } catch (error) {
+        console.error('Error al cargar receta:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReceta();
+  }, [id]);
 
   const ajustarPorciones = (delta) => {
     LayoutAnimation.easeInEaseOut();
     setPorciones((prev) => Math.max(1, prev + delta));
   };
 
+  if (loading || !receta) {
+    return <MinimalLoading />;
+  }
+
   return (
     <View style={styles.container}>
-      <ImageBackground source={receta.image} style={styles.heroImage}>
+      <ImageBackground source={{ uri: receta.mainPhoto }} style={styles.heroImage}>
         <TouchableOpacity style={styles.favoriteFloating}>
           <AntDesign name={receta.isFavorite ? 'heart' : 'hearto'} size={24} color="#e74c3c" />
         </TouchableOpacity>
@@ -41,42 +78,39 @@ export default function DetailRecipeScreen() {
       </ImageBackground>
 
       <ScrollView style={styles.sheet} showsVerticalScrollIndicator={false}>
-        <Text style={styles.desc}>{receta.desc}</Text>
+        <Text style={styles.desc}>{receta.description}</Text>
 
         <View style={styles.userInfo}>
-          <Image source={receta.userImage} style={styles.userImage} />
+          <Image source={require('../assets/FotoPerfil1.jpg')} style={styles.userImage} />
           <View>
-            <Text style={styles.userName}>{receta.userName}</Text>
-            <Text style={styles.userAlias}>{receta.userAlias} · {receta.ago}</Text>
+            <Text style={styles.userName}>{receta.email}</Text>
+            <Text style={styles.userAlias}>{receta.authorAlias} · {receta.ago}</Text>
           </View>
         </View>
 
-        {/* Stats tipo Coursera */}
         <View style={styles.statBlock}>
           <Text style={styles.ratingText}>
-            <Text style={styles.ratingNumber}>{receta.rating}</Text> <Text style={styles.ratingStar}>★</Text>
+            <Text style={styles.ratingNumber}>{4.8}</Text> <Text style={styles.ratingStar}>★</Text>
           </Text>
-          <Text style={styles.statDetail}>({receta.reviews} reseñas)</Text>
+          <Text style={styles.statDetail}>({250} reseñas)</Text>
         </View>
 
         <View style={styles.statBlock}>
-          <Text style={styles.statTitle}>Nivel {receta.level}</Text>
+          <Text style={styles.statTitle}>Nivel {receta.experienceLevel}</Text>
           <Text style={styles.statDetail}>Experiencia recomendada</Text>
         </View>
 
-        {/* Ingredientes */}
         <Text style={styles.sectionTitle}>Ingredientes:</Text>
-        {receta.ingredientes?.map((ing, i) => (
+        {receta.ingredients?.map((ing, i) => (
           <View key={i} style={styles.ingredientRow}>
             <View style={styles.bullet} />
             <Text style={styles.ingredient}>
-              <Text style={styles.ingredientBold}>{ing.cantidad} {ing.unidad} </Text>
-              {ing.nombre}
+              <Text style={styles.ingredientBold}>{ing.quantity} {ing.unit} </Text>
+              {ing.detail}
             </Text>
           </View>
         ))}
 
-        {/* Ajuste de porciones */}
         <View style={styles.porcionesRow}>
           <Text style={styles.porcionesLabel}>Cantidad de porciones:</Text>
           <View style={styles.porcionesControl}>
@@ -90,21 +124,19 @@ export default function DetailRecipeScreen() {
           </View>
         </View>
 
-        {/* Paso a paso */}
         <Text style={styles.sectionTitle}>Paso a paso:</Text>
-        {receta.pasos?.map((paso, index) => (
+        {receta.steps?.map((paso, index) => (
           <View key={index} style={styles.pasoContainer}>
             <View style={styles.pasoHeader}>
               <View style={styles.numeroCirculo}>
                 <Text style={styles.numeroTexto}>{index + 1}</Text>
               </View>
-              <Text style={styles.pasoTexto}>{paso.texto}</Text>
+              <Text style={styles.pasoTexto}>{paso.instruction}</Text>
             </View>
-
-            {paso.imagenes?.length > 0 && (
+            {paso.media?.length > 0 && (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pasoImagenesScroll}>
-                {paso.imagenes.map((img, i) => (
-                  <Image key={i} source={img} style={styles.pasoImagen} />
+                {paso.media.map((img, i) => (
+                  <Image key={i} source={{ uri: img.urlContenido }} style={styles.pasoImagen} />
                 ))}
               </ScrollView>
             )}
@@ -285,5 +317,29 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 10,
     resizeMode: 'cover',
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContent: {
+    backgroundColor: '#fff',
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 18,
+    color: '#333',
+    fontWeight: '500',
   },
 });

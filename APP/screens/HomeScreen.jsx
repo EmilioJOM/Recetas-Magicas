@@ -608,7 +608,7 @@ export default function HomeScreen() {
     const fetchRecipes = async () => {
       try {
         const response = await getRecipes();
-        console.log('Respuesta getRecipes:', response.data);
+        //console.log('Respuesta getRecipes:', response.data);
         setAllRecipes(response.data);
       } catch (error) {
         console.error('Error al traer las recetas', error);
@@ -624,7 +624,7 @@ export default function HomeScreen() {
     const fetchCourses = async () => {
       try {
         const response = await getCourses();
-        console.log('Cursos:', response.data);
+        //console.log('Cursos:', response.data);
         setCourses(response.data);
       } catch (error) {
         console.error('Error al traer los cursos', error);
@@ -743,7 +743,7 @@ export default function HomeScreen() {
   const resetIngredientes = () => {
     setIngredientesSeleccionados([]);
   };
-  console.log('allRecipes:', allRecipes);
+  //console.log('allRecipes:', allRecipes);
   return (
     <View style={styles.container}>
       <ScrollView
@@ -802,19 +802,30 @@ export default function HomeScreen() {
           <>
             <ImageCarousel data={imagenes} />
             <LatestRecipesPreview
-
-              recipes={latestRecipes}// endpoint
-              //recipes={ultimasRecetas} //constante
-              onPressRecipe={(receta) =>
-                navigation.navigate('DetailRecipeScreen', { receta })
-              }
+              recipes={latestRecipes}
+              onPressRecipe={(receta) => (
+                //console.log('ID enviado:', receta.id),
+                //console.log('Presionaste receta en exploración:', receta),
+                navigation.navigate('DetailRecipeScreen', { id: receta.id })
+              )}
             />
+
+            <HorizontalCards
+              title="Explorá nuevas recetas"
+              data={allRecipes}
+              onItemPress={(receta) => (
+                //console.log('ID enviado:', receta.id),
+                //console.log('Presionaste receta en exploración:', receta),
+                navigation.navigate('DetailRecipeScreen', { id: receta.id })
+              )}
+            />
+
             <HorizontalCards
               title="Explorá nuevas recetas"
               data={allRecipes} //endpoint
               //data={exploraRecetas} mock
               onItemPress={(receta) =>
-                navigation.navigate('DetailRecipeScreen', { receta })
+                navigation.navigate('DetailRecipeScreen', { id: receta.id })
               }
             />
             <HorizontalCards
