@@ -27,4 +27,7 @@ public class Course {
     private Double price;
 
     private String modality; // Ej: "presencial", "virtual", "online"
+
+    private List<String> Elementos;
+    private List<String> Cronograma;
 }

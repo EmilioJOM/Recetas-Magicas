@@ -6,8 +6,8 @@ from typing import *
 from enum import Enum
 from definicionEntidades import *
 
-URL = "https://recetas-magicas-api.onrender.com/"
-# URL = "http://localhost:8080/"
+# URL = "https://recetas-magicas-api.onrender.com/"
+URL = "http://localhost:8080/"
 global TOKEN
 print(URL)
 emilio = User(
@@ -443,10 +443,10 @@ def recuperarCatedras(id):
 def buscarRecetas(filtros):
     url = f"{URL}search/receta"
     headers = {
-        # "Authorization": f"Bearer {TOKEN}",
+        "Authorization": f"Bearer {TOKEN}",
         "Content-Type": "application/json"
     }
-    response = requests.get(url, headers=headers, data=json.dumps(filtros))
+    response = requests.post(url, headers=headers, data=json.dumps(filtros))
     print(response.status_code, response.text)
 
 def buscarCursos(filtros):
@@ -455,7 +455,7 @@ def buscarCursos(filtros):
         # "Authorization": f"Bearer {TOKEN}",
         "Content-Type": "application/json"
     }
-    response = requests.get(url, headers=headers, data=json.dumps(filtros))
+    response = requests.post(url, headers=headers, data=json.dumps(filtros))
     print(response.status_code, response.text)
 
 def getOrdenCompra(catedra):
@@ -502,11 +502,6 @@ def getCursos():
     for i in r.json():
         print(i)
 
-def baja(id):
-    login_url = f"{URL}inscripciones/{id}"
-    headers = {'Authorization': f'Bearer {TOKEN}'}
-    r = requests.delete(login_url,headers=headers)
-    print(f"DELETE inscripciones/{id}", r.text)
 
 def CC():
     login_url = f"{URL}pagar/CC"
@@ -514,7 +509,14 @@ def CC():
     r = requests.get(login_url,headers=headers)
     print(f"GET pagar/CC",r.status_code, r.text)
 
+def baja(id):
+    login_url = f"{URL}inscripciones/{id}"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.delete(login_url,headers=headers)
+    print(f"DELETE inscripciones/{id}", r.text)
 
+def rembolso():
+    pass
 
 #######################################################################
 
@@ -622,7 +624,7 @@ def testInscribirme():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-# login(emilio.mail,emilio.contraseña)
+login(emilio.mail,emilio.contraseña)
 # registrarTarjeta(tarjeta1)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
@@ -640,7 +642,7 @@ def testInscribirme():
 # marcarModificado(1)
 # searchUser()
 # testSubirCatedra()
-# recuperarCursos()
+recuperarCursos()
 # recuperarUnCurso(7)
 # recuperarCatedras(5)
 
@@ -657,8 +659,8 @@ def testInscribirme():
 # testInscribirme()
 # pagar()
 # recuperarRecetas()
-getRecetas()
-# getCursos()
+# getRecetas()
+getCursos()
 
 
 # CC()

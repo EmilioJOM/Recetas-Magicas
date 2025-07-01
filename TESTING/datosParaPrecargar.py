@@ -370,7 +370,20 @@ cursos = [
         requirements="No se requieren conocimientos previos.",
         duration="8 clases de 2 horas",
         price=35000.0,
-        modality="Presencial"
+        modality="Presencial",
+        elementos_necesarios=[
+            "Delantal", "Bowl grande", "Espátula de silicona", "Moldes para pan"
+        ],
+        cronograma_semanal=[
+            "Clase 1: Introducción y tipos de pan",
+            "Clase 2: Técnicas de amasado",
+            "Clase 3: Fermentación y levado",
+            "Clase 4: Pan de campo",
+            "Clase 5: Baguette",
+            "Clase 6: Focaccia",
+            "Clase 7: Panes integrales",
+            "Clase 8: Revisión y práctica libre"
+        ]
     ),
     Course(
         title="Cocina Vegana Creativa",
@@ -386,7 +399,18 @@ cursos = [
         requirements="Apto para todo público.",
         duration="6 clases de 2 horas",
         price=30000.0,
-        modality="Presencial y online"
+        modality="Presencial y online",
+        elementos_necesarios=[
+            "Licuadora o procesadora", "Cuchillo afilado", "Tabla de cortar"
+        ],
+        cronograma_semanal=[
+            "Clase 1: Introducción y bases veganas",
+            "Clase 2: Sustitutos vegetales",
+            "Clase 3: Entradas creativas",
+            "Clase 4: Platos principales",
+            "Clase 5: Postres y fermentos",
+            "Clase 6: Planificación semanal"
+        ]
     ),
     Course(
         title="Pastelería Profesional",
@@ -402,7 +426,13 @@ cursos = [
         requirements="Conocimientos básicos de cocina recomendados.",
         duration="12 clases de 3 horas",
         price=65000.0,
-        modality="Presencial"
+        modality="Presencial",
+        elementos_necesarios=[
+            "Batidora", "Mangas pasteleras", "Espátulas", "Moldes"
+        ],
+        cronograma_semanal=[
+            f"Clase {i+1}: Contenido de la clase {i+1}" for i in range(12)
+        ]
     ),
     Course(
         title="Cocina Italiana de Autor",
@@ -418,7 +448,13 @@ cursos = [
         requirements="No se requieren conocimientos previos.",
         duration="8 clases de 2 horas y media",
         price=42000.0,
-        modality="Presencial"
+        modality="Presencial",
+        elementos_necesarios=[
+            "Máquina para pasta (opcional)", "Rodillo", "Utensilios básicos de cocina"
+        ],
+        cronograma_semanal=[
+            f"Clase {i+1}: Contenido italiano {i+1}" for i in range(8)
+        ]
     ),
     Course(
         title="Sushi y Cocina Asiática",
@@ -434,7 +470,13 @@ cursos = [
         requirements="Tener cuchillo propio recomendable.",
         duration="5 clases de 2 horas",
         price=50000.0,
-        modality="Presencial"
+        modality="Presencial",
+        elementos_necesarios=[
+            "Cuchillo para sushi", "Esterilla para sushi", "Palillos", "Wok"
+        ],
+        cronograma_semanal=[
+            f"Clase {i+1}: Contenido asiático {i+1}" for i in range(5)
+        ]
     ),
     Course(
         title="Cocina Saludable para el Día a Día",
@@ -450,7 +492,13 @@ cursos = [
         requirements="Para todas las edades.",
         duration="4 clases de 2 horas",
         price=22000.0,
-        modality="Online"
+        modality="Online",
+        elementos_necesarios=[
+            "Contenedores herméticos", "Procesadora", "Cuchillos básicos"
+        ],
+        cronograma_semanal=[
+            f"Clase {i+1}: Cocina saludable tema {i+1}" for i in range(4)
+        ]
     ),
     Course(
         title="Repostería sin TACC",
@@ -466,9 +514,16 @@ cursos = [
         requirements="No se requiere experiencia previa.",
         duration="6 clases de 1 hora y media",
         price=32000.0,
-        modality="Online"
+        modality="Online",
+        elementos_necesarios=[
+            "Harinas sin gluten", "Batidora", "Moldes", "Espátulas"
+        ],
+        cronograma_semanal=[
+            f"Clase {i+1}: Repostería sin TACC tema {i+1}" for i in range(6)
+        ]
     ),
 ]
+
 
 cronogramas = [
     CronogramaCurso(course=1, sede=1, ubicacion="Aula Panadería", promotion=10.0, fecha_inicio="2024-08-05", fecha_fin="2024-08-28", vacantes=25),
@@ -497,10 +552,7 @@ filtros_receta = [
 
     # 1. Buscar por texto libre que aparece en el título
     {
-        "query": "napolitana",
-        "tipoReceta": None,
-        "ingredientesIncluidos": [],
-        "ingredientesExcluidos": [],
+        "query": "napolitana"
     },
 
     # 2. Buscar por tipo de receta "Postre" y porciones = 8

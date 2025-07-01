@@ -48,6 +48,8 @@ class Course:
     title: str
     description: str
     main_photo: str
+    elementos_necesarios : List[str]
+    cronograma_semanal : List[str]
     contenidos: List[str] = field(default_factory=list)
     requirements: str = ""
     duration: str = ""
