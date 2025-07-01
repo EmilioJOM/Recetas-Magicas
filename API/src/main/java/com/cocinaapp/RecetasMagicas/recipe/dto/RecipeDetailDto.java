@@ -13,6 +13,7 @@ public class RecipeDetailDto {
     private String experienceLevel;
     private String mainPhoto;
     private String authorAlias;
+    private String email;
     private LocalDateTime createdAt;
     private List<IngredientDto> ingredients;
     private List<StepDto> steps;

@@ -55,7 +55,9 @@ public class PayU {
         Alumno alumno = alumnoRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado para el usuario: " + user.getEmail()));
 
-        CronogramaCurso catedra = cronogramaCursoRepository.findById(Long.valueOf(dto.getCodigoPago()))
+        Long catedraId = Long.valueOf(dto.getCodigoPago().split("#")[1]);
+
+        CronogramaCurso catedra = cronogramaCursoRepository.findById(catedraId)
                 .orElseThrow(() -> new RuntimeException("Catedra no encontrada para el ID: " + dto.getCodigoPago()));
 
         ResponseEntity<String> respuesta = pagarPayU(monto, user, card, alumno);

@@ -14,4 +14,6 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     Optional<Pago> findByReferencia(String referencia);
 
     List<Pago> findByUsuarioEmail(String email); // ✅ campo exacto
+    Optional<Pago> findTopByReferenciaOrderByFechaRegistroDesc(String referencia);
+
 }

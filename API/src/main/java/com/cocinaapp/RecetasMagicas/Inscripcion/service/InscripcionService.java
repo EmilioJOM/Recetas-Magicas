@@ -49,8 +49,12 @@ public class InscripcionService {
                 .build();
 
         double precioBase = cronograma.getCourse().getPrice();  // o getPrecio()
-        double descuento = cronograma.getPromotion() == null ? cronograma.getPromotion() : 0;  // en porcentaje
-
+        Double descuento;
+        try {
+            descuento = cronograma.getPromotion()+0;
+        } catch (Exception e) {
+            descuento = 0.0;
+        }
         long precioFinal = Math.round(precioBase * (100 - descuento) / 100.0);
 
         registrarPago.pagoPendiente(

@@ -63,6 +63,7 @@ public class RecipeService {
                 .experienceLevel(recipe.getExperienceLevel().name())
                 .mainPhoto(recipe.getMainPhoto())
                 .authorAlias(recipe.getAuthor().getAlias())
+                .email(recipe.getAuthor().getEmail())
                 .createdAt(recipe.getCreatedAt())
                 .ingredients(recipe.getIngredientesUtilizados().stream()
                         .map(ri -> IngredientDto.builder()

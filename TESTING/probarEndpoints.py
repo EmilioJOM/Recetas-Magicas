@@ -9,7 +9,7 @@ from definicionEntidades import *
 # URL = "https://recetas-magicas-api.onrender.com/"
 URL = "http://localhost:8080/"
 global TOKEN
-
+print(URL)
 emilio = User(
     mail = "emijesus21@gmail.com",
     contraseña = "claveSergura123",
@@ -525,37 +525,37 @@ def testTarjetas(tarjeta):
 
 def testCrearReceta(receta):
     mi_receta = receta
-    # mi_receta = Receta(
-    #     title="Pizza napolitana g",
-    #     description="Pizza casera con masa fina",
-    #     servings=4,
-    #     tipoId=1,
-    #     experiencia= NivelDificultad.PRINCIPIANTE.name,
-    #     ingredients=[
-    #         {
-    #             "quantity": 500,
-    #             "detail": "harina 000",
-    #             "unit": "gramos",
-    #             "observations": ""
-    #         },
-    #         # Más ingredientes...
-    #     ],
-    #     steps=[
-    #         {"instruction": "Mezclar la harina con el agua","foto":True},
-    #         {"instruction": "Amasar hasta obtener una masa suave","foto":False},
-    #         {"instruction": "Cortar cebolla","foto":True},
-    #         # Más pasos...
-    #     ],
-    #     main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
-    #     step_photos_paths=[
-    #         r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
-    #         r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
-    #     ]
-    # )
+    mi_receta = Receta(
+        title="Pizza napolitana h",
+        description="Pizza casera con masa fina",
+        servings=4,
+        tipoId="1",
+        experiencia= NivelDificultad.PRINCIPIANTE.name,
+        ingredients=[
+            {
+                "quantity": 500,
+                "detail": "harina 000",
+                "unit": "gramos",
+                "observations": ""
+            },
+            # Más ingredientes...
+        ],
+        steps=[
+            {"instruction": "Mezclar la harina con el agua","foto":True},
+            {"instruction": "Amasar hasta obtener una masa suave","foto":False},
+            {"instruction": "Cortar cebolla","foto":True},
+            # Más pasos...
+        ],
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
+        step_photos_paths=[
+            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
+            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
+        ]
+    )
     id = crearRecetaPaso1(mi_receta)
     print(id)
     crearRecetaPaso2(id, mi_receta)
-    # crearRecetaPaso3(id, mi_receta)
+    crearRecetaPaso3(id, mi_receta)
 
 def testSubirCatedra():
     sede = Sede(
@@ -617,9 +617,9 @@ login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1)
 # getTarjetas()
-# testCrearReceta()
+# testCrearReceta("dsdsd")
 # recuperarRecetas()
-# recuperarUnaReceta(8)
+# recuperarUnaReceta(12)
 # marcarFavorito(2)
 # searchUser()
 # desmarcarFavorito(2)
@@ -627,7 +627,7 @@ login(emilio.mail,emilio.contraseña)
 # marcarModificado(1)
 # searchUser()
 # testSubirCatedra()
-recuperarCursos()
+# recuperarCursos()
 # recuperarUnCurso(7)
 # recuperarCatedras(5)
 
@@ -641,8 +641,10 @@ recuperarCursos()
 # subirDNI(emilio.dni,emilio.nroTramite)
 
 # registrarTarjeta(tarjeta1=tarjeta1)
-# testInscribirme()
+testInscribirme()
 # pagar()
 # recuperarRecetas()
 # getRecetas()
+# getCursos()
+
 
