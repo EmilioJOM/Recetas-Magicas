@@ -68,6 +68,8 @@ public class CourseService {
                 .duration(dto.getDuration())
                 .price(dto.getPrice())
                 .modality(dto.getModality())
+                .Cronograma(dto.getCronograma())
+                .Elementos(dto.getElementos())
                 .build();
         return courseRepository.save(course);
     }
@@ -85,6 +87,8 @@ public class CourseService {
                 .duration(course.getDuration())
                 .price(course.getPrice())
                 .modality(course.getModality())
+                .Cronograma(course.getCronograma())
+                .Elementos(course.getElementos())
                 .build();
     }
 

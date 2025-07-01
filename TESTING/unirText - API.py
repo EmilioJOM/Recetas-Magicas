@@ -18,7 +18,7 @@ def sumar_txts(ruta):
 # ----- PARÁMETROS -----
 
 rutaRepo = "D:/Documentos/UADE/desarrollo_de_aplicaciones_distribuidas/Recetas-Magicas/"
-ruta_inicial = rutaRepo + 'API/src/main/java/com/cocinaapp/RecetasMagicas'  # Cambia esto por tu ruta real
+ruta_inicial = rutaRepo + 'API/src/main/java/com/cocinaapp/RecetasMagicas/search'  # Cambia esto por tu ruta real
 
 # Ejecuta el script
 suma_total_path = rutaRepo[:-17]

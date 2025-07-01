@@ -497,10 +497,7 @@ filtros_receta = [
 
     # 1. Buscar por texto libre que aparece en el título
     {
-        "query": "napolitana",
-        "tipoReceta": None,
-        "ingredientesIncluidos": [],
-        "ingredientesExcluidos": [],
+        "query": "napolitana"
     },
 
     # 2. Buscar por tipo de receta "Postre" y porciones = 8

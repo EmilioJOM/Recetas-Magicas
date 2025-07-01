@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,8 +82,16 @@ public class SearchService {
             // Si es usuario autenticado y pide favoritos o modificadas
             if (user != null) {
                 if (Boolean.TRUE.equals(filtro.getFavoritos())) {
-                    Join<?, ?> favJoin = root.join("favoritos"); // debe estar mapeado en el modelo
-                    predicates.add(cb.equal(favJoin.get("id"), user.getId()));
+                    Set<Long> recetasFavoritasIds = user.getFavoritos()
+                            .stream()
+                            .map(Recipe::getId)
+                            .collect(Collectors.toSet());
+                    if (!recetasFavoritasIds.isEmpty()) {
+                        predicates.add(root.get("id").in(recetasFavoritasIds));
+                    } else {
+                        // No hay favoritos, devolver lista vacía directamente
+                        return cb.disjunction(); // equivalente a WHERE false
+                    }
                 }
                 if (Boolean.TRUE.equals(filtro.getModificados())) {
                     predicates.add(cb.equal(root.get("author").get("id"), user.getId())); // si modificados == de él

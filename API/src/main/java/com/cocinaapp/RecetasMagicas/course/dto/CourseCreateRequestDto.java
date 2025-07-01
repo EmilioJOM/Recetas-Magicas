@@ -14,4 +14,6 @@ public class CourseCreateRequestDto {
     private String duration;
     private Double price;
     private String modality;
+    private List<String> Elementos;
+    private List<String> Cronograma;
 }
