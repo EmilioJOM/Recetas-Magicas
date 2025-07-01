@@ -7,6 +7,7 @@ import lombok.*;
 public class CourseListItemDto {
     private Long id;
     private String title;
+    private String mainPhoto;
     private String modalidad;
     private Double precio;
     private String portada; // Si usás imagen principal

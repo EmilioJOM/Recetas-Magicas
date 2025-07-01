@@ -33,6 +33,21 @@ public class CourseService {
                         .precio(c.getPrice())
                         .portada(c.getMainPhoto())
                         .duracion(c.getDuration())
+                        .mainPhoto(c.getMainPhoto())
+                        .build())
+                .toList();
+    }
+    public List<CourseListItemDto> getCourses() {
+        List<Course> courses = courseRepository.findAll();
+        return courses.stream()
+                .map(c -> CourseListItemDto.builder()
+                        .id(c.getId())
+                        .title(c.getTitle())
+                        .modalidad(c.getModality())
+                        .precio(c.getPrice())
+                        .portada(c.getMainPhoto())
+                        .duracion(c.getDuration())
+                        .mainPhoto(c.getMainPhoto())
                         .build())
                 .toList();
     }

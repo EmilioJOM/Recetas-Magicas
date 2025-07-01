@@ -20,7 +20,6 @@ public class InscripcionController {
             Authentication authentication) {
         System.out.print("/inscripciones/"+idCronograma.toString());
         String email = authentication.getName();
-        inscripcionService.inscribirse(idCronograma, email);
         return inscripcionService.inscribirse(idCronograma, email);
     }
 
