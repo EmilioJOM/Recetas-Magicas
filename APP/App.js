@@ -77,6 +77,7 @@ function MyStack() {
             component={WelcomeScreen}
             options={{ headerShown: false }}
           />
+
           <Stack.Screen name="TestLoginScreen" component={TestLoginScreen} />
           <Stack.Screen name="RegisterStepOneScreen" component={RegisterStepOneScreen} />
           <Stack.Screen name="RegisterStepTwoScreen" component={RegisterStepTwoScreen} />
@@ -87,6 +88,8 @@ function MyStack() {
           <Stack.Screen name="ForgotPasswordStepTwoScreen" component={ForgotPasswordStepTwoScreen} />
           <Stack.Screen name="ForgotPasswordStepThreeScreen" component={ForgotPasswordStepThreeScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
+          <Stack.Screen name="OnlyRegistered" component={OnlyRegisteredScreen} />
+          <Stack.Screen name="OnlyStudents" component={OnlyStudentsScreen} />
 
         </>
       ) : (
