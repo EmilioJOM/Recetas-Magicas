@@ -63,7 +63,8 @@ export const getLatestRecipes = (limit = 5) => API.get(`/recipes/latest/${limit}
 //export const getLatestRecipes = () => API.get('/recipes/latest');
 
 // Función para recuperar todas las recetas ( )
-export const getRecipes = (limit = 5) => API.get(`/recipes?n=${limit}`);
+//export const getRecipes = (limit = 5) => API.get(`/recipes/${limit}`);
+export const getRecipes = () => API.get('/recipes');
 
 // Función para recuperar recetas porbuscador y filtros ( filterData )
 export const getRecipesFilter = (filterData) => API.get('/search/search');
@@ -80,3 +81,7 @@ export const createRecipeStepOne = (formData, token) => {
     },
   });
 };
+
+//--------- Cursos --------------
+// Función para recuperar 5 ultimos cursos ( )
+export const getCourses = (limit = 5) => API.get(`courses/latest/${limit}`);
