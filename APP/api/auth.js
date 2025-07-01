@@ -84,4 +84,7 @@ export const createRecipeStepOne = (formData, token) => {
 
 //--------- Cursos --------------
 // Función para recuperar 5 ultimos cursos ( )
-export const getCourses = (limit = 5) => API.get(`courses/latest/${limit}`);
+export const getLastestCourses = (limit = 5) => API.get(`courses/latest/${limit}`);
+
+// Función para recuperar todos los cursos ( )
+export const getCourses = () => API.get('/courses');
