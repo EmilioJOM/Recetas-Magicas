@@ -35,7 +35,11 @@ export default function SelectSedeScreen() {
     Alert.alert('Sede seleccionada', `Elegiste: ${item.sedeNombre}`, [
       {
         text: 'Continuar al pago',
-        onPress: () => navigation.navigate('PaymentSummaryScreen', { sede: item }),
+        onPress: () => navigation.navigate({
+          name: 'PaymentSummaryScreen',
+          key: `PaymentSummary-${item.id}`, // clave para forzar una nueva pantalla
+          params: { sede: { ...item, courseId } },
+        }),
       },
     ]);
   };

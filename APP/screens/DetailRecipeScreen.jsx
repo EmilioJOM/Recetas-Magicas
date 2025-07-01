@@ -146,8 +146,8 @@ export default function DetailRecipeScreen() {
           <View key={i} style={styles.ingredientRow}>
             <View style={styles.bullet} />
             <Text style={styles.ingredient}>
-              <Text style={styles.ingredientBold}>{ing.cantidadAjustada} {ing.unit} </Text>
-              {ing.detail}
+              <Text style={styles.ingredientBold}>{ing.cantidadAjustada} {ing.unit}</Text>
+              {" "+ing.detail}
             </Text>
           </View>
         ))}
