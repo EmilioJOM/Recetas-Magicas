@@ -495,6 +495,13 @@ def getRecetas():
     print("get RECETAS:", r.status_code, r.text)
     for i in r.json():
         print(i)
+def getCursos():
+    login_url = f"{URL}courses"
+    r = requests.get(login_url)
+    print("get RECETAS:", r.status_code, r.text)
+    for i in r.json():
+        print(i)
+
 
 #######################################################################
 
@@ -620,7 +627,7 @@ login(emilio.mail,emilio.contraseña)
 # marcarModificado(1)
 # searchUser()
 # testSubirCatedra()
-# recuperarCursos()
+recuperarCursos()
 # recuperarUnCurso(7)
 # recuperarCatedras(5)
 
@@ -634,7 +641,7 @@ login(emilio.mail,emilio.contraseña)
 # subirDNI(emilio.dni,emilio.nroTramite)
 
 # registrarTarjeta(tarjeta1=tarjeta1)
-testInscribirme()
+# testInscribirme()
 # pagar()
 # recuperarRecetas()
 # getRecetas()

@@ -24,7 +24,11 @@ public class CourseController {
         System.out.println("GET /courses/latest/" + n);
         return courseService.getLatestCourses(n);
     }
-
+    @GetMapping("")
+    public List<CourseListItemDto> getLatestCourses() {
+        System.out.println("GET /courses");
+        return courseService.getCourses();
+    }
     @GetMapping("/{id}")
     public CourseDetailDto getCourseDetail(@PathVariable Long id) {
         System.out.println("GET /courses/" + id);

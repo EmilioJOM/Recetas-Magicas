@@ -7,7 +7,7 @@ import datosParaPrecargar as datos
 from definicionEntidades import *
 import probarEndpoints
 
-probarEndpoints.login(probarEndpoints.emilio.mail,probarEndpoints.emilio.contraseña)
+# probarEndpoints.login(probarEndpoints.emilio.mail,probarEndpoints.emilio.contraseña)
 
 for receta in datos.recetas:
     probarEndpoints.testCrearReceta(receta=receta)

@@ -37,6 +37,7 @@ public class InscripcionService {
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
         if (inscripcionRepository.existsByUsuarioAndCronograma(usuario, cronograma)) {
+            System.out.println("Ya existe una inscripción para el usuario " + usuario.getId() + " y catedra " + cronograma.getId());
             throw new RuntimeException("Ya estás inscripto en este curso.");
         }
 
