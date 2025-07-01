@@ -123,4 +123,10 @@ export const getCatedraByCourseId = (id, token) => {
 //--------- Pagos---------------
 
 //Funcion para mostrar datos de la factura
-export const getOrdenCompra = (id) => API.get(`courses/catedras/${id}/ordenCompra`);
+export const getOrdenCompra = (id, token) => {
+  return API.get(`courses/catedras/${id}/ordenCompra`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

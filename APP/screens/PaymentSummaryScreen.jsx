@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,32 +7,43 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { getOrdenCompra } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 export default function PaymentSummaryScreen() {
   const navigation = useNavigation();
-  const [selectedPayment, setSelectedPayment] = useState('efectivo'); // default seleccionado
+  const route = useRoute();
+  const { sede } = route.params || {}; // ← contiene la cátedra entera
+  const { token } = useAuth();
 
-  const sede = {
-    nombre: 'Sede Buenos Aires',
-    descuento: 30,
-  };
+  const [data, setData] = useState(null);
+  const [selectedPayment, setSelectedPayment] = useState('efectivo');
 
-  const curso = {
-    nombre: 'Curso de Pastelería Profesional',
-    descripcion: 'Aprendé técnicas avanzadas de repostería en 3 meses.',
-    precio: 60000,
-    imagen: require('../assets/Rabioles.jpg'),
-  };
+  useEffect(() => {
+    const fetchOrden = async () => {
+      try {
+        console.log('Obteniendo orden para cátedra id:', sede?.id);
+        const response = await getOrdenCompra(sede?.id, token); // ← PASA EL ID DE LA CÁTEDRA
+        console.log('OrdenCompra data:', response.data);
+        setData(response.data);
+      } catch (error) {
+        console.error('Error al obtener orden de compra:', error);
+      }
+    };
+    if (sede?.id && token) fetchOrden();
+  }, [sede, token]);
 
-  const tarjetaRegistrada = {
-    numero: '**** **** **** 1234',
-    nombre: 'Juan Pérez',
-    vencimiento: '12/27',
-  };
+  if (!data) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.header}>Cargando resumen...</Text>
+      </View>
+    );
+  }
 
-  const totalConDescuento = curso.precio * (1 - sede.descuento / 100);
+  const totalConDescuento = data.precio * (1 - (data.descuentoCatedra || 0) / 100);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -53,40 +64,47 @@ export default function PaymentSummaryScreen() {
           <Text style={styles.paymentText}>Efectivo</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.paymentOption,
-            selectedPayment === 'tarjeta' && styles.selectedOption,
-          ]}
-          onPress={() => setSelectedPayment('tarjeta')}
-        >
-          <Icon name="credit-card" size={20} color="#2196F3" />
-          <View style={{ marginLeft: 8 }}>
-            <Text style={styles.paymentText}>{tarjetaRegistrada.numero}</Text>
-            <Text style={styles.subText}>a nombre de {tarjetaRegistrada.nombre}</Text>
-            <Text style={styles.subText}>Vence: {tarjetaRegistrada.vencimiento}</Text>
-          </View>
-        </TouchableOpacity>
+        {data.MediosPago?.map((medio) => (
+          <TouchableOpacity
+            key={medio.id}
+            style={[
+              styles.paymentOption,
+              selectedPayment === medio.id && styles.selectedOption,
+            ]}
+            onPress={() => setSelectedPayment(medio.id)}
+          >
+            <Icon name="credit-card" size={20} color="#2196F3" />
+            <View style={{ marginLeft: 8 }}>
+              <Text style={styles.paymentText}>
+                **** **** **** {medio.numero.slice(-4)}
+              </Text>
+              <Text style={styles.subText}>Tipo: {medio.tipo}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
       </View>
 
       {/* Descuento */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Descuento por sede</Text>
         <Text style={styles.discountText}>
-          {sede.nombre} aplica un {sede.descuento}% de descuento
+          {data.sede} aplica un {data.descuentoCatedra || 0}% de descuento
         </Text>
+        {data.promocionSede && (
+          <Text style={styles.subText}>Promo: {data.promocionSede}</Text>
+        )}
       </View>
 
       {/* Curso */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Curso</Text>
         <View style={styles.courseCard}>
-          <Image source={curso.imagen} style={styles.courseImage} />
+          <Image source={{ uri: data.fotoCurso }} style={styles.courseImage} />
           <View style={styles.courseInfo}>
-            <Text style={styles.courseName}>{curso.nombre}</Text>
-            <Text style={styles.courseDescription}>{curso.descripcion}</Text>
+            <Text style={styles.courseName}>{data.curso}</Text>
+            <Text style={styles.courseDescription}>Curso intensivo con certificación oficial.</Text>
             <Text style={styles.coursePrice}>
-              ${curso.precio.toLocaleString()}
+              ${data.precio.toLocaleString()}
             </Text>
           </View>
         </View>
@@ -102,7 +120,6 @@ export default function PaymentSummaryScreen() {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          // Acá podrías enviar al backend el método de pago seleccionado
           console.log('Método de pago seleccionado:', selectedPayment);
           navigation.navigate('SuccessScreen');
         }}
