@@ -28,6 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/search/**").permitAll()
                         .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/pagar/CC").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/recipes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/courses").permitAll()

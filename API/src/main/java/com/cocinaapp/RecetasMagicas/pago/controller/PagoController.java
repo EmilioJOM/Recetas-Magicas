@@ -52,16 +52,19 @@ public class PagoController {
     }
 
     @PostMapping("/payu/devolucion")
-    public ResponseEntity<String> devolucionConPayU(@RequestBody DevolucionRequestDto request, Authentication authentication) throws Exception {
+    public ResponseEntity<String> devolucionConPayU(
+            @RequestBody DevolucionRequestDto request,
+            Authentication authentication
+    ) throws Exception {
         System.out.println("POST /pagar/payu/devolucion");
         String email = authentication.getName();
 
         return payU.reembolsarParcial(request, email);
     }
 
-    @GetMapping("/estadoPagos")
+    @GetMapping("/CC")
     public List<Pago> estadoPagos(Authentication authentication) throws Exception {
-        System.out.println("POST /pagar/estadoPagos");
+        System.out.println("POST /pagar/CC");
         String email = authentication.getName();
 
         return registrarPago.getPagos(email);

@@ -6,10 +6,10 @@ from typing import *
 from enum import Enum
 from definicionEntidades import *
 
-# URL = "https://recetas-magicas-api.onrender.com/"
-URL = "http://localhost:8080/"
+URL = "https://recetas-magicas-api.onrender.com/"
+# URL = "http://localhost:8080/"
 global TOKEN
-
+print(URL)
 emilio = User(
     mail = "emijesus21@gmail.com",
     contraseña = "claveSergura123",
@@ -446,7 +446,7 @@ def buscarRecetas(filtros):
         # "Authorization": f"Bearer {TOKEN}",
         "Content-Type": "application/json"
     }
-    response = requests.post(url, headers=headers, data=json.dumps(filtros))
+    response = requests.get(url, headers=headers, data=json.dumps(filtros))
     print(response.status_code, response.text)
 
 def buscarCursos(filtros):
@@ -455,7 +455,7 @@ def buscarCursos(filtros):
         # "Authorization": f"Bearer {TOKEN}",
         "Content-Type": "application/json"
     }
-    response = requests.post(url, headers=headers, data=json.dumps(filtros))
+    response = requests.get(url, headers=headers, data=json.dumps(filtros))
     print(response.status_code, response.text)
 
 def getOrdenCompra(catedra):
@@ -502,6 +502,19 @@ def getCursos():
     for i in r.json():
         print(i)
 
+def baja(id):
+    login_url = f"{URL}inscripciones/{id}"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.delete(login_url,headers=headers)
+    print(f"DELETE inscripciones/{id}", r.text)
+
+def CC():
+    login_url = f"{URL}pagar/CC"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.get(login_url,headers=headers)
+    print(f"GET pagar/CC",r.status_code, r.text)
+
+
 
 #######################################################################
 
@@ -525,37 +538,37 @@ def testTarjetas(tarjeta):
 
 def testCrearReceta(receta):
     mi_receta = receta
-    # mi_receta = Receta(
-    #     title="Pizza napolitana g",
-    #     description="Pizza casera con masa fina",
-    #     servings=4,
-    #     tipoId=1,
-    #     experiencia= NivelDificultad.PRINCIPIANTE.name,
-    #     ingredients=[
-    #         {
-    #             "quantity": 500,
-    #             "detail": "harina 000",
-    #             "unit": "gramos",
-    #             "observations": ""
-    #         },
-    #         # Más ingredientes...
-    #     ],
-    #     steps=[
-    #         {"instruction": "Mezclar la harina con el agua","foto":True},
-    #         {"instruction": "Amasar hasta obtener una masa suave","foto":False},
-    #         {"instruction": "Cortar cebolla","foto":True},
-    #         # Más pasos...
-    #     ],
-    #     main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
-    #     step_photos_paths=[
-    #         r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
-    #         r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
-    #     ]
-    # )
     id = crearRecetaPaso1(mi_receta)
     print(id)
     crearRecetaPaso2(id, mi_receta)
-    # crearRecetaPaso3(id, mi_receta)
+    mi_receta = Receta(
+        title="Pizza napolitana h",
+        description="Pizza casera con masa fina",
+        servings=4,
+        tipoId="1",
+        experiencia= NivelDificultad.PRINCIPIANTE.name,
+        ingredients=[
+            {
+                "quantity": 500,
+                "detail": "harina 000",
+                "unit": "gramos",
+                "observations": ""
+            },
+            # Más ingredientes...
+        ],
+        steps=[
+            {"instruction": "Mezclar la harina con el agua","foto":True},
+            {"instruction": "Amasar hasta obtener una masa suave","foto":False},
+            {"instruction": "Cortar cebolla","foto":True},
+            # Más pasos...
+        ],
+        main_photo_path=r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\pizza2.jpg",
+        step_photos_paths=[
+            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarTomate.jpg",
+            r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
+        ]
+    )
+    crearRecetaPaso3(id, mi_receta)
 
 def testSubirCatedra():
     sede = Sede(
@@ -609,7 +622,7 @@ def testInscribirme():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-login(emilio.mail,emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
 # registrarTarjeta(tarjeta1)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
@@ -617,9 +630,9 @@ login(emilio.mail,emilio.contraseña)
 # testRecoverPassword(emilio.mail)
 # testTarjetas(tarjeta1)
 # getTarjetas()
-# testCrearReceta()
+# testCrearReceta("dsdsd")
 # recuperarRecetas()
-# recuperarUnaReceta(8)
+# recuperarUnaReceta(12)
 # marcarFavorito(2)
 # searchUser()
 # desmarcarFavorito(2)
@@ -627,7 +640,7 @@ login(emilio.mail,emilio.contraseña)
 # marcarModificado(1)
 # searchUser()
 # testSubirCatedra()
-recuperarCursos()
+# recuperarCursos()
 # recuperarUnCurso(7)
 # recuperarCatedras(5)
 
@@ -644,5 +657,8 @@ recuperarCursos()
 # testInscribirme()
 # pagar()
 # recuperarRecetas()
-# getRecetas()
+getRecetas()
+# getCursos()
 
+
+# CC()

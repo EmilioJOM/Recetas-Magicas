@@ -18,8 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static java.util.Arrays.stream;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -88,8 +87,12 @@ public class CronogramaCursoService {
 
         // 3. Calcular precio final con descuento
         double precioBase = curso.getPrice();  // o getPrecio()
-        Double descuento = (catedra.getPromotion() == 0.0 || catedra.getPromotion() == null) ? catedra.getPromotion() : 0;  // en porcentaje
-
+        Double descuento;
+        try {
+            descuento = catedra.getPromotion()+0;
+        } catch (Exception e) {
+            descuento = 0.0;
+        }
         long precioFinal = Math.round(precioBase * (100 - descuento) / 100.0);
 
         // 4. Armar y devolver DTO

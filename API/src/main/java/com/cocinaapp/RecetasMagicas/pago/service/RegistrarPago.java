@@ -28,8 +28,8 @@ public class RegistrarPago {
     }
 
     public void pagoRealizado(String referenceCode, String orderId, String transactionId, String metodo){
-        Pago pago = pagoRepository.findByReferencia(referenceCode)
-                .orElseThrow(() -> new RuntimeException("No se encontró el pago con referencia: " + referenceCode));
+        Pago pago = pagoRepository.findTopByReferenciaOrderByFechaRegistroDesc(referenceCode)
+                .orElseThrow(() -> new RuntimeException("No se encontró pago con referencia: " + referenceCode));
         pago.setEstado("PAGADO");
         pago.setMetodo(metodo);
         pago.setOrderId(orderId);
@@ -38,7 +38,7 @@ public class RegistrarPago {
 
         pagoRepository.save(pago);
     }
-    public void devolucionRealizada(User usuario, Double monto, String referenceCode, String orderId, String transactionId, String metodo){
+    public void devolucionRealizada(User usuario, Double monto, String referenceCode, String orderId, String transactionId){
         Pago pago = new Pago();
         LocalDateTime tiempoActual = LocalDateTime.now();
         pago.setUsuarioEmail(usuario.getEmail());
