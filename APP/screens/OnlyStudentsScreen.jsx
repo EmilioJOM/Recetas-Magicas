@@ -11,9 +11,9 @@ export default function OnlyStudentsScreen() {
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <PermissionPrompt
         title="Solo Alumnos pueden inscribirse a cursos"
-        imageSource={require('../assets/lock.png')}
+        imageSource={require('../assets/LogoSinFondo.png')}
         buttons={[
-          { label: 'Registrarse como Alumno', onPress: () => navigation.navigate('BecomeStudentScreen') },
+          { label: 'Registrarse como Alumno', onPress: () => navigation.navigate('RegisterStepFourScreen') },
           { label: 'Seguir como usuario', onPress: () => navigation.navigate('HomeScreen') },
         ]}
       />

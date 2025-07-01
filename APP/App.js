@@ -22,6 +22,8 @@ import CreateRecipeStepThreeScreen from './screens/CreateRecipeStepThreeScreen';
 import SplashScreen from './screens/SplashScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import OnlyRegisteredScreen from './screens/OnlyRegisteredScreen';
+import OnlyStudentsScreen from './screens/OnlyStudentsScreen';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -87,6 +89,7 @@ function MyStack() {
           <Stack.Screen name="ForgotPasswordStepOneScreen" component={ForgotPasswordStepOneScreen} />
           <Stack.Screen name="ForgotPasswordStepTwoScreen" component={ForgotPasswordStepTwoScreen} />
           <Stack.Screen name="ForgotPasswordStepThreeScreen" component={ForgotPasswordStepThreeScreen} />
+          <Stack.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="OnlyRegistered" component={OnlyRegisteredScreen} />
           <Stack.Screen name="OnlyStudents" component={OnlyStudentsScreen} />
@@ -109,6 +112,7 @@ function MyStack() {
           <Stack.Screen name="ForgotPasswordStepOneScreen" component={ForgotPasswordStepOneScreen} />
           <Stack.Screen name="ForgotPasswordStepTwoScreen" component={ForgotPasswordStepTwoScreen} />
           <Stack.Screen name="ForgotPasswordStepThreeScreen" component={ForgotPasswordStepThreeScreen} />
+          <Stack.Screen name="OnlyStudents" component={OnlyStudentsScreen} />
         </>
       )}
     </Stack.Navigator>

@@ -9,6 +9,8 @@ import RecipeOrCourseCard from '../components/RecipeOrCourseCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { getLatestRecipes, getRecipes, getCourses, searchReceta } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
+
 
 const imagenes = [
   { id: '1', image: require('../assets/Shawarma.jpg'), title: 'Curso de Cocina Árabe' },
@@ -34,6 +36,9 @@ export default function HomeScreen() {
   const filtros = ['Todos', 'Favoritos', 'Modificadas', 'Mis Cursos', 'Tipo', 'Usuario', 'Ingrediente'];
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  
+  const { user } = useAuth();
+
 
   useEffect(() => {
     const fetchLatestRecipes = async () => {

@@ -37,13 +37,14 @@ export default function PantallaPaso3() {
 
     const pickImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            allowsMultipleSelection: true,
+            allowsMultipleSelection: false, // ← Solo una imagen
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 0.7,
         });
 
-        if (!result.canceled) {
-            setImagenes([...imagenes, ...result.assets.map((asset) => ({ uri: asset.uri }))]);
+        if (!result.canceled && result.assets.length > 0) {
+            // Solo una imagen, reemplaza la anterior si existía
+            setImagenes([{ uri: result.assets[0].uri }]);
         }
     };
 
@@ -80,12 +81,19 @@ export default function PantallaPaso3() {
             const formData = new FormData();
 
             // 1. Crear el archivo JSON de pasos
-            const pasosData = pasos.map((paso) => ({ description: paso.texto }));
-            const jsonContent = JSON.stringify({ steps: pasosData });
+            // 1. Crear el archivo JSON de pasos con "instruction" y "foto"
+            const pasosData = pasos.map((paso) => ({
+            instruction: paso.texto,
+            foto: paso.imagenes.length > 0, // true si tiene imágenes
+            }));
+
+            const jsonContent = JSON.stringify({ steps: pasosData }, null, 2);
             const jsonPath = FileSystem.documentDirectory + 'data.json';
 
             await FileSystem.writeAsStringAsync(jsonPath, jsonContent);
-            console.log("📄 JSON guardado en:", jsonPath);
+            console.log("📄 JSON creado con pasos:", jsonContent);
+
+            console.log(jsonContent)
 
             formData.append('data', {
                 uri: jsonPath,

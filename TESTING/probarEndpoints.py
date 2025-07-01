@@ -625,7 +625,7 @@ def testInscribirme():
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
 login(emilio.mail,emilio.contraseña)
-# registrarTarjeta(tarjeta1)
+registrarTarjeta(tarjeta1)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
 # subirDNI(emilio.dni, emilio.nroTramite)
@@ -659,7 +659,7 @@ login(emilio.mail,emilio.contraseña)
 # testInscribirme()
 # pagar()
 # recuperarRecetas()
-getRecetas()
+# getRecetas()
 # getCursos()
 
 
