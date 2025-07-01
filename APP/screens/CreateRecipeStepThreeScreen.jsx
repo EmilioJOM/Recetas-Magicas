@@ -13,7 +13,15 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import BottomTabs from '../components/BottomTabs';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+import { useAuth } from '../context/AuthContext'; // si estás usando contexto
+
 export default function PantallaPaso3() {
+    const route = useRoute();
+    const { recipeId } = route.params || {};
+    const { token } = useAuth(); // <-- si usás AuthContext
+
     const [pasoTexto, setPasoTexto] = useState('');
     const [imagenes, setImagenes] = useState([]);
     const [pasos, setPasos] = useState([]);
@@ -53,6 +61,65 @@ export default function PantallaPaso3() {
     const goToNextStep = () => {
         navigation.navigate('HomeScreen');
     };
+
+    const enviarPasoAPaso = async () => {
+        if (!recipeId || !token) {
+            Alert.alert("Error", "Faltan datos para continuar.");
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+
+            // 1. Paso a paso en JSON
+            const pasosData = pasos.map((paso) => ({ description: paso.texto }));
+            formData.append('data', {
+                name: 'data',
+                type: 'application/json',
+                string: JSON.stringify({ steps: pasosData }),
+            });
+
+            // 2. Imágenes de cada paso
+            let imageIndex = 0;
+            for (const paso of pasos) {
+                for (const img of paso.imagenes) {
+                    const fileInfo = await FileSystem.getInfoAsync(img.uri);
+                    if (!fileInfo.exists) continue;
+
+                    formData.append('stepPhotos', {
+                        uri: img.uri,
+                        name: `photo_${imageIndex}.jpg`,
+                        type: 'image/jpeg',
+                    });
+                    imageIndex++;
+                }
+            }
+
+            // 3. Envío
+            const response = await fetch(`https://recetas-magicas-api.onrender.com/recipes/crearReceta3/${recipeId}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            const result = await response.text();
+
+            if (!response.ok) {
+                console.error("❌ Error al subir pasos:", result);
+                Alert.alert("Error", "No se pudieron subir los pasos.");
+            } else {
+                console.log("✅ Pasos subidos:", result);
+                Alert.alert("Éxito", "Receta completa.");
+                navigation.navigate('HomeScreen');
+            }
+        } catch (error) {
+            console.error("❌ Error inesperado:", error);
+            Alert.alert("Error", "Ocurrió un problema al subir los pasos.");
+        }
+    };
+
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
@@ -118,7 +185,7 @@ export default function PantallaPaso3() {
                             <Text style={styles.actionText}>+ Imagen</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={publicarPaso} style={styles.publicarBtn}>
+                        <TouchableOpacity onPress={enviarPasoAPaso} style={styles.publicarBtn}>
                             <Text style={styles.publicarText}>Publicar</Text>
                         </TouchableOpacity>
                     </View>

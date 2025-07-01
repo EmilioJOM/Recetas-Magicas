@@ -6,8 +6,8 @@ from typing import *
 from enum import Enum
 from definicionEntidades import *
 
-# URL = "https://recetas-magicas-api.onrender.com/"
-URL = "http://localhost:8080/"
+URL = "https://recetas-magicas-api.onrender.com/"
+# URL = "http://localhost:8080/"
 global TOKEN
 print(URL)
 emilio = User(
@@ -642,7 +642,7 @@ login(emilio.mail,emilio.contraseña)
 # marcarModificado(1)
 # searchUser()
 # testSubirCatedra()
-recuperarCursos()
+# recuperarCursos()
 # recuperarUnCurso(7)
 # recuperarCatedras(5)
 
@@ -659,8 +659,8 @@ recuperarCursos()
 # testInscribirme()
 # pagar()
 # recuperarRecetas()
-# getRecetas()
-getCursos()
+getRecetas()
+# getCursos()
 
 
 # CC()

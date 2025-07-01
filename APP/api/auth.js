@@ -81,6 +81,33 @@ export const createRecipeStepOne = (formData, token) => {
     },
   });
 };
+export const enviarIngredientes = async (recipeId, token, ingredients) => {
+  try {
+    const response = await fetch(`https://recetas-magicas-api.onrender.com/recipes/crearReceta2/${recipeId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ingredients }),
+    });
+
+    const result = await response.text();
+
+    if (!response.ok) {
+      console.error("❌ Backend error:", result);
+      Alert.alert("Error", "No se pudieron guardar los ingredientes.");
+      return false;
+    }
+
+    console.log("✅ Ingredientes guardados:", result);
+    return true;
+  } catch (err) {
+    console.error("❌ Error de red:", err);
+    Alert.alert("Error", "No se pudo conectar con el servidor.");
+    return false;
+  }
+};
 
 //--------- Ver Receta --------------
 

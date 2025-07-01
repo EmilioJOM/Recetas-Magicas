@@ -15,6 +15,8 @@ import BottomTabs from '../components/BottomTabs';
 import * as Yup from 'yup';
 import { createRecipeStepOne } from '../api/auth';
 import { useAuth } from '../context/AuthContext';  // <-- importás el contexto
+import * as FileSystem from 'expo-file-system';
+
 
 const CreateRecipeStepOneScreen = ({ navigation }) => {
   const { token } = useAuth();  // <-- sacás el token del contexto
@@ -93,28 +95,60 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
 
       setErrors({});
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('description', description);
-      formData.append('experience', experience);
-      formData.append('portions', portions);
-      formData.append('recipeType', recipeType);
-      formData.append('image', {
-        uri: image,
-        name: 'recipe-image.jpg',
-        type: 'image/jpeg',
-      });
-      for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
+      // 1. Validar que el archivo existe
+      const fileInfo = await FileSystem.getInfoAsync(image);
+      if (!fileInfo.exists) {
+        Alert.alert("Error", "No se pudo acceder a la imagen seleccionada.");
+        return;
       }
 
-      const response = await createRecipeStepOne(formData, token); // <-- le pasás el token
+      // 2. Construir el JSON de datos
+      const data = {
+        title: name,
+        description: description,
+        servings: parseInt(portions),
+        tipoId: recipeType,
+        experienceLevel: experience,
+      };
 
-      if (response?.status === 200 || response?.status === 201) {
+      // 3. Crear el FormData
+      const formData = new FormData();
+
+      // JSON como archivo virtual
+      formData.append('data', {
+        string: JSON.stringify(data),
+        name: 'data',
+        type: 'application/json',
+      });
+
+      // Imagen correctamente referenciada
+      formData.append('mainPhoto', {
+        uri: fileInfo.uri,
+        name: 'recipe.jpg',
+        type: 'image/jpeg',
+      });
+
+      // 4. Enviar con fetch (NO axios)
+      const response = await fetch('https://recetas-magicas-api.onrender.com/recipes/crearReceta1', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // No agregues 'Content-Type': fetch se encarga
+        },
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        const recipeId = result.id;
         Alert.alert('¡Éxito!', 'Receta creada correctamente.');
-        navigation.navigate('CreateRecipeStepTwoScreen');
+        navigation.navigate('CreateRecipeStepTwoScreen', { recipeId, token });
+
+
       } else {
-        Alert.alert('Error', 'Hubo un problema al crear la receta.');
+        console.error("❌ Error:", result);
+        Alert.alert('Error', result.message || 'Hubo un problema al crear la receta.');
       }
     } catch (validationError) {
       if (validationError.name === 'ValidationError') {
@@ -124,11 +158,13 @@ const CreateRecipeStepOneScreen = ({ navigation }) => {
         });
         setErrors(newErrors);
       } else {
-        console.error(validationError);
+        console.error("❌ Error inesperado:", validationError);
         Alert.alert('Error', validationError.message || 'Error desconocido');
       }
     }
   };
+
+
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 130 }}>

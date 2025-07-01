@@ -18,6 +18,9 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as Yup from 'yup';
 import BottomTabs from '../components/BottomTabs';
+import { useRoute } from '@react-navigation/native';
+import { useAuth } from '../context/AuthContext'; // si usás contexto
+
 
 const ingredientSchema = Yup.object().shape({
     quantity: Yup.number()
@@ -39,6 +42,10 @@ const CreateRecipeStepTwoScreen = ({ navigation }) => {
     const [unit, setUnit] = useState('');
     const [name, setName] = useState('');
     const [errors, setErrors] = useState({});
+    const { token } = useAuth();
+    const route = useRoute();
+    const { recipeId } = route.params || {};
+
 
     const addIngredient = async () => {
         try {
@@ -69,13 +76,54 @@ const CreateRecipeStepTwoScreen = ({ navigation }) => {
         setIngredients(updated);
     };
 
-    const goToNextStep = () => {
+    const goToNextStep = async () => {
         if (ingredients.length === 0) {
             Alert.alert('Error', 'Debés agregar al menos un ingrediente para continuar.');
             return;
         }
-        navigation.navigate('CreateRecipeStepThreeScreen');
+
+        if (!recipeId || !token) {
+            Alert.alert('Error', 'Faltan datos necesarios para continuar.');
+            return;
+        }
+
+        const enviarIngredientes = async (recipeId, token, ingredients) => {
+            try {
+                const response = await fetch(`https://recetas-magicas-api.onrender.com/recipes/crearReceta2/${recipeId}`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ingredients }),
+                });
+
+                const result = await response.text();
+
+                if (!response.ok) {
+                    console.error("❌ Backend error:", result);
+                    Alert.alert("Error", "No se pudieron guardar los ingredientes.");
+                    return false;
+                }
+
+                console.log("✅ Ingredientes guardados:", result);
+                return true;
+            } catch (err) {
+                console.error("❌ Error de red:", err);
+                Alert.alert("Error", "No se pudo conectar con el servidor.");
+                return false;
+            }
+        };
+
+        const success = await enviarIngredientes(recipeId, token, ingredients);
+
+        if (success) {
+            navigation.navigate('CreateRecipeStepThreeScreen', { recipeId });
+        }
     };
+
+
+    
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

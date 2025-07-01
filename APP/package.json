@@ -35,7 +35,8 @@
     "react-native-webview": "^13.14.2",
     "yup": "^1.6.1",
     "expo-linear-gradient": "~14.1.5",
-    "lottie-react-native": "7.2.2"
+    "lottie-react-native": "7.2.2",
+    "expo-file-system": "~18.1.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
