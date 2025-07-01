@@ -16,6 +16,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import { useAuth } from '../context/AuthContext'; // si estás usando contexto
+import { Alert } from 'react-native';
+
 
 export default function PantallaPaso3() {
     const route = useRoute();
@@ -59,8 +61,13 @@ export default function PantallaPaso3() {
     };
 
     const goToNextStep = () => {
-        navigation.navigate('HomeScreen');
+    if (pasos.length === 0) {
+        Alert.alert("Error", "Agregá al menos un paso antes de continuar.");
+        return;
+    }
+    enviarPasoAPaso(); // envía todo
     };
+
 
     const enviarPasoAPaso = async () => {
         if (!recipeId || !token) {
@@ -69,17 +76,24 @@ export default function PantallaPaso3() {
         }
 
         try {
+            console.log("🔧 Iniciando envío de pasos...");
             const formData = new FormData();
 
-            // 1. Paso a paso en JSON
+            // 1. Crear el archivo JSON de pasos
             const pasosData = pasos.map((paso) => ({ description: paso.texto }));
+            const jsonContent = JSON.stringify({ steps: pasosData });
+            const jsonPath = FileSystem.documentDirectory + 'data.json';
+
+            await FileSystem.writeAsStringAsync(jsonPath, jsonContent);
+            console.log("📄 JSON guardado en:", jsonPath);
+
             formData.append('data', {
-                name: 'data',
+                uri: jsonPath,
+                name: 'data.json',
                 type: 'application/json',
-                string: JSON.stringify({ steps: pasosData }),
             });
 
-            // 2. Imágenes de cada paso
+            // 2. Agregar imágenes
             let imageIndex = 0;
             for (const paso of pasos) {
                 for (const img of paso.imagenes) {
@@ -110,15 +124,17 @@ export default function PantallaPaso3() {
                 console.error("❌ Error al subir pasos:", result);
                 Alert.alert("Error", "No se pudieron subir los pasos.");
             } else {
-                console.log("✅ Pasos subidos:", result);
+                console.log("✅ Pasos subidos correctamente:", result);
                 Alert.alert("Éxito", "Receta completa.");
                 navigation.navigate('HomeScreen');
             }
         } catch (error) {
-            console.error("❌ Error inesperado:", error);
+            console.error("❌ Error inesperado:", error.message);
             Alert.alert("Error", "Ocurrió un problema al subir los pasos.");
         }
     };
+
+
 
 
     return (
@@ -185,8 +201,8 @@ export default function PantallaPaso3() {
                             <Text style={styles.actionText}>+ Imagen</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={enviarPasoAPaso} style={styles.publicarBtn}>
-                            <Text style={styles.publicarText}>Publicar</Text>
+                        <TouchableOpacity onPress={publicarPaso} style={styles.publicarBtn}>
+                            <Text style={styles.publicarText}>Publicar paso</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
