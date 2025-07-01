@@ -501,14 +501,6 @@ filtros_receta = [
         "tipoReceta": None,
         "ingredientesIncluidos": [],
         "ingredientesExcluidos": [],
-        "porciones": None,
-        "autorId": None,
-        "favoritos": False,
-        "modificados": False,
-        "valoracionMinima": None,
-        "estado": "APROBADA",
-        "fechaDesde": None,
-        "fechaHasta": None
     },
 
     # 2. Buscar por tipo de receta "Postre" y porciones = 8

@@ -15,7 +15,7 @@ import java.util.List;
 public class SearchController {
     private final SearchService searchService;
 
-    @GetMapping("/receta")
+    @PostMapping("/receta")
     public List<RecipeListItemDto> buscarRecetas(
             @RequestBody FiltroBusquedaRecetaDto filtros,
             Authentication authentication
@@ -25,7 +25,7 @@ public class SearchController {
         return searchService.buscarRecetas(filtros, email);
     }
 
-    @GetMapping("/curso")
+    @PostMapping("/curso")
     public List<CursoListadoDto> buscarCursos(
             @RequestBody FiltroBusquedaCursoDto filtros,
             Authentication authentication

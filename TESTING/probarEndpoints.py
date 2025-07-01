@@ -446,7 +446,7 @@ def buscarRecetas(filtros):
         # "Authorization": f"Bearer {TOKEN}",
         "Content-Type": "application/json"
     }
-    response = requests.post(url, headers=headers, data=json.dumps(filtros))
+    response = requests.get(url, headers=headers, data=json.dumps(filtros))
     print(response.status_code, response.text)
 
 def buscarCursos(filtros):
@@ -455,7 +455,7 @@ def buscarCursos(filtros):
         # "Authorization": f"Bearer {TOKEN}",
         "Content-Type": "application/json"
     }
-    response = requests.post(url, headers=headers, data=json.dumps(filtros))
+    response = requests.get(url, headers=headers, data=json.dumps(filtros))
     print(response.status_code, response.text)
 
 def getOrdenCompra(catedra):
@@ -512,7 +512,7 @@ def CC():
     login_url = f"{URL}pagar/CC"
     headers = {'Authorization': f'Bearer {TOKEN}'}
     r = requests.get(login_url,headers=headers)
-    print(f"GET pagar/CC", r.text)
+    print(f"GET pagar/CC",r.status_code, r.text)
 
 
 
@@ -538,6 +538,9 @@ def testTarjetas(tarjeta):
 
 def testCrearReceta(receta):
     mi_receta = receta
+    id = crearRecetaPaso1(mi_receta)
+    print(id)
+    crearRecetaPaso2(id, mi_receta)
     mi_receta = Receta(
         title="Pizza napolitana h",
         description="Pizza casera con masa fina",
@@ -565,9 +568,6 @@ def testCrearReceta(receta):
             r"D:\Documentos\UADE\desarrollo_de_aplicaciones_distribuidas\Recetas-Magicas\APP\assets\CortarCebolla.jpg"
         ]
     )
-    id = crearRecetaPaso1(mi_receta)
-    print(id)
-    crearRecetaPaso2(id, mi_receta)
     crearRecetaPaso3(id, mi_receta)
 
 def testSubirCatedra():
@@ -622,7 +622,7 @@ def testInscribirme():
 #############################################
 # sleep(300)
 # testRegistrarUsuario(emilio.mail, emilio.alias, emilio.contraseña)
-login(emilio.mail,emilio.contraseña)
+# login(emilio.mail,emilio.contraseña)
 # registrarTarjeta(tarjeta1)
 # validarAlias(emilio.mail, emilio.alias)
 # eliminarReceta(2)
@@ -661,4 +661,4 @@ getRecetas()
 # getCursos()
 
 
-CC()
+# CC()
