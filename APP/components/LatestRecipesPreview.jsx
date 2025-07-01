@@ -18,7 +18,7 @@ export default function LatestRecipesPreview({ recipes = [], onPressRecipe }) {
           <RecipeItem
             key={recipe.id}
             title={recipe.title}
-            image={recipe.image}
+            image={recipe.mainPhoto}
             onPress={() => onPressRecipe?.(recipe)}
           />
         ))}

@@ -6,21 +6,34 @@ export default function HorizontalCards({ title, data, onItemPress }) {
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>{title}</Text>
       <FlatList
-        data={data}
+        data={Array.isArray(data) ? data : []}
         horizontal
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
         contentContainerStyle={{ paddingHorizontal: 16 }}
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card} onPress={() => onItemPress(item)}>
-            <Image source={item.image} style={styles.image} />
-            <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          const image = item.mainPhoto || item.image || 'https://via.placeholder.com/140';
+
+          return (
+            <TouchableOpacity style={styles.card} onPress={() => onItemPress(item)}>
+              <Image
+                source={{ uri: image }}
+                style={styles.image}
+                resizeMode="cover"
+              />
+              <Text style={styles.title} numberOfLines={1}>{item.title || 'Sin título'}</Text>
+            </TouchableOpacity>
+          );
+        }}
       />
     </View>
   );
 }
+
+HorizontalCards.defaultProps = {
+  data: [],
+  onItemPress: () => {},
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -36,6 +49,9 @@ const styles = StyleSheet.create({
     width: 140,
     marginRight: 12,
     alignItems: 'center',
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
   },
   image: {
     width: 140,

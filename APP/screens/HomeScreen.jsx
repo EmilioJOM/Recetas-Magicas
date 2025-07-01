@@ -9,6 +9,7 @@ import RecipeOrCourseCard from '../components/RecipeOrCourseCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { getLatestRecipes, getRecipes } from '../api/auth';
+import { getCourses } from '../api/auth';
 
 const recetasMock = [
   { id: '1', title: 'Tarta de Verdura', isFavorite: true, isModified: false, isInCourse: false },
@@ -607,6 +608,7 @@ export default function HomeScreen() {
     const fetchRecipes = async () => {
       try {
         const response = await getRecipes();
+        console.log('Respuesta getRecipes:', response.data);
         setAllRecipes(response.data);
       } catch (error) {
         console.error('Error al traer las recetas', error);
@@ -616,8 +618,21 @@ export default function HomeScreen() {
     fetchRecipes();
   }, []);
 
+  const [courses, setCourses] = useState([]);
 
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await getCourses();
+        console.log('Cursos:', response.data);
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error al traer los cursos', error);
+      }
+    };
 
+    fetchCourses();
+  }, []);
 
   const [searchText, setSearchText] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Todos');
@@ -728,7 +743,7 @@ export default function HomeScreen() {
   const resetIngredientes = () => {
     setIngredientesSeleccionados([]);
   };
-
+  console.log('allRecipes:', allRecipes);
   return (
     <View style={styles.container}>
       <ScrollView
@@ -787,6 +802,7 @@ export default function HomeScreen() {
           <>
             <ImageCarousel data={imagenes} />
             <LatestRecipesPreview
+
               recipes={latestRecipes}// endpoint
               //recipes={ultimasRecetas} //constante
               onPressRecipe={(receta) =>
@@ -795,28 +811,17 @@ export default function HomeScreen() {
             />
             <HorizontalCards
               title="Explorá nuevas recetas"
-              //data={allRecipes} endpoint
-              data={exploraRecetas}
+              data={allRecipes} //endpoint
+              //data={exploraRecetas} mock
               onItemPress={(receta) =>
                 navigation.navigate('DetailRecipeScreen', { receta })
               }
             />
             <HorizontalCards
               title="Explorá cursos"
-              data={exploraRecetas}
-              onItemPress={(curso) =>
-                navigation.navigate('DetailCourseScreen', {
-                  course: {
-                    title: 'Programa de pastelería experto profesional',
-                    description: 'El objetivo es formar profesionales que no solo trabajen operativamente...',
-                    startDate: '14 de abril',
-                    duration: '3 meses',
-                    level: 'Intermedio',
-                    language: 'Español',
-                    rating: 4.8,
-                    reviews: 183,
-                  },
-                })
+              data={courses}
+              onItemPress={(course) =>
+                navigation.navigate('DetailCourseScreen', { course })
               }
             />
           </>
