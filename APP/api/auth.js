@@ -87,9 +87,23 @@ export const createRecipeStepOne = (formData, token) => {
 // Funcion para buscar receta por id 
 export const getRecipeById = (id) => API.get(`recipes/${id}`);
 
+//-------- Buscar Recetas------------
+
+//Funcion para buscar receta
+export const searchReceta = (data) =>
+  API.post(`search/receta`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+
 //--------- Cursos --------------
 // Función para recuperar 5 ultimos cursos ( )
 export const getLastestCourses = (limit = 5) => API.get(`courses/latest/${limit}`);
 
 // Función para recuperar todos los cursos ( )
 export const getCourses = () => API.get('/courses');
+
+//Función para recuperar un curso (id)
+export const getCourseById = (id) => API.get(`courses/${id}`);

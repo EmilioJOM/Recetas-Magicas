@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,23 +7,62 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import BottomTabs from '../components/BottomTabs';
+import { getCourseById } from '../api/auth';
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function DetailCourseScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { course } = route.params || {};
+  const { course: passedCourse } = route.params || {};
+
+  const [course, setCourse] = useState(passedCourse || null);
+  const [loading, setLoading] = useState(!passedCourse);
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      if (!passedCourse?.id) return;
+      try {
+        const response = await getCourseById(passedCourse.id);
+        setCourse(response.data);
+      } catch (error) {
+        console.error('Error al obtener el curso:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourse();
+  }, []);
+
+  if (loading || !course) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#E08D3E" />
+      </View>
+    );
+  }
+
+  const {
+    title,
+    description,
+    main_photo,
+    contenidos = [],
+    requirements,
+    duration,
+    price,
+    modality,
+  } = course;
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Imagen destacada */}
         <Image
-          source={require('../assets/pizza2.jpg')}
+          source={main_photo ? { uri: main_photo } : require('../assets/pizza2.jpg')}
           style={styles.heroImage}
           resizeMode="cover"
         />
@@ -32,12 +71,12 @@ export default function DetailCourseScreen() {
         <View style={styles.contentWrapper}>
           {/* Título */}
           <Text style={styles.title}>
-            {course?.title || 'Programa de pastelería experto profesional'}
+            {title || 'Programa de pastelería experto profesional'}
           </Text>
 
           {/* Descripción */}
           <Text style={styles.description}>
-            {course?.description ||
+            {description ||
               'El objetivo es formar profesionales que no solo trabajen operativamente sino que además tengan las herramientas para diseñar, implementar y supervisar, tanto empresas como procesos culinarios y servicios gastronómicos de alto nivel.'}
           </Text>
 
@@ -45,18 +84,26 @@ export default function DetailCourseScreen() {
           <View style={styles.card}>
             <Text style={styles.infoItem}>⭐ 4.8 · <Text style={styles.infoSub}>183 reseñas</Text></Text>
             <Text style={styles.infoItem}>🎓 Nivel: <Text style={styles.infoSub}>Intermedio</Text></Text>
-            <Text style={styles.infoItem}>🕒 Duración: <Text style={styles.infoSub}>3 meses</Text></Text>
+            <Text style={styles.infoItem}>🕒 Duración: <Text style={styles.infoSub}>{duration || '3 meses'}</Text></Text>
             <Text style={styles.infoItem}>🗣️ Idioma: <Text style={styles.infoSub}>Español</Text></Text>
-            <Text style={styles.infoItem}>📅 Comienza: <Text style={styles.infoSub}>14 de abril</Text></Text>
+            <Text style={styles.infoItem}>📅 Modalidad: <Text style={styles.infoSub}>{modality || '14 de abril'}</Text></Text>
           </View>
 
           {/* Aprendizajes */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>¿Qué aprenderás?</Text>
             <View style={styles.bulletContainer}>
-              <Text style={styles.bullet}>• Planificar y estructurar negocios culinarios.</Text>
-              <Text style={styles.bullet}>• Liderar equipos y garantizar la calidad del servicio.</Text>
-              <Text style={styles.bullet}>• Aplicar técnicas avanzadas de cocina e innovación profesional.</Text>
+              {contenidos.length > 0 ? (
+                contenidos.map((item, index) => (
+                  <Text key={index} style={styles.bullet}>• {item}</Text>
+                ))
+              ) : (
+                <>
+                  <Text style={styles.bullet}>• Planificar y estructurar negocios culinarios.</Text>
+                  <Text style={styles.bullet}>• Liderar equipos y garantizar la calidad del servicio.</Text>
+                  <Text style={styles.bullet}>• Aplicar técnicas avanzadas de cocina e innovación profesional.</Text>
+                </>
+              )}
             </View>
           </View>
 
