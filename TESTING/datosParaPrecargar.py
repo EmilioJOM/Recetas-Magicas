@@ -497,7 +497,7 @@ filtros_receta = [
 
     # 1. Buscar por texto libre que aparece en el título
     {
-        "query": "tarta",
+        "query": "napolitana",
         "tipoReceta": None,
         "ingredientesIncluidos": [],
         "ingredientesExcluidos": [],

@@ -191,6 +191,9 @@ public class PayU {
         String[] partes = pago.getReferencia().split("\\|");
         Long catedraId = Long.parseLong(partes[1]);
 
+        User usuario = userRepository.findByEmail(partes[0])
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrada para el ID: " + partes[0]));
+
         CronogramaCurso catedra = cronogramaCursoRepository.findById(catedraId)
                 .orElseThrow(() -> new RuntimeException("Catedra no encontrada para el ID: " + catedraId));
 
@@ -245,7 +248,13 @@ public class PayU {
         }
 
         System.out.println("➡️ Enviando reembolso parcial: \n" + json);
-
+        registrarPago.devolucionRealizada(
+                usuario,
+                montoFinal,
+                pago.getReferencia(),
+                pago.getOrderId(),
+                pago.getTransactionId()
+        );
         HttpEntity<String> entity = new HttpEntity<>(json, headers);
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi";

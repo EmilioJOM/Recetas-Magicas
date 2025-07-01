@@ -30,6 +30,7 @@ public class InscripcionController {
         System.out.print("DELETE /inscripciones/"+idCronograma.toString());
         String email = authentication.getName();
         inscripcionService.darBaja(email, idCronograma);
+
         return ResponseEntity.ok("BAJA exitosa");
     }
 }

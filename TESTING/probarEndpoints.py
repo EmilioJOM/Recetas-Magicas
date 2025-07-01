@@ -6,8 +6,8 @@ from typing import *
 from enum import Enum
 from definicionEntidades import *
 
-# URL = "https://recetas-magicas-api.onrender.com/"
-URL = "http://localhost:8080/"
+URL = "https://recetas-magicas-api.onrender.com/"
+# URL = "http://localhost:8080/"
 global TOKEN
 print(URL)
 emilio = User(
@@ -502,6 +502,19 @@ def getCursos():
     for i in r.json():
         print(i)
 
+def baja(id):
+    login_url = f"{URL}inscripciones/{id}"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.delete(login_url,headers=headers)
+    print(f"DELETE inscripciones/{id}", r.text)
+
+def CC():
+    login_url = f"{URL}pagar/CC"
+    headers = {'Authorization': f'Bearer {TOKEN}'}
+    r = requests.get(login_url,headers=headers)
+    print(f"GET pagar/CC", r.text)
+
+
 
 #######################################################################
 
@@ -641,10 +654,11 @@ login(emilio.mail,emilio.contraseña)
 # subirDNI(emilio.dni,emilio.nroTramite)
 
 # registrarTarjeta(tarjeta1=tarjeta1)
-testInscribirme()
+# testInscribirme()
 # pagar()
 # recuperarRecetas()
-# getRecetas()
+getRecetas()
 # getCursos()
 
 
+CC()

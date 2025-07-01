@@ -38,7 +38,7 @@ public class RegistrarPago {
 
         pagoRepository.save(pago);
     }
-    public void devolucionRealizada(User usuario, Double monto, String referenceCode, String orderId, String transactionId, String metodo){
+    public void devolucionRealizada(User usuario, Double monto, String referenceCode, String orderId, String transactionId){
         Pago pago = new Pago();
         LocalDateTime tiempoActual = LocalDateTime.now();
         pago.setUsuarioEmail(usuario.getEmail());
