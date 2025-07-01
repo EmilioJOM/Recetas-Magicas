@@ -12,7 +12,9 @@ import {
   UIManager,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { getRecipeById } from '../api/auth';
@@ -39,17 +41,27 @@ export default function DetailRecipeScreen() {
   const route = useRoute();
   const { id } = route.params;
   const { token } = useAuth();
+
   const [receta, setReceta] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const [porciones, setPorciones] = useState(1);
+  const [porcionesBase, setPorcionesBase] = useState(1);
+  const [ingredientesBase, setIngredientesBase] = useState([]);
 
   useEffect(() => {
     const fetchReceta = async () => {
       try {
         const response = await getRecipeById(id);
-        setReceta(response.data);
-        console.log(response.data);
-        setPorciones(response.data.servings || 1);
+        const data = response.data;
+
+        setReceta(data);
+
+        const baseServings = data.servings || 1;
+        setPorcionesBase(baseServings);
+        setPorciones(baseServings);
+
+        setIngredientesBase(data.ingredients || []);
       } catch (error) {
         console.error('Error al cargar receta:', error.message);
       } finally {
@@ -62,6 +74,35 @@ export default function DetailRecipeScreen() {
   const ajustarPorciones = (delta) => {
     LayoutAnimation.easeInEaseOut();
     setPorciones((prev) => Math.max(1, prev + delta));
+  };
+
+  const ingredientesAjustados = ingredientesBase.map((ing) => {
+    const factor = porciones / porcionesBase;
+    let cantidadAjustada = ing.quantity * factor;
+    cantidadAjustada =
+      cantidadAjustada % 1 === 0
+        ? cantidadAjustada.toString()
+        : cantidadAjustada.toFixed(2);
+    return {
+      ...ing,
+      cantidadAjustada,
+    };
+  });
+
+  const guardarReceta = async () => {
+    try {
+      // Guardamos la receta completa, con las porciones actuales y los ingredientes ajustados
+      const recetaAGuardar = {
+        ...receta,
+        porcionesActuales: porciones,
+        ingredientesAjustados,
+      };
+      await AsyncStorage.setItem('receta_guardada', JSON.stringify(recetaAGuardar));
+      Alert.alert('¡Éxito!', 'Receta guardada en tu dispositivo.');
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo guardar la receta. Intenta nuevamente.');
+      console.error('Error guardando receta:', error);
+    }
   };
 
   if (loading || !receta) {
@@ -77,7 +118,7 @@ export default function DetailRecipeScreen() {
         <Text style={styles.heroTitle}>{receta.title}</Text>
       </ImageBackground>
 
-      <ScrollView style={styles.sheet} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.sheet} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 80}}>
         <Text style={styles.desc}>{receta.description}</Text>
 
         <View style={styles.userInfo}>
@@ -101,11 +142,11 @@ export default function DetailRecipeScreen() {
         </View>
 
         <Text style={styles.sectionTitle}>Ingredientes:</Text>
-        {receta.ingredients?.map((ing, i) => (
+        {ingredientesAjustados.map((ing, i) => (
           <View key={i} style={styles.ingredientRow}>
             <View style={styles.bullet} />
             <Text style={styles.ingredient}>
-              <Text style={styles.ingredientBold}>{ing.quantity} {ing.unit} </Text>
+              <Text style={styles.ingredientBold}>{ing.cantidadAjustada} {ing.unit} </Text>
               {ing.detail}
             </Text>
           </View>
@@ -143,8 +184,14 @@ export default function DetailRecipeScreen() {
           </View>
         ))}
 
+        {/* Espacio para que el botón no tape contenido */}
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      {/* Botón facha "Guardar receta" fijo abajo */}
+      <TouchableOpacity style={styles.botonGuardar} onPress={guardarReceta} activeOpacity={0.8}>
+        <Text style={styles.textoBotonGuardar}>Guardar receta</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -341,5 +388,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#333',
     fontWeight: '500',
+  },
+   botonGuardar: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: '#f39c12', // naranja brillante
+    borderRadius: 8, // bordes cuadrados con un poco de redondeo
+    paddingVertical: 13,
+    alignItems: 'center',
+    shadowColor: '#f39c12',
+    //shadowOpacity: 0.5,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+  },
+  textoBotonGuardar: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
   },
 });
